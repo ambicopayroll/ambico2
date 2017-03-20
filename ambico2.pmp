@@ -589,6 +589,44 @@
       <Field FldName="userlevel" FldAlias="0" FldSourceName="" FldSourceTable="" FldSourceField="" FldType="3" FldTypeName="INT" NativeDataType="3" FldSQL="" FldIsCustom="0" FldSupport="1" FldSort="1" FldSize="11" FldUniqueIdx="0" FldZeroLen="0" FldReq="1" FldIsPrimaryKey="0" FldAutoIncrement="0" FldAttribute="4" FldMin="" FldMax="" FldErrMsg="" FldValidate="INTEGER" FldServerValidateArgs="" FldClientValidateArgs="" FldRequired="1" FldPopCalendar="0" FldGenerate="1" FldList="1" FldExport="1" FldView="1" FldEdit="1" FldAdd="1" FldAddOpt="1" FldSearch="1" FldBasicSearch="0" FldExtendedBasicSearch="0" FldRegister="0" FldSrchOpr="=" FldSrchOpr2="" FldDefault="" FldSearchDefault="" FldSearchDefault2="" FldDbDefault="" FldCaption="userlevel" FldViewTag="FORMATTED TEXT" FldViewThumbnail="0" FldHtmlTag="SELECT" FldTagSize="30" FldTagMaxLength="0" FldTagValues="&quot;-2&quot;,&quot;Anonymous&quot;|&quot;-1&quot;,&quot;Administrator&quot;|&quot;0&quot;,&quot;Default&quot;|" FldHtmlTagReadOnly="0" FldTagHiddenValue="" FldSelectType="Values" FldTagLnkTbl="" FldTagLnkFld="" FldTagLnkDisplay="" FldTagLnkDisp2="" FldTagLnkDisp3="" FldTagLnkDisp4="" FldTagLnkOrderBy="" FldTagLnkOrderType="" FldTagLnkDistinct="0" FldTagCols="0" FldTagRows="0" FldTagImgWidth="0" FldTagImgHeight="0" FldTagAType="" FldTagATarget="" FldTagAPrefix="None" FldTagASuffix="" FldBold="0" FldItalic="0" FldAlign="" FldFmtType="None" FldDtFormat="0" FldNumDigits="0" FldIncLeadDigit="-2" FldUseParen="-2" FldGpDigits="-2" FileNameFld="" FileTypeFld="" FileSizeFld="" ImageWidthFld="" ImageHeightFld="" FldHrefFld="" FldHrefFldOrig="0" FldStrFunc="" FldUseDHTMLEditor="0" FldMemoMaxLength="0" FldSelectSize="0" FldSelectMultiple="0" FldSelectFilter="" FldAutoFillSourceFields="" FldAutoFillTargetFields="" FldParentSelect="" FldParentSelect2="" FldParentSelect3="" FldParentSelect4="" FldSelectFilterFld="" FldSelectFilterFld2="" FldSelectFilterFld3="" FldSelectFilterFld4="" FldParentSelectTbl="" FldParentSelectTbl2="" FldParentSelectTbl3="" FldParentSelectTbl4="" FldSelectAllowAdd="0" FldQuoteS="" FldQuoteE="" FldColumnWidth="" FldColumnWrap="1" FldAggregate="" FldGroupBy="0" FldOrderBy="0" FldOrder="" FldGroupByShowSummary="0" FldRptAggSum="0" FldRptAggAvg="0" FldRptAggMin="0" FldRptAggMax="0" FldRepeatColumns="5" FldUploadPath="" FldUploadMultiple="0" UploadAllowedFileExt="" UploadMaxFileSize="0" UploadMaxFileCount="0" FldCheckDuplicate="0" FldPageIndex="1" FldAjax="1" FldAutoUpdateValue="" FldUploadResize="0" FldResizeWidth="0" FldResizeHeight="0" FldMultiUpdate="1" FldTitle="" FldAlt="" FldEditCustomAttributes="" FldViewCustomAttributes="" FldTagACustomAttributes="" FldResizeQuality="75" FldEditTableField="" FldAutoFill="0" FldSelectForceSelection="0" FldMemoCRLFReplace="0" FldTooltipFld="" FldTooltipWidth="0" FldVirtualLookup="0" FldVirtualLookupSearch="0" FldViewTemplate="" FldOptionTemplate="" FldDropdown="0" FldDropdownWidth="0" FldDropdownHeight="0" FldModalLookup="0" FldModalLookupPageSize="0" />
     </Table>
   </Database>
+  <CustomScript ScriptType="Server" ScriptCodeType="Global" ScriptName="Database_Connecting" ScriptCtrlID="" ScriptL1Key="" ScriptL2Key=""><![CDATA[// Database Connecting event
+function Database_Connecting(&$info) {
+	// Example:
+	//var_dump($info);
+	//if ($info["id"] == "DB" && ew_CurrentUserIP() == "127.0.0.1") { // Testing on local PC
+	//	$info["host"] = "locahost";
+	//	$info["user"] = "root";
+	//	$info["pass"] = "";
+	//}
+
+	if (ew_CurrentUserIP () == "127.0.0.1"  || ew_CurrentUserIP () == ":: 1"  || ew_CurrentHost () == "localhost" ) { // testing on local PC
+		$info["host"] = "localhost";
+		$info["user"] = "root"; // sesuaikan dengan username database di komputer localhost
+		$info["pass"] = "admin"; // sesuaikan dengan password database di komputer localhost
+		$info["db"] = "fin_pro"; // sesuaikan dengan nama database di komputer localhost
+	} elseif (ew_CurrentHost () == "ambico.nma-indonesia.com") { // setting koneksi database untuk komputer server
+		$info["host"] = "mysql.idhostinger.com";  // sesuaikan dengan ip address atau hostname komputer server
+		$info["user"] = "u945388674_ambic"; // sesuaikan dengan username database di komputer server
+		$info["pass"] = "M457r1P 81"; // sesuaikan deengan password database di komputer server
+		$info["db"] = "u945388674_ambic"; // sesuaikan dengan nama database di komputer server
+	} elseif (ew_CurrentHost () == "ambico.890m.com") { // setting koneksi database untuk komputer server
+		$info["host"] = "mysql.idhostinger.com";  // sesuaikan dengan ip address atau hostname komputer server
+		$info["user"] = "u942964223_ambic"; // sesuaikan dengan username database di komputer server
+		$info["pass"] = "PresarioCQ43"; // sesuaikan deengan password database di komputer server
+		$info["db"] = "u942964223_ambic"; // sesuaikan dengan nama database di komputer server
+	} elseif (ew_CurrentHost () == "ambico.16mb.com") { // setting koneksi database untuk komputer server
+		$info["host"] = "mysql.idhostinger.com";  // sesuaikan dengan ip address atau hostname komputer server
+		$info["user"] = "u885137693_ambic"; // sesuaikan dengan username database di komputer server
+		$info["pass"] = "PresarioCQ43"; // sesuaikan deengan password database di komputer server
+		$info["db"] = "u885137693_ambic"; // sesuaikan dengan nama database di komputer server
+	} elseif (ew_CurrentHost () == "ambico2.890m.com") { // setting koneksi database untuk komputer server
+		$info["host"] = "mysql.idhostinger.com";  // sesuaikan dengan ip address atau hostname komputer server
+		$info["user"] = "u616044283_ambic"; // sesuaikan dengan username database di komputer server
+		$info["pass"] = "PresarioCQ43"; // sesuaikan deengan password database di komputer server
+		$info["db"] = "u616044283_ambic"; // sesuaikan dengan nama database di komputer server
+	}
+}
+]]></CustomScript>
   <Menu MenuID="63" MenuText="Setting" MenuParentID="-1" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="8" MenuSecurity="" MenuUrl="" MenuCustomUrl="1" MenuLevel="0" MenuShow="1" MenuDisplayOrder="100" />
   <Menu MenuID="22" MenuText="jdw kerja m" MenuParentID="63" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="0" MenuSecurity="" MenuUrl="jdw_kerja_m" MenuCustomUrl="0" MenuLevel="1" MenuShow="1" MenuDisplayOrder="100" />
   <Menu MenuID="21" MenuText="jdw kerja d" MenuParentID="63" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="0" MenuSecurity="" MenuUrl="jdw_kerja_d" MenuCustomUrl="0" MenuLevel="1" MenuShow="1" MenuDisplayOrder="200" />
