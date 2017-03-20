@@ -590,16 +590,16 @@
       <phrase id="menutext" value="Setting" />
     </menu>
     <menu id="22">
-      <phrase id="menutext" value="jdw kerja m" />
-    </menu>
-    <menu id="21">
-      <phrase id="menutext" value="jdw kerja d" />
+      <phrase id="menutext" value="Jadwal Kerja" />
     </menu>
     <menu id="18">
       <phrase id="menutext" value="jam kerja" />
     </menu>
     <menu id="19">
       <phrase id="menutext" value="jam kerja extra" />
+    </menu>
+    <menu id="21">
+      <phrase id="menutext" value="jdw kerja d" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="att log" />

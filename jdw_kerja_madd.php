@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "jdw_kerja_minfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
+<?php include_once "jdw_kerja_dgridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -309,6 +310,14 @@ class cjdw_kerja_m_add extends cjdw_kerja_m {
 
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
+
+			// Process auto fill for detail table 'jdw_kerja_d'
+			if (@$_POST["grid"] == "fjdw_kerja_dgrid") {
+				if (!isset($GLOBALS["jdw_kerja_d_grid"])) $GLOBALS["jdw_kerja_d_grid"] = new cjdw_kerja_d_grid;
+				$GLOBALS["jdw_kerja_d_grid"]->Page_Init();
+				$this->Page_Terminate();
+				exit();
+			}
 			$results = $this->GetAutoFill(@$_POST["name"], @$_POST["q"]);
 			if ($results) {
 
@@ -422,6 +431,9 @@ class cjdw_kerja_m_add extends cjdw_kerja_m {
 		// Set up Breadcrumb
 		$this->SetupBreadcrumb();
 
+		// Set up detail parameters
+		$this->SetUpDetailParms();
+
 		// Validate form if post back
 		if (@$_POST["a_add"] <> "") {
 			if (!$this->ValidateForm()) {
@@ -444,13 +456,19 @@ class cjdw_kerja_m_add extends cjdw_kerja_m {
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
 					$this->Page_Terminate("jdw_kerja_mlist.php"); // No matching record, return to list
 				}
+
+				// Set up detail parameters
+				$this->SetUpDetailParms();
 				break;
 			case "A": // Add new record
 				$this->SendEmail = TRUE; // Send email on add success
 				if ($this->AddRow($this->OldRecordset)) { // Add successful
 					if ($this->getSuccessMessage() == "")
 						$this->setSuccessMessage($Language->Phrase("AddSuccess")); // Set up success message
-					$sReturnUrl = $this->getReturnUrl();
+					if ($this->getCurrentDetailTable() <> "") // Master/detail add
+						$sReturnUrl = $this->GetDetailUrl();
+					else
+						$sReturnUrl = $this->getReturnUrl();
 					if (ew_GetPageName($sReturnUrl) == "jdw_kerja_mlist.php")
 						$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to list page with correct master key if necessary
 					elseif (ew_GetPageName($sReturnUrl) == "jdw_kerja_mview.php")
@@ -459,6 +477,9 @@ class cjdw_kerja_m_add extends cjdw_kerja_m {
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
 					$this->RestoreFormValues(); // Add failed, restore form values
+
+					// Set up detail parameters
+					$this->SetUpDetailParms();
 				}
 		}
 
@@ -833,6 +854,13 @@ class cjdw_kerja_m_add extends cjdw_kerja_m {
 			ew_AddMessage($gsFormError, $this->use_sama->FldErrMsg());
 		}
 
+		// Validate detail grid
+		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
+		if (in_array("jdw_kerja_d", $DetailTblVar) && $GLOBALS["jdw_kerja_d"]->DetailAdd) {
+			if (!isset($GLOBALS["jdw_kerja_d_grid"])) $GLOBALS["jdw_kerja_d_grid"] = new cjdw_kerja_d_grid(); // get detail page object
+			$GLOBALS["jdw_kerja_d_grid"]->ValidateGridForm();
+		}
+
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
 
@@ -849,6 +877,10 @@ class cjdw_kerja_m_add extends cjdw_kerja_m {
 	function AddRow($rsold = NULL) {
 		global $Language, $Security;
 		$conn = &$this->Connection();
+
+		// Begin transaction
+		if ($this->getCurrentDetailTable() <> "")
+			$conn->BeginTrans();
 
 		// Load db values from rsold
 		if ($rsold) {
@@ -919,6 +951,29 @@ class cjdw_kerja_m_add extends cjdw_kerja_m {
 			}
 			$AddRow = FALSE;
 		}
+
+		// Add detail records
+		if ($AddRow) {
+			$DetailTblVar = explode(",", $this->getCurrentDetailTable());
+			if (in_array("jdw_kerja_d", $DetailTblVar) && $GLOBALS["jdw_kerja_d"]->DetailAdd) {
+				$GLOBALS["jdw_kerja_d"]->jdw_kerja_m_id->setSessionValue($this->jdw_kerja_m_id->CurrentValue); // Set master key
+				if (!isset($GLOBALS["jdw_kerja_d_grid"])) $GLOBALS["jdw_kerja_d_grid"] = new cjdw_kerja_d_grid(); // Get detail page object
+				$Security->LoadCurrentUserLevel($this->ProjectID . "jdw_kerja_d"); // Load user level of detail table
+				$AddRow = $GLOBALS["jdw_kerja_d_grid"]->GridInsert();
+				$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+				if (!$AddRow)
+					$GLOBALS["jdw_kerja_d"]->jdw_kerja_m_id->setSessionValue(""); // Clear master key if insert failed
+			}
+		}
+
+		// Commit/Rollback transaction
+		if ($this->getCurrentDetailTable() <> "") {
+			if ($AddRow) {
+				$conn->CommitTrans(); // Commit transaction
+			} else {
+				$conn->RollbackTrans(); // Rollback transaction
+			}
+		}
 		if ($AddRow) {
 
 			// Call Row Inserted event
@@ -926,6 +981,39 @@ class cjdw_kerja_m_add extends cjdw_kerja_m {
 			$this->Row_Inserted($rs, $rsnew);
 		}
 		return $AddRow;
+	}
+
+	// Set up detail parms based on QueryString
+	function SetUpDetailParms() {
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_DETAIL])) {
+			$sDetailTblVar = $_GET[EW_TABLE_SHOW_DETAIL];
+			$this->setCurrentDetailTable($sDetailTblVar);
+		} else {
+			$sDetailTblVar = $this->getCurrentDetailTable();
+		}
+		if ($sDetailTblVar <> "") {
+			$DetailTblVar = explode(",", $sDetailTblVar);
+			if (in_array("jdw_kerja_d", $DetailTblVar)) {
+				if (!isset($GLOBALS["jdw_kerja_d_grid"]))
+					$GLOBALS["jdw_kerja_d_grid"] = new cjdw_kerja_d_grid;
+				if ($GLOBALS["jdw_kerja_d_grid"]->DetailAdd) {
+					if ($this->CopyRecord)
+						$GLOBALS["jdw_kerja_d_grid"]->CurrentMode = "copy";
+					else
+						$GLOBALS["jdw_kerja_d_grid"]->CurrentMode = "add";
+					$GLOBALS["jdw_kerja_d_grid"]->CurrentAction = "gridadd";
+
+					// Save current master table to detail table
+					$GLOBALS["jdw_kerja_d_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["jdw_kerja_d_grid"]->setStartRecordNumber(1);
+					$GLOBALS["jdw_kerja_d_grid"]->jdw_kerja_m_id->FldIsDetailKey = TRUE;
+					$GLOBALS["jdw_kerja_d_grid"]->jdw_kerja_m_id->CurrentValue = $this->jdw_kerja_m_id->CurrentValue;
+					$GLOBALS["jdw_kerja_d_grid"]->jdw_kerja_m_id->setSessionValue($GLOBALS["jdw_kerja_d_grid"]->jdw_kerja_m_id->CurrentValue);
+				}
+			}
+		}
 	}
 
 	// Set up Breadcrumb
@@ -1222,6 +1310,14 @@ $jdw_kerja_m_add->ShowMessage();
 	</div>
 <?php } ?>
 </div>
+<?php
+	if (in_array("jdw_kerja_d", explode(",", $jdw_kerja_m->getCurrentDetailTable())) && $jdw_kerja_d->DetailAdd) {
+?>
+<?php if ($jdw_kerja_m->getCurrentDetailTable() <> "") { ?>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("jdw_kerja_d", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "jdw_kerja_dgrid.php" ?>
+<?php } ?>
 <?php if (!$jdw_kerja_m_add->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">

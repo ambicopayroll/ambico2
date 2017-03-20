@@ -6,6 +6,7 @@ ob_start(); // Turn on output buffering
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
 <?php include_once "jdw_kerja_dinfo.php" ?>
+<?php include_once "jdw_kerja_minfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
@@ -232,6 +233,9 @@ class cjdw_kerja_d_add extends cjdw_kerja_d {
 			$GLOBALS["Table"] = &$GLOBALS["jdw_kerja_d"];
 		}
 
+		// Table object (jdw_kerja_m)
+		if (!isset($GLOBALS['jdw_kerja_m'])) $GLOBALS['jdw_kerja_m'] = new cjdw_kerja_m();
+
 		// Table object (t_user)
 		if (!isset($GLOBALS['t_user'])) $GLOBALS['t_user'] = new ct_user();
 
@@ -392,6 +396,9 @@ class cjdw_kerja_d_add extends cjdw_kerja_d {
 		$this->IsModal = (@$_GET["modal"] == "1" || @$_POST["modal"] == "1");
 		if ($this->IsModal)
 			$gbSkipHeaderFooter = TRUE;
+
+		// Set up master/detail parameters
+		$this->SetUpMasterParms();
 
 		// Process form if post back
 		if (@$_POST["a_add"] <> "") {
@@ -561,6 +568,11 @@ class cjdw_kerja_d_add extends cjdw_kerja_d {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->jdw_kerja_m_id->setDbValue($rs->fields('jdw_kerja_m_id'));
+		if (array_key_exists('EV__jdw_kerja_m_id', $rs->fields)) {
+			$this->jdw_kerja_m_id->VirtualValue = $rs->fields('EV__jdw_kerja_m_id'); // Set up virtual field value
+		} else {
+			$this->jdw_kerja_m_id->VirtualValue = ""; // Clear value
+		}
 		$this->jdw_kerja_d_idx->setDbValue($rs->fields('jdw_kerja_d_idx'));
 		$this->jk_id->setDbValue($rs->fields('jk_id'));
 		$this->jdw_kerja_d_hari->setDbValue($rs->fields('jdw_kerja_d_hari'));
@@ -628,7 +640,30 @@ class cjdw_kerja_d_add extends cjdw_kerja_d {
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
 		// jdw_kerja_m_id
-		$this->jdw_kerja_m_id->ViewValue = $this->jdw_kerja_m_id->CurrentValue;
+		if ($this->jdw_kerja_m_id->VirtualValue <> "") {
+			$this->jdw_kerja_m_id->ViewValue = $this->jdw_kerja_m_id->VirtualValue;
+		} else {
+		if (strval($this->jdw_kerja_m_id->CurrentValue) <> "") {
+			$sFilterWrk = "`jdw_kerja_m_id`" . ew_SearchString("=", $this->jdw_kerja_m_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `jdw_kerja_m_id`, `jdw_kerja_m_kode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `jdw_kerja_m`";
+		$sWhereWrk = "";
+		$this->jdw_kerja_m_id->LookupFilters = array("dx1" => '`jdw_kerja_m_kode`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->jdw_kerja_m_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->jdw_kerja_m_id->ViewValue = $this->jdw_kerja_m_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->jdw_kerja_m_id->ViewValue = $this->jdw_kerja_m_id->CurrentValue;
+			}
+		} else {
+			$this->jdw_kerja_m_id->ViewValue = NULL;
+		}
+		}
 		$this->jdw_kerja_m_id->ViewCustomAttributes = "";
 
 		// jdw_kerja_d_idx
@@ -674,10 +709,58 @@ class cjdw_kerja_d_add extends cjdw_kerja_d {
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
 			// jdw_kerja_m_id
-			$this->jdw_kerja_m_id->EditAttrs["class"] = "form-control";
 			$this->jdw_kerja_m_id->EditCustomAttributes = "";
-			$this->jdw_kerja_m_id->EditValue = ew_HtmlEncode($this->jdw_kerja_m_id->CurrentValue);
-			$this->jdw_kerja_m_id->PlaceHolder = ew_RemoveHtml($this->jdw_kerja_m_id->FldCaption());
+			if ($this->jdw_kerja_m_id->getSessionValue() <> "") {
+				$this->jdw_kerja_m_id->CurrentValue = $this->jdw_kerja_m_id->getSessionValue();
+			if ($this->jdw_kerja_m_id->VirtualValue <> "") {
+				$this->jdw_kerja_m_id->ViewValue = $this->jdw_kerja_m_id->VirtualValue;
+			} else {
+			if (strval($this->jdw_kerja_m_id->CurrentValue) <> "") {
+				$sFilterWrk = "`jdw_kerja_m_id`" . ew_SearchString("=", $this->jdw_kerja_m_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+			$sSqlWrk = "SELECT `jdw_kerja_m_id`, `jdw_kerja_m_kode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `jdw_kerja_m`";
+			$sWhereWrk = "";
+			$this->jdw_kerja_m_id->LookupFilters = array("dx1" => '`jdw_kerja_m_kode`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->jdw_kerja_m_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('DispFld');
+					$this->jdw_kerja_m_id->ViewValue = $this->jdw_kerja_m_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->jdw_kerja_m_id->ViewValue = $this->jdw_kerja_m_id->CurrentValue;
+				}
+			} else {
+				$this->jdw_kerja_m_id->ViewValue = NULL;
+			}
+			}
+			$this->jdw_kerja_m_id->ViewCustomAttributes = "";
+			} else {
+			if (trim(strval($this->jdw_kerja_m_id->CurrentValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
+				$sFilterWrk = "`jdw_kerja_m_id`" . ew_SearchString("=", $this->jdw_kerja_m_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+			}
+			$sSqlWrk = "SELECT `jdw_kerja_m_id`, `jdw_kerja_m_kode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `jdw_kerja_m`";
+			$sWhereWrk = "";
+			$this->jdw_kerja_m_id->LookupFilters = array("dx1" => '`jdw_kerja_m_kode`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->jdw_kerja_m_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+				$this->jdw_kerja_m_id->ViewValue = $this->jdw_kerja_m_id->DisplayValue($arwrk);
+			} else {
+				$this->jdw_kerja_m_id->ViewValue = $Language->Phrase("PleaseSelect");
+			}
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->jdw_kerja_m_id->EditValue = $arwrk;
+			}
 
 			// jdw_kerja_d_idx
 			$this->jdw_kerja_d_idx->EditAttrs["class"] = "form-control";
@@ -748,9 +831,6 @@ class cjdw_kerja_d_add extends cjdw_kerja_d {
 			return ($gsFormError == "");
 		if (!$this->jdw_kerja_m_id->FldIsDetailKey && !is_null($this->jdw_kerja_m_id->FormValue) && $this->jdw_kerja_m_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->jdw_kerja_m_id->FldCaption(), $this->jdw_kerja_m_id->ReqErrMsg));
-		}
-		if (!ew_CheckInteger($this->jdw_kerja_m_id->FormValue)) {
-			ew_AddMessage($gsFormError, $this->jdw_kerja_m_id->FldErrMsg());
 		}
 		if (!$this->jdw_kerja_d_idx->FldIsDetailKey && !is_null($this->jdw_kerja_d_idx->FormValue) && $this->jdw_kerja_d_idx->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->jdw_kerja_d_idx->FldCaption(), $this->jdw_kerja_d_idx->ReqErrMsg));
@@ -866,6 +946,66 @@ class cjdw_kerja_d_add extends cjdw_kerja_d {
 		return $AddRow;
 	}
 
+	// Set up master/detail based on QueryString
+	function SetUpMasterParms() {
+		$bValidMaster = FALSE;
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "jdw_kerja_m") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_jdw_kerja_m_id"] <> "") {
+					$GLOBALS["jdw_kerja_m"]->jdw_kerja_m_id->setQueryStringValue($_GET["fk_jdw_kerja_m_id"]);
+					$this->jdw_kerja_m_id->setQueryStringValue($GLOBALS["jdw_kerja_m"]->jdw_kerja_m_id->QueryStringValue);
+					$this->jdw_kerja_m_id->setSessionValue($this->jdw_kerja_m_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["jdw_kerja_m"]->jdw_kerja_m_id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "jdw_kerja_m") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_jdw_kerja_m_id"] <> "") {
+					$GLOBALS["jdw_kerja_m"]->jdw_kerja_m_id->setFormValue($_POST["fk_jdw_kerja_m_id"]);
+					$this->jdw_kerja_m_id->setFormValue($GLOBALS["jdw_kerja_m"]->jdw_kerja_m_id->FormValue);
+					$this->jdw_kerja_m_id->setSessionValue($this->jdw_kerja_m_id->FormValue);
+					if (!is_numeric($GLOBALS["jdw_kerja_m"]->jdw_kerja_m_id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		}
+		if ($bValidMaster) {
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+
+			// Reset start record counter (new master key)
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "jdw_kerja_m") {
+				if ($this->jdw_kerja_m_id->CurrentValue == "") $this->jdw_kerja_m_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
+	}
+
 	// Set up Breadcrumb
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
@@ -881,6 +1021,18 @@ class cjdw_kerja_d_add extends cjdw_kerja_d {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		case "x_jdw_kerja_m_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `jdw_kerja_m_id` AS `LinkFld`, `jdw_kerja_m_kode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `jdw_kerja_m`";
+			$sWhereWrk = "{filter}";
+			$this->jdw_kerja_m_id->LookupFilters = array("dx1" => '`jdw_kerja_m_kode`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`jdw_kerja_m_id` = {filter_value}', "t0" => "3", "fn0" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->jdw_kerja_m_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 		}
 	}
 
@@ -1003,9 +1155,6 @@ fjdw_kerja_dadd.Validate = function() {
 			elm = this.GetElements("x" + infix + "_jdw_kerja_m_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $jdw_kerja_d->jdw_kerja_m_id->FldCaption(), $jdw_kerja_d->jdw_kerja_m_id->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_jdw_kerja_m_id");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($jdw_kerja_d->jdw_kerja_m_id->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_jdw_kerja_d_idx");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $jdw_kerja_d->jdw_kerja_d_idx->FldCaption(), $jdw_kerja_d->jdw_kerja_d_idx->ReqErrMsg)) ?>");
@@ -1054,8 +1203,9 @@ fjdw_kerja_dadd.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-// Form object for search
+fjdw_kerja_dadd.Lists["x_jdw_kerja_m_id"] = {"LinkField":"x_jdw_kerja_m_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_jdw_kerja_m_kode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"jdw_kerja_m"};
 
+// Form object for search
 </script>
 <script type="text/javascript">
 
@@ -1081,14 +1231,31 @@ $jdw_kerja_d_add->ShowMessage();
 <?php if ($jdw_kerja_d_add->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
+<?php if ($jdw_kerja_d->getCurrentMasterTable() == "jdw_kerja_m") { ?>
+<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="jdw_kerja_m">
+<input type="hidden" name="fk_jdw_kerja_m_id" value="<?php echo $jdw_kerja_d->jdw_kerja_m_id->getSessionValue() ?>">
+<?php } ?>
 <div>
 <?php if ($jdw_kerja_d->jdw_kerja_m_id->Visible) { // jdw_kerja_m_id ?>
 	<div id="r_jdw_kerja_m_id" class="form-group">
 		<label id="elh_jdw_kerja_d_jdw_kerja_m_id" for="x_jdw_kerja_m_id" class="col-sm-2 control-label ewLabel"><?php echo $jdw_kerja_d->jdw_kerja_m_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
 		<div class="col-sm-10"><div<?php echo $jdw_kerja_d->jdw_kerja_m_id->CellAttributes() ?>>
+<?php if ($jdw_kerja_d->jdw_kerja_m_id->getSessionValue() <> "") { ?>
 <span id="el_jdw_kerja_d_jdw_kerja_m_id">
-<input type="text" data-table="jdw_kerja_d" data-field="x_jdw_kerja_m_id" name="x_jdw_kerja_m_id" id="x_jdw_kerja_m_id" size="30" placeholder="<?php echo ew_HtmlEncode($jdw_kerja_d->jdw_kerja_m_id->getPlaceHolder()) ?>" value="<?php echo $jdw_kerja_d->jdw_kerja_m_id->EditValue ?>"<?php echo $jdw_kerja_d->jdw_kerja_m_id->EditAttributes() ?>>
+<span<?php echo $jdw_kerja_d->jdw_kerja_m_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $jdw_kerja_d->jdw_kerja_m_id->ViewValue ?></p></span>
 </span>
+<input type="hidden" id="x_jdw_kerja_m_id" name="x_jdw_kerja_m_id" value="<?php echo ew_HtmlEncode($jdw_kerja_d->jdw_kerja_m_id->CurrentValue) ?>">
+<?php } else { ?>
+<span id="el_jdw_kerja_d_jdw_kerja_m_id">
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_jdw_kerja_m_id"><?php echo (strval($jdw_kerja_d->jdw_kerja_m_id->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $jdw_kerja_d->jdw_kerja_m_id->ViewValue); ?></span>
+</span>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($jdw_kerja_d->jdw_kerja_m_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_jdw_kerja_m_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="jdw_kerja_d" data-field="x_jdw_kerja_m_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $jdw_kerja_d->jdw_kerja_m_id->DisplayValueSeparatorAttribute() ?>" name="x_jdw_kerja_m_id" id="x_jdw_kerja_m_id" value="<?php echo $jdw_kerja_d->jdw_kerja_m_id->CurrentValue ?>"<?php echo $jdw_kerja_d->jdw_kerja_m_id->EditAttributes() ?>>
+<input type="hidden" name="s_x_jdw_kerja_m_id" id="s_x_jdw_kerja_m_id" value="<?php echo $jdw_kerja_d->jdw_kerja_m_id->LookupFilterQuery() ?>">
+</span>
+<?php } ?>
 <?php echo $jdw_kerja_d->jdw_kerja_m_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>

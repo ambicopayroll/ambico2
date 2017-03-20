@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "jdw_kerja_minfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
+<?php include_once "jdw_kerja_dgridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -531,6 +532,9 @@ class cjdw_kerja_m_view extends cjdw_kerja_m {
 		$this->RowType = EW_ROWTYPE_VIEW;
 		$this->ResetAttrs();
 		$this->RenderRow();
+
+		// Set up detail parameters
+		$this->SetUpDetailParms();
 	}
 
 	// Set up other options
@@ -573,6 +577,81 @@ class cjdw_kerja_m_view extends cjdw_kerja_m {
 		else
 			$item->Body = "<a class=\"ewAction ewDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("ViewPageDeleteLink")) . "\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
 		$item->Visible = ($this->DeleteUrl <> "" && $Security->CanDelete());
+		$option = &$options["detail"];
+		$DetailTableLink = "";
+		$DetailViewTblVar = "";
+		$DetailCopyTblVar = "";
+		$DetailEditTblVar = "";
+
+		// "detail_jdw_kerja_d"
+		$item = &$option->Add("detail_jdw_kerja_d");
+		$body = $Language->Phrase("ViewPageDetailLink") . $Language->TablePhrase("jdw_kerja_d", "TblCaption");
+		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("jdw_kerja_dlist.php?" . EW_TABLE_SHOW_MASTER . "=jdw_kerja_m&fk_jdw_kerja_m_id=" . urlencode(strval($this->jdw_kerja_m_id->CurrentValue)) . "") . "\">" . $body . "</a>";
+		$links = "";
+		if ($GLOBALS["jdw_kerja_d_grid"] && $GLOBALS["jdw_kerja_d_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 'jdw_kerja_d')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=jdw_kerja_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
+			if ($DetailViewTblVar <> "") $DetailViewTblVar .= ",";
+			$DetailViewTblVar .= "jdw_kerja_d";
+		}
+		if ($GLOBALS["jdw_kerja_d_grid"] && $GLOBALS["jdw_kerja_d_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 'jdw_kerja_d')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=jdw_kerja_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
+			if ($DetailEditTblVar <> "") $DetailEditTblVar .= ",";
+			$DetailEditTblVar .= "jdw_kerja_d";
+		}
+		if ($GLOBALS["jdw_kerja_d_grid"] && $GLOBALS["jdw_kerja_d_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 'jdw_kerja_d')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=jdw_kerja_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
+			if ($DetailCopyTblVar <> "") $DetailCopyTblVar .= ",";
+			$DetailCopyTblVar .= "jdw_kerja_d";
+		}
+		if ($links <> "") {
+			$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewDetail\" data-toggle=\"dropdown\"><b class=\"caret\"></b></button>";
+			$body .= "<ul class=\"dropdown-menu\">". $links . "</ul>";
+		}
+		$body = "<div class=\"btn-group\">" . $body . "</div>";
+		$item->Body = $body;
+		$item->Visible = $Security->AllowList(CurrentProjectID() . 'jdw_kerja_d');
+		if ($item->Visible) {
+			if ($DetailTableLink <> "") $DetailTableLink .= ",";
+			$DetailTableLink .= "jdw_kerja_d";
+		}
+		if ($this->ShowMultipleDetails) $item->Visible = FALSE;
+
+		// Multiple details
+		if ($this->ShowMultipleDetails) {
+			$body = $Language->Phrase("MultipleMasterDetails");
+			$body = "<div class=\"btn-group\">";
+			$links = "";
+			if ($DetailViewTblVar <> "") {
+				$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=" . $DetailViewTblVar)) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
+			}
+			if ($DetailEditTblVar <> "") {
+				$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=" . $DetailEditTblVar)) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
+			}
+			if ($DetailCopyTblVar <> "") {
+				$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=" . $DetailCopyTblVar)) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
+			}
+			if ($links <> "") {
+				$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewMasterDetail\" title=\"" . ew_HtmlTitle($Language->Phrase("MultipleMasterDetails")) . "\" data-toggle=\"dropdown\">" . $Language->Phrase("MultipleMasterDetails") . "<b class=\"caret\"></b></button>";
+				$body .= "<ul class=\"dropdown-menu ewMenu\">". $links . "</ul>";
+			}
+			$body .= "</div>";
+
+			// Multiple details
+			$oListOpt = &$option->Add("details");
+			$oListOpt->Body = $body;
+		}
+
+		// Set up detail default
+		$option = &$options["detail"];
+		$options["detail"]->DropDownButtonPhrase = $Language->Phrase("ButtonDetails");
+		$option->UseImageAndText = TRUE;
+		$ar = explode(",", $DetailTableLink);
+		$cnt = count($ar);
+		$option->UseDropDownButton = ($cnt > 1);
+		$option->UseButtonGroup = TRUE;
+		$item = &$option->Add($option->GroupOptionName);
+		$item->Body = "";
+		$item->Visible = FALSE;
 
 		// Set up action default
 		$option = &$options["action"];
@@ -676,6 +755,7 @@ class cjdw_kerja_m_view extends cjdw_kerja_m {
 		// Call Row Selected event
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
+		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->jdw_kerja_m_id->setDbValue($rs->fields('jdw_kerja_m_id'));
 		$this->jdw_kerja_m_kode->setDbValue($rs->fields('jdw_kerja_m_kode'));
 		$this->jdw_kerja_m_name->setDbValue($rs->fields('jdw_kerja_m_name'));
@@ -918,6 +998,24 @@ class cjdw_kerja_m_view extends cjdw_kerja_m {
 		$this->Page_DataRendering($sHeader);
 		$Doc->Text .= $sHeader;
 		$this->ExportDocument($Doc, $rs, $this->StartRec, $this->StopRec, "view");
+
+		// Export detail records (jdw_kerja_d)
+		if (EW_EXPORT_DETAIL_RECORDS && in_array("jdw_kerja_d", explode(",", $this->getCurrentDetailTable()))) {
+			global $jdw_kerja_d;
+			if (!isset($jdw_kerja_d)) $jdw_kerja_d = new cjdw_kerja_d;
+			$rsdetail = $jdw_kerja_d->LoadRs($jdw_kerja_d->GetDetailFilter()); // Load detail records
+			if ($rsdetail && !$rsdetail->EOF) {
+				$ExportStyle = $Doc->Style;
+				$Doc->SetStyle("h"); // Change to horizontal
+				if ($this->Export <> "csv" || EW_EXPORT_DETAIL_RECORDS_FOR_CSV) {
+					$Doc->ExportEmptyRow();
+					$detailcnt = $rsdetail->RecordCount();
+					$jdw_kerja_d->ExportDocument($Doc, $rsdetail, 1, $detailcnt);
+				}
+				$Doc->SetStyle($ExportStyle); // Restore
+				$rsdetail->Close();
+			}
+		}
 		$sFooter = $this->PageFooter;
 		$this->Page_DataRendered($sFooter);
 		$Doc->Text .= $sFooter;
@@ -1051,6 +1149,35 @@ class cjdw_kerja_m_view extends cjdw_kerja_m {
 		// Add record key QueryString
 		$sQry .= "&" . substr($this->KeyUrl("", ""), 1);
 		return $sQry;
+	}
+
+	// Set up detail parms based on QueryString
+	function SetUpDetailParms() {
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_DETAIL])) {
+			$sDetailTblVar = $_GET[EW_TABLE_SHOW_DETAIL];
+			$this->setCurrentDetailTable($sDetailTblVar);
+		} else {
+			$sDetailTblVar = $this->getCurrentDetailTable();
+		}
+		if ($sDetailTblVar <> "") {
+			$DetailTblVar = explode(",", $sDetailTblVar);
+			if (in_array("jdw_kerja_d", $DetailTblVar)) {
+				if (!isset($GLOBALS["jdw_kerja_d_grid"]))
+					$GLOBALS["jdw_kerja_d_grid"] = new cjdw_kerja_d_grid;
+				if ($GLOBALS["jdw_kerja_d_grid"]->DetailView) {
+					$GLOBALS["jdw_kerja_d_grid"]->CurrentMode = "view";
+
+					// Save current master table to detail table
+					$GLOBALS["jdw_kerja_d_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["jdw_kerja_d_grid"]->setStartRecordNumber(1);
+					$GLOBALS["jdw_kerja_d_grid"]->jdw_kerja_m_id->FldIsDetailKey = TRUE;
+					$GLOBALS["jdw_kerja_d_grid"]->jdw_kerja_m_id->CurrentValue = $this->jdw_kerja_m_id->CurrentValue;
+					$GLOBALS["jdw_kerja_d_grid"]->jdw_kerja_m_id->setSessionValue($GLOBALS["jdw_kerja_d_grid"]->jdw_kerja_m_id->CurrentValue);
+				}
+			}
+		}
 	}
 
 	// Set up Breadcrumb
@@ -1338,6 +1465,14 @@ $jdw_kerja_m_view->ShowMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php
+	if (in_array("jdw_kerja_d", explode(",", $jdw_kerja_m->getCurrentDetailTable())) && $jdw_kerja_d->DetailView) {
+?>
+<?php if ($jdw_kerja_m->getCurrentDetailTable() <> "") { ?>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("jdw_kerja_d", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "jdw_kerja_dgrid.php" ?>
+<?php } ?>
 </form>
 <?php if ($jdw_kerja_m->Export == "") { ?>
 <script type="text/javascript">
