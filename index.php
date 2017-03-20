@@ -266,8 +266,8 @@ class cdefault {
 			$this->setFailureMessage($Language->Phrase("SessionExpired"));
 		if (!$Security->IsLoggedIn()) $Security->AutoLogin();
 		$Security->LoadUserLevel(); // Load User Level
-		if ($Security->AllowList(CurrentProjectID() . 'jdw_kerja_m'))
-		$this->Page_Terminate("jdw_kerja_mlist.php"); // Exit and go to default page
+		if ($Security->AllowList(CurrentProjectID() . 'dashboard.php'))
+		$this->Page_Terminate("dashboard.php"); // Exit and go to default page
 		if ($Security->AllowList(CurrentProjectID() . 'att_log'))
 			$this->Page_Terminate("att_loglist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'cuti_normatif'))
@@ -310,6 +310,8 @@ class cdefault {
 			$this->Page_Terminate("jatah_cutilist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'jdw_kerja_d'))
 			$this->Page_Terminate("jdw_kerja_dlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'jdw_kerja_m'))
+			$this->Page_Terminate("jdw_kerja_mlist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'jdw_kerja_pegawai'))
 			$this->Page_Terminate("jdw_kerja_pegawailist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'jns_izin'))
@@ -390,8 +392,6 @@ class cdefault {
 			$this->Page_Terminate("audittraillist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't_user'))
 			$this->Page_Terminate("t_userlist.php");
-		if ($Security->AllowList(CurrentProjectID() . 'dashboard.php'))
-			$this->Page_Terminate("dashboard.php");
 		if ($Security->IsLoggedIn()) {
 			$this->setFailureMessage(ew_DeniedMsg() . "<br><br><a href=\"logout.php\">" . $Language->Phrase("BackToLogin") . "</a>");
 		} else {
