@@ -390,6 +390,8 @@ class cdefault {
 			$this->Page_Terminate("audittraillist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't_user'))
 			$this->Page_Terminate("t_userlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'dashboard.php'))
+			$this->Page_Terminate("dashboard.php");
 		if ($Security->IsLoggedIn()) {
 			$this->setFailureMessage(ew_DeniedMsg() . "<br><br><a href=\"logout.php\">" . $Language->Phrase("BackToLogin") . "</a>");
 		} else {

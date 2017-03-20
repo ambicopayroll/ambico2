@@ -583,6 +583,9 @@
   <project>
     <phrase id="bodytitle" value="AMBICO" />
     <phrase id="footertext" value="&amp;copy;2016 e.World Technology Ltd. All rights reserved." />
+    <menu id="64">
+      <phrase id="menutext" value="Dashboard" />
+    </menu>
     <menu id="63">
       <phrase id="menutext" value="Setting" />
     </menu>
@@ -2352,6 +2355,9 @@
         <phrase id="fldtagvalue3" value="0" />
         <phrase id="fldtagcaption3" value="Default" />
       </field>
+    </table>
+    <table id="dashboard_php">
+      <phrase id="tblcaption" value="Dashboard" />
     </table>
   </project>
 </ew-language>
