@@ -1,0 +1,10 @@
+11:23 AM 3/21/2017
+- baca data finger
+	- sampai dengan proses ini :: data masih mentah, yang tersimpan [tanggal dan jam] dan [pin]
+	- data tersimpan di tabel att_log
+	- tabel penghubung dengan proses berikutnya adalah tabel pegawai,
+	  karena di tabel pegawai terdapat field pegawai_pin yang terhubung dengan tabel att_log
+	- koneksi antara tabel att_log dengan tabel pegawai ::
+	  att_log.pin = pegawai.pegawai_pin
+	- sampai dengan proses ini :: sudah bisa didapat data -> scan_date, pegawai_pin, pegawai_id
+	
