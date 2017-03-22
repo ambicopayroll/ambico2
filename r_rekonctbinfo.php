@@ -692,7 +692,7 @@ class crr_rekon extends crTableCrosstab {
 		// 2nd dimension = no of distinct values
 
 		$nGrps = 1;
-		$this->SummaryFields[0] = new crSummaryField('x_durasi', 'durasi', '`durasi`', 'SUM');
+		$this->SummaryFields[0] = new crSummaryField('x_durasi_minute', 'durasi_minute', '`durasi_minute`', 'SUM');
 		$this->SummaryFields[0]->SummaryCaption = $ReportLanguage->Phrase("RptSum");
 		$this->SummaryFields[0]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
 		$this->SummaryFields[0]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);

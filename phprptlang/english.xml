@@ -350,6 +350,12 @@
   <project>
     <phrase id="bodytitle" value="AMBICO" />
     <phrase id="footertext" value="&amp;copy;2017 AMBICO. All rights reserved." />
+    <menu id="64">
+      <phrase id="menutext" value="view 1" />
+    </menu>
+    <menu id="65">
+      <phrase id="menutext" value="r rekon 2" />
+    </menu>
     <menu id="63">
       <phrase id="menutext" value="r rekon" />
     </menu>
@@ -2226,6 +2232,54 @@
       </field>
       <field id="keterangan">
         <phrase id="fldcaption" value="keterangan" />
+      </field>
+    </table>
+    <table id="view1">
+      <phrase id="tblcaption" value="view 1" />
+      <field id="pegawai_nama">
+        <phrase id="fldcaption" value="pegawai nama" />
+      </field>
+      <field id="pegawai_nip">
+        <phrase id="fldcaption" value="pegawai nip" />
+      </field>
+      <field id="jdw_kerja_m_name">
+        <phrase id="fldcaption" value="jdw kerja m name" />
+      </field>
+      <field id="jdw_kerja_m_kode">
+        <phrase id="fldcaption" value="jdw kerja m kode" />
+      </field>
+      <field id="tgl_shift">
+        <phrase id="fldcaption" value="tgl shift" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="jdw_kerja_m_kode2">
+        <phrase id="fldcaption" value="jdw kerja m kode 2" />
+      </field>
+    </table>
+    <table id="r_rekon2">
+      <phrase id="tblcaption" value="r rekon 2" />
+      <field id="pegawai_nama">
+        <phrase id="fldcaption" value="pegawai nama" />
+      </field>
+      <field id="pegawai_nip">
+        <phrase id="fldcaption" value="pegawai nip" />
+      </field>
+      <field id="jdw_kerja_m_name">
+        <phrase id="fldcaption" value="jdw kerja m name" />
+      </field>
+      <field id="jdw_kerja_m_kode">
+        <phrase id="fldcaption" value="jdw kerja m kode" />
+      </field>
+      <field id="tgl_shift">
+        <phrase id="fldcaption" value="tgl shift" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="jdw_kerja_m_kode2">
+        <phrase id="fldcaption" value="jdw kerja m kode 2" />
       </field>
     </table>
   </project>

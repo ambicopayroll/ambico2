@@ -6,16 +6,16 @@ ob_start();
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "phprptinc/ewmysql.php") ?>
 <?php include_once "phprptinc/ewrfn10.php" ?>
 <?php include_once "phprptinc/ewrusrfn10.php" ?>
-<?php include_once "r_rekonctbinfo.php" ?>
+<?php include_once "r_rekon2ctbinfo.php" ?>
 <?php
 
 //
 // Page class
 //
 
-$r_rekon_crosstab = NULL; // Initialize page object first
+$r_rekon2_crosstab = NULL; // Initialize page object first
 
-class crr_rekon_crosstab extends crr_rekon {
+class crr_rekon2_crosstab extends crr_rekon2 {
 
 	// Page ID
 	var $PageID = 'crosstab';
@@ -24,7 +24,7 @@ class crr_rekon_crosstab extends crr_rekon {
 	var $ProjectID = "{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}";
 
 	// Page object name
-	var $PageObjName = 'r_rekon_crosstab';
+	var $PageObjName = 'r_rekon2_crosstab';
 
 	// Page name
 	function PageName() {
@@ -203,10 +203,10 @@ class crr_rekon_crosstab extends crr_rekon {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (r_rekon)
-		if (!isset($GLOBALS["r_rekon"])) {
-			$GLOBALS["r_rekon"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["r_rekon"];
+		// Table object (r_rekon2)
+		if (!isset($GLOBALS["r_rekon2"])) {
+			$GLOBALS["r_rekon2"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["r_rekon2"];
 		}
 
 		// Initialize URLs
@@ -221,7 +221,7 @@ class crr_rekon_crosstab extends crr_rekon {
 
 		// Table name (for backward compatibility)
 		if (!defined("EWR_TABLE_NAME"))
-			define("EWR_TABLE_NAME", 'r_rekon', TRUE);
+			define("EWR_TABLE_NAME", 'r_rekon2', TRUE);
 
 		// Start timer
 		$GLOBALS["gsTimer"] = new crTimer();
@@ -248,7 +248,7 @@ class crr_rekon_crosstab extends crr_rekon {
 		// Filter options
 		$this->FilterOptions = new crListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption fr_rekoncrosstab";
+		$this->FilterOptions->TagClassName = "ewFilterOption fr_rekon2crosstab";
 
 		// Generate report options
 		$this->GenerateOptions = new crListOptions();
@@ -267,7 +267,7 @@ class crr_rekon_crosstab extends crr_rekon {
 		$Security = new crAdvancedSecurity();
 		if (!$Security->IsLoggedIn()) $Security->AutoLogin(); // Auto login
 		$Security->TablePermission_Loading();
-		$Security->LoadCurrentUserLevel($this->ProjectID . 'r_rekon');
+		$Security->LoadCurrentUserLevel($this->ProjectID . 'r_rekon2');
 		$Security->TablePermission_Loaded();
 		if (!$Security->CanList()) {
 			$Security->SaveLastUrl();
@@ -293,7 +293,7 @@ class crr_rekon_crosstab extends crr_rekon {
 		$gsEmailContentType = @$_POST["contenttype"]; // Get email content type
 
 		// Setup placeholder
-		$this->pegawai_id->PlaceHolder = $this->pegawai_id->FldCaption();
+		$this->pegawai_nip->PlaceHolder = $this->pegawai_nip->FldCaption();
 		$this->tgl_shift->PlaceHolder = $this->tgl_shift->FldCaption();
 
 		// Setup export options
@@ -355,7 +355,7 @@ class crr_rekon_crosstab extends crr_rekon {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = $this->PageUrl() . "export=email";
-		$item->Body = "<a title=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" data-caption=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" id=\"emf_r_rekon\" href=\"javascript:void(0);\" onclick=\"ewr_EmailDialogShow({lnk:'emf_r_rekon',hdr:ewLanguage.Phrase('ExportToEmail'),url:'$url',exportid:'$exportid',el:this});\">" . $ReportLanguage->Phrase("ExportToEmail") . "</a>";
+		$item->Body = "<a title=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" data-caption=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" id=\"emf_r_rekon2\" href=\"javascript:void(0);\" onclick=\"ewr_EmailDialogShow({lnk:'emf_r_rekon2',hdr:ewLanguage.Phrase('ExportToEmail'),url:'$url',exportid:'$exportid',el:this});\">" . $ReportLanguage->Phrase("ExportToEmail") . "</a>";
 		$item->Visible = TRUE;
 		$ReportTypes["email"] = $item->Visible ? $ReportLanguage->Phrase("ReportFormEmail") : "";
 		$ReportOptions["ReportTypes"] = $ReportTypes;
@@ -373,10 +373,10 @@ class crr_rekon_crosstab extends crr_rekon {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fr_rekoncrosstab\" href=\"#\">" . $ReportLanguage->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fr_rekon2crosstab\" href=\"#\">" . $ReportLanguage->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fr_rekoncrosstab\" href=\"#\">" . $ReportLanguage->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fr_rekon2crosstab\" href=\"#\">" . $ReportLanguage->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton; // v8
@@ -410,7 +410,7 @@ class crr_rekon_crosstab extends crr_rekon {
 		// Filter panel button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = $this->FilterApplied ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-caption=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-toggle=\"button\" data-form=\"fr_rekoncrosstab\">" . $ReportLanguage->Phrase("SearchBtn") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-caption=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-toggle=\"button\" data-form=\"fr_rekon2crosstab\">" . $ReportLanguage->Phrase("SearchBtn") . "</button>";
 		$item->Visible = TRUE;
 
 		// Reset filter
@@ -544,9 +544,9 @@ class crr_rekon_crosstab extends crr_rekon {
 		$this->Sort = $this->GetSort($this->GenOptions);
 
 		// Popup values and selections
-		$this->pegawai_id->SelectionList = "";
-		$this->pegawai_id->DefaultSelectionList = "";
-		$this->pegawai_id->ValueList = "";
+		$this->pegawai_nip->SelectionList = "";
+		$this->pegawai_nip->DefaultSelectionList = "";
+		$this->pegawai_nip->ValueList = "";
 		$this->tgl_shift->SelectionList = "";
 		$this->tgl_shift->DefaultSelectionList = "";
 		$this->tgl_shift->ValueList = "";
@@ -708,14 +708,14 @@ class crr_rekon_crosstab extends crr_rekon {
 		if ($opt == 1) { // Get first group
 
 	//		$rsgrp->MoveFirst(); // NOTE: no need to move position
-			$this->pegawai_id->setDbValue(""); // Init first value
+			$this->pegawai_nama->setDbValue(""); // Init first value
 		} else { // Get next group
 			$rsgrp->MoveNext();
 		}
 		if (!$rsgrp->EOF) {
-			$this->pegawai_id->setDbValue($rsgrp->fields[0]);
+			$this->pegawai_nama->setDbValue($rsgrp->fields[0]);
 		} else {
-			$this->pegawai_id->setDbValue("");
+			$this->pegawai_nama->setDbValue("");
 		}
 	}
 
@@ -732,8 +732,9 @@ class crr_rekon_crosstab extends crr_rekon {
 		}
 		if (!$rs->EOF) {
 			if ($opt <> 1)
-				$this->pegawai_id->setDbValue($rs->fields('pegawai_id'));
-			$cntbase = 1;
+				$this->pegawai_nama->setDbValue($rs->fields('pegawai_nama'));
+			$this->pegawai_nip->setDbValue($rs->fields('pegawai_nip'));
+			$cntbase = 2;
 			$cnt = count($this->SummaryFields);
 			for ($is = 0; $is < $cnt; $is++) {
 				$smry = &$this->SummaryFields[$is];
@@ -749,7 +750,8 @@ class crr_rekon_crosstab extends crr_rekon {
 				$cntbase += ($smry->SummaryType == "AVG") ? 2*($cntval-1) : ($cntval-1);
 			}
 		} else {
-			$this->pegawai_id->setDbValue("");
+			$this->pegawai_nama->setDbValue("");
+			$this->pegawai_nip->setDbValue("");
 		}
 	}
 
@@ -757,9 +759,13 @@ class crr_rekon_crosstab extends crr_rekon {
 	function ChkLvlBreak($lvl) {
 		switch ($lvl) {
 			case 1:
-				return (is_null($this->pegawai_id->CurrentValue) && !is_null($this->pegawai_id->OldValue)) ||
-					(!is_null($this->pegawai_id->CurrentValue) && is_null($this->pegawai_id->OldValue)) ||
-					($this->pegawai_id->GroupValue() <> $this->pegawai_id->GroupOldValue());
+				return (is_null($this->pegawai_nama->CurrentValue) && !is_null($this->pegawai_nama->OldValue)) ||
+					(!is_null($this->pegawai_nama->CurrentValue) && is_null($this->pegawai_nama->OldValue)) ||
+					($this->pegawai_nama->GroupValue() <> $this->pegawai_nama->GroupOldValue());
+			case 2:
+				return (is_null($this->pegawai_nip->CurrentValue) && !is_null($this->pegawai_nip->OldValue)) ||
+					(!is_null($this->pegawai_nip->CurrentValue) && is_null($this->pegawai_nip->OldValue)) ||
+					($this->pegawai_nip->GroupValue() <> $this->pegawai_nip->GroupOldValue()) || $this->ChkLvlBreak(1); // Recurse upper level
 		}
 	}
 
@@ -860,37 +866,37 @@ class crr_rekon_crosstab extends crr_rekon {
 			$popupname = $_GET["popup"];
 
 			// Check popup name
-			// Build distinct values for pegawai_id
+			// Build distinct values for pegawai_nip
 
-			if ($popupname == 'r_rekon_pegawai_id') {
+			if ($popupname == 'r_rekon2_pegawai_nip') {
 				$bNullValue = FALSE;
 				$bEmptyValue = FALSE;
 				$sFilter = $this->Filter;
 
 				// Call Page Filtering event
-				$this->Page_Filtering($this->pegawai_id, $sFilter, "popup");
-				$sSql = ewr_BuildReportSql($this->pegawai_id->SqlSelect, $this->getSqlWhere(), $this->getSqlGroupBy(), $this->getSqlHaving(), $this->pegawai_id->SqlOrderBy, $sFilter, "");
+				$this->Page_Filtering($this->pegawai_nip, $sFilter, "popup");
+				$sSql = ewr_BuildReportSql($this->pegawai_nip->SqlSelect, $this->getSqlWhere(), $this->getSqlGroupBy(), $this->getSqlHaving(), $this->pegawai_nip->SqlOrderBy, $sFilter, "");
 				$rswrk = $conn->Execute($sSql);
 				while ($rswrk && !$rswrk->EOF) {
-					$this->pegawai_id->setDbValue($rswrk->fields[0]);
-					$this->pegawai_id->ViewValue = @$rswrk->fields[1];
-					if (is_null($this->pegawai_id->CurrentValue)) {
+					$this->pegawai_nip->setDbValue($rswrk->fields[0]);
+					$this->pegawai_nip->ViewValue = @$rswrk->fields[1];
+					if (is_null($this->pegawai_nip->CurrentValue)) {
 						$bNullValue = TRUE;
-					} elseif ($this->pegawai_id->CurrentValue == "") {
+					} elseif ($this->pegawai_nip->CurrentValue == "") {
 						$bEmptyValue = TRUE;
 					} else {
-						$this->pegawai_id->GroupViewValue = $this->pegawai_id->GroupValue();
-						ewr_SetupDistinctValues($this->pegawai_id->ValueList, $this->pegawai_id->GroupValue(), $this->pegawai_id->GroupViewValue, FALSE);
+						$this->pegawai_nip->GroupViewValue = $this->pegawai_nip->GroupValue();
+						ewr_SetupDistinctValues($this->pegawai_nip->ValueList, $this->pegawai_nip->GroupValue(), $this->pegawai_nip->GroupViewValue, FALSE);
 					}
 					$rswrk->MoveNext();
 				}
 				if ($rswrk)
 					$rswrk->Close();
 				if ($bEmptyValue)
-					ewr_SetupDistinctValues($this->pegawai_id->ValueList, EWR_EMPTY_VALUE, $ReportLanguage->Phrase("EmptyLabel"), FALSE);
+					ewr_SetupDistinctValues($this->pegawai_nip->ValueList, EWR_EMPTY_VALUE, $ReportLanguage->Phrase("EmptyLabel"), FALSE);
 				if ($bNullValue)
-					ewr_SetupDistinctValues($this->pegawai_id->ValueList, EWR_NULL_VALUE, $ReportLanguage->Phrase("NullLabel"), FALSE);
-				$fld = &$this->pegawai_id;
+					ewr_SetupDistinctValues($this->pegawai_nip->ValueList, EWR_NULL_VALUE, $ReportLanguage->Phrase("NullLabel"), FALSE);
+				$fld = &$this->pegawai_nip;
 			}
 
 			// Output data as Json
@@ -938,27 +944,27 @@ class crr_rekon_crosstab extends crr_rekon {
 		} elseif (@$_GET["cmd"] <> "") {
 			$sCmd = $_GET["cmd"];
 			if (strtolower($sCmd) == "reset") {
-				$this->ClearSessionSelection('pegawai_id');
-				$_SESSION["sel_r_rekon_tgl_shift"] = "";
-				$_SESSION["rf_r_rekon_tgl_shift"] = "";
-				$_SESSION["rt_r_rekon_tgl_shift"] = "";
+				$this->ClearSessionSelection('pegawai_nip');
+				$_SESSION["sel_r_rekon2_tgl_shift"] = "";
+				$_SESSION["rf_r_rekon2_tgl_shift"] = "";
+				$_SESSION["rt_r_rekon2_tgl_shift"] = "";
 				$this->ResetPager();
 			}
 		}
 
 		// Load selection criteria to array
-		// Get pegawai_id selected values
+		// Get pegawai_nip selected values
 
-		if (is_array(@$_SESSION["sel_r_rekon_pegawai_id"])) {
-			$this->LoadSelectionFromSession('pegawai_id');
-		} elseif (@$_SESSION["sel_r_rekon_pegawai_id"] == EWR_INIT_VALUE) { // Select all
-			$this->pegawai_id->SelectionList = "";
+		if (is_array(@$_SESSION["sel_r_rekon2_pegawai_nip"])) {
+			$this->LoadSelectionFromSession('pegawai_nip');
+		} elseif (@$_SESSION["sel_r_rekon2_pegawai_nip"] == EWR_INIT_VALUE) { // Select all
+			$this->pegawai_nip->SelectionList = "";
 		}
-		if (is_array(@$_SESSION["sel_r_rekon_tgl_shift"])) {
-			$this->tgl_shift->SelectionList = @$_SESSION["sel_r_rekon_tgl_shift"];
-			$this->tgl_shift->RangeFrom = @$_SESSION["rf_r_rekon_tgl_shift"];
-			$this->tgl_shift->RangeTo = @$_SESSION["rt_r_rekon_tgl_shift"];
-		} elseif (@$_SESSION["sel_r_rekon_tgl_shift"] == EWR_INIT_VALUE) { // Select all
+		if (is_array(@$_SESSION["sel_r_rekon2_tgl_shift"])) {
+			$this->tgl_shift->SelectionList = @$_SESSION["sel_r_rekon2_tgl_shift"];
+			$this->tgl_shift->RangeFrom = @$_SESSION["rf_r_rekon2_tgl_shift"];
+			$this->tgl_shift->RangeTo = @$_SESSION["rt_r_rekon2_tgl_shift"];
+		} elseif (@$_SESSION["sel_r_rekon2_tgl_shift"] == EWR_INIT_VALUE) { // Select all
 			$this->tgl_shift->SelectionList = "";
 		}
 	}
@@ -1073,9 +1079,13 @@ class crr_rekon_crosstab extends crr_rekon {
 
 		if ($this->RowType == EWR_ROWTYPE_TOTAL) { // Summary row
 
-			// pegawai_id
-			$this->pegawai_id->GroupViewValue = $this->pegawai_id->GroupOldValue();
-			$this->pegawai_id->CellAttrs["class"] = ($this->RowGroupLevel == 1) ? "ewRptGrpSummary1" : "ewRptGrpField1";
+			// pegawai_nama
+			$this->pegawai_nama->GroupViewValue = $this->pegawai_nama->GroupOldValue();
+			$this->pegawai_nama->CellAttrs["class"] = ($this->RowGroupLevel == 1) ? "ewRptGrpSummary1" : "ewRptGrpField1";
+
+			// pegawai_nip
+			$this->pegawai_nip->GroupViewValue = $this->pegawai_nip->GroupOldValue();
+			$this->pegawai_nip->CellAttrs["class"] = ($this->RowGroupLevel == 2) ? "ewRptGrpSummary2" : "ewRptGrpField2";
 
 			// Set up summary values
 			$smry = &$this->SummaryFields[0];
@@ -1086,15 +1096,24 @@ class crr_rekon_crosstab extends crr_rekon {
 				$this->SummaryCellAttrs[$i]["class"] = ($this->RowTotalType == EWR_ROWTOTAL_GROUP) ? "ewRptGrpSummary" . $this->RowGroupLevel : "";
 			}
 
-			// pegawai_id
-			$this->pegawai_id->HrefValue = "";
+			// pegawai_nama
+			$this->pegawai_nama->HrefValue = "";
+
+			// pegawai_nip
+			$this->pegawai_nip->HrefValue = "";
 		} else {
 
-			// pegawai_id
-			$this->pegawai_id->GroupViewValue = $this->pegawai_id->GroupValue();
-			$this->pegawai_id->CellAttrs["class"] = "ewRptGrpField1";
-			if ($this->pegawai_id->GroupValue() == $this->pegawai_id->GroupOldValue() && !$this->ChkLvlBreak(1))
-				$this->pegawai_id->GroupViewValue = "&nbsp;";
+			// pegawai_nama
+			$this->pegawai_nama->GroupViewValue = $this->pegawai_nama->GroupValue();
+			$this->pegawai_nama->CellAttrs["class"] = "ewRptGrpField1";
+			if ($this->pegawai_nama->GroupValue() == $this->pegawai_nama->GroupOldValue() && !$this->ChkLvlBreak(1))
+				$this->pegawai_nama->GroupViewValue = "&nbsp;";
+
+			// pegawai_nip
+			$this->pegawai_nip->GroupViewValue = $this->pegawai_nip->GroupValue();
+			$this->pegawai_nip->CellAttrs["class"] = "ewRptGrpField2";
+			if ($this->pegawai_nip->GroupValue() == $this->pegawai_nip->GroupOldValue() && !$this->ChkLvlBreak(2))
+				$this->pegawai_nip->GroupViewValue = "&nbsp;";
 
 			// Set up summary values
 			$smry = &$this->SummaryFields[0];
@@ -1105,22 +1124,35 @@ class crr_rekon_crosstab extends crr_rekon {
 				$this->SummaryCellAttrs[$i]["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
 			}
 
-			// pegawai_id
-			$this->pegawai_id->HrefValue = "";
+			// pegawai_nama
+			$this->pegawai_nama->HrefValue = "";
+
+			// pegawai_nip
+			$this->pegawai_nip->HrefValue = "";
 		}
 
 		// Call Cell_Rendered event
 		if ($this->RowType == EWR_ROWTYPE_TOTAL) { // Summary row
 
-			// pegawai_id
+			// pegawai_nama
 			$this->CurrentIndex = 0; // Current index
-			$CurrentValue = $this->pegawai_id->GroupOldValue();
-			$ViewValue = &$this->pegawai_id->GroupViewValue;
-			$ViewAttrs = &$this->pegawai_id->ViewAttrs;
-			$CellAttrs = &$this->pegawai_id->CellAttrs;
-			$HrefValue = &$this->pegawai_id->HrefValue;
-			$LinkAttrs = &$this->pegawai_id->LinkAttrs;
-			$this->Cell_Rendered($this->pegawai_id, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+			$CurrentValue = $this->pegawai_nama->GroupOldValue();
+			$ViewValue = &$this->pegawai_nama->GroupViewValue;
+			$ViewAttrs = &$this->pegawai_nama->ViewAttrs;
+			$CellAttrs = &$this->pegawai_nama->CellAttrs;
+			$HrefValue = &$this->pegawai_nama->HrefValue;
+			$LinkAttrs = &$this->pegawai_nama->LinkAttrs;
+			$this->Cell_Rendered($this->pegawai_nama, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+
+			// pegawai_nip
+			$this->CurrentIndex = 1; // Current index
+			$CurrentValue = $this->pegawai_nip->GroupOldValue();
+			$ViewValue = &$this->pegawai_nip->GroupViewValue;
+			$ViewAttrs = &$this->pegawai_nip->ViewAttrs;
+			$CellAttrs = &$this->pegawai_nip->CellAttrs;
+			$HrefValue = &$this->pegawai_nip->HrefValue;
+			$LinkAttrs = &$this->pegawai_nip->LinkAttrs;
+			$this->Cell_Rendered($this->pegawai_nip, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
 			for ($i = 0; $i < $scvcnt; $i++) {
 				$this->CurrentIndex = $i;
 				$cnt = count($this->SummaryFields);
@@ -1137,15 +1169,25 @@ class crr_rekon_crosstab extends crr_rekon {
 			}
 		} else {
 
-			// pegawai_id
+			// pegawai_nama
 			$this->CurrentIndex = 0; // Group index
-			$CurrentValue = $this->pegawai_id->GroupValue();
-			$ViewValue = &$this->pegawai_id->GroupViewValue;
-			$ViewAttrs = &$this->pegawai_id->ViewAttrs;
-			$CellAttrs = &$this->pegawai_id->CellAttrs;
-			$HrefValue = &$this->pegawai_id->HrefValue;
-			$LinkAttrs = &$this->pegawai_id->LinkAttrs;
-			$this->Cell_Rendered($this->pegawai_id, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+			$CurrentValue = $this->pegawai_nama->GroupValue();
+			$ViewValue = &$this->pegawai_nama->GroupViewValue;
+			$ViewAttrs = &$this->pegawai_nama->ViewAttrs;
+			$CellAttrs = &$this->pegawai_nama->CellAttrs;
+			$HrefValue = &$this->pegawai_nama->HrefValue;
+			$LinkAttrs = &$this->pegawai_nama->LinkAttrs;
+			$this->Cell_Rendered($this->pegawai_nama, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+
+			// pegawai_nip
+			$this->CurrentIndex = 1; // Group index
+			$CurrentValue = $this->pegawai_nip->GroupValue();
+			$ViewValue = &$this->pegawai_nip->GroupViewValue;
+			$ViewAttrs = &$this->pegawai_nip->ViewAttrs;
+			$CellAttrs = &$this->pegawai_nip->CellAttrs;
+			$HrefValue = &$this->pegawai_nip->HrefValue;
+			$LinkAttrs = &$this->pegawai_nip->LinkAttrs;
+			$this->Cell_Rendered($this->pegawai_nip, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
 			for ($i = 0; $i < $scvcnt; $i++) {
 				$this->CurrentIndex = $i;
 				$cnt = count($this->SummaryFields);
@@ -1170,7 +1212,8 @@ class crr_rekon_crosstab extends crr_rekon {
 	// Setup field count
 	function SetupFieldCount() {
 		$this->GrpColumnCount = 0;
-		if ($this->pegawai_id->Visible) $this->GrpColumnCount += 1;
+		if ($this->pegawai_nama->Visible) $this->GrpColumnCount += 1;
+		if ($this->pegawai_nip->Visible) $this->GrpColumnCount += 1;
 	}
 
 	// Set up Breadcrumb
@@ -1208,27 +1251,27 @@ class crr_rekon_crosstab extends crr_rekon {
 		// Reset extended filter if filter changed
 		if ($bPostBack) {
 
-			// Clear extended filter for field pegawai_id
-			if ($this->ClearExtFilter == 'r_rekon_pegawai_id')
-				$this->SetSessionFilterValues('', '=', 'AND', '', '=', 'pegawai_id');
+			// Clear extended filter for field pegawai_nip
+			if ($this->ClearExtFilter == 'r_rekon2_pegawai_nip')
+				$this->SetSessionFilterValues('', '=', 'AND', '', '=', 'pegawai_nip');
 
 			// Clear extended filter for field tgl_shift
-			if ($this->ClearExtFilter == 'r_rekon_tgl_shift')
+			if ($this->ClearExtFilter == 'r_rekon2_tgl_shift')
 				$this->SetSessionFilterValues('', '=', 'AND', '', '=', 'tgl_shift');
 
 		// Reset search command
 		} elseif (@$_GET["cmd"] == "reset") {
 
 			// Load default values
-			$this->SetSessionFilterValues($this->pegawai_id->SearchValue, $this->pegawai_id->SearchOperator, $this->pegawai_id->SearchCondition, $this->pegawai_id->SearchValue2, $this->pegawai_id->SearchOperator2, 'pegawai_id'); // Field pegawai_id
+			$this->SetSessionFilterValues($this->pegawai_nip->SearchValue, $this->pegawai_nip->SearchOperator, $this->pegawai_nip->SearchCondition, $this->pegawai_nip->SearchValue2, $this->pegawai_nip->SearchOperator2, 'pegawai_nip'); // Field pegawai_nip
 			$this->SetSessionFilterValues($this->tgl_shift->SearchValue, $this->tgl_shift->SearchOperator, $this->tgl_shift->SearchCondition, $this->tgl_shift->SearchValue2, $this->tgl_shift->SearchOperator2, 'tgl_shift'); // Field tgl_shift
 
 			//$bSetupFilter = TRUE; // No need to set up, just use default
 		} else {
 			$bRestoreSession = !$this->SearchCommand;
 
-			// Field pegawai_id
-			if ($this->GetFilterValues($this->pegawai_id)) {
+			// Field pegawai_nip
+			if ($this->GetFilterValues($this->pegawai_nip)) {
 				$bSetupFilter = TRUE;
 			}
 
@@ -1244,7 +1287,7 @@ class crr_rekon_crosstab extends crr_rekon {
 
 		// Restore session
 		if ($bRestoreSession) {
-			$this->GetSessionFilterValues($this->pegawai_id); // Field pegawai_id
+			$this->GetSessionFilterValues($this->pegawai_nip); // Field pegawai_nip
 			$this->GetSessionFilterValues($this->tgl_shift); // Field tgl_shift
 		}
 
@@ -1252,27 +1295,27 @@ class crr_rekon_crosstab extends crr_rekon {
 		$this->Page_FilterValidated();
 
 		// Build SQL
-		$this->BuildExtendedFilter($this->pegawai_id, $sFilter, FALSE, TRUE); // Field pegawai_id
+		$this->BuildExtendedFilter($this->pegawai_nip, $sFilter, FALSE, TRUE); // Field pegawai_nip
 		$this->BuildExtendedFilter($this->tgl_shift, $sFilter, FALSE, TRUE); // Field tgl_shift
 
 		// Save parms to session
-		$this->SetSessionFilterValues($this->pegawai_id->SearchValue, $this->pegawai_id->SearchOperator, $this->pegawai_id->SearchCondition, $this->pegawai_id->SearchValue2, $this->pegawai_id->SearchOperator2, 'pegawai_id'); // Field pegawai_id
+		$this->SetSessionFilterValues($this->pegawai_nip->SearchValue, $this->pegawai_nip->SearchOperator, $this->pegawai_nip->SearchCondition, $this->pegawai_nip->SearchValue2, $this->pegawai_nip->SearchOperator2, 'pegawai_nip'); // Field pegawai_nip
 		$this->SetSessionFilterValues($this->tgl_shift->SearchValue, $this->tgl_shift->SearchOperator, $this->tgl_shift->SearchCondition, $this->tgl_shift->SearchValue2, $this->tgl_shift->SearchOperator2, 'tgl_shift'); // Field tgl_shift
 
 		// Setup filter
 		if ($bSetupFilter) {
 
-			// Field pegawai_id
+			// Field pegawai_nip
 			$sWrk = "";
-			$this->BuildExtendedFilter($this->pegawai_id, $sWrk);
-			ewr_LoadSelectionFromFilter($this->pegawai_id, $sWrk, $this->pegawai_id->SelectionList);
-			$_SESSION['sel_r_rekon_pegawai_id'] = ($this->pegawai_id->SelectionList == "") ? EWR_INIT_VALUE : $this->pegawai_id->SelectionList;
+			$this->BuildExtendedFilter($this->pegawai_nip, $sWrk);
+			ewr_LoadSelectionFromFilter($this->pegawai_nip, $sWrk, $this->pegawai_nip->SelectionList);
+			$_SESSION['sel_r_rekon2_pegawai_nip'] = ($this->pegawai_nip->SelectionList == "") ? EWR_INIT_VALUE : $this->pegawai_nip->SelectionList;
 
 			// Field tgl_shift
 			$sWrk = "";
 			$this->BuildExtendedFilter($this->tgl_shift, $sWrk);
 			ewr_LoadSelectionFromFilter($this->tgl_shift, $sWrk, $this->tgl_shift->SelectionList);
-			$_SESSION['sel_r_rekon_tgl_shift'] = ($this->tgl_shift->SelectionList == "") ? EWR_INIT_VALUE : $this->tgl_shift->SelectionList;
+			$_SESSION['sel_r_rekon2_tgl_shift'] = ($this->tgl_shift->SelectionList == "") ? EWR_INIT_VALUE : $this->tgl_shift->SelectionList;
 		}
 		return $sFilter;
 	}
@@ -1473,18 +1516,18 @@ class crr_rekon_crosstab extends crr_rekon {
 	// Get dropdown value from session
 	function GetSessionDropDownValue(&$fld) {
 		$parm = substr($fld->FldVar, 2);
-		$this->GetSessionValue($fld->DropDownValue, 'sv_r_rekon_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator, 'so_r_rekon_' . $parm);
+		$this->GetSessionValue($fld->DropDownValue, 'sv_r_rekon2_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator, 'so_r_rekon2_' . $parm);
 	}
 
 	// Get filter values from session
 	function GetSessionFilterValues(&$fld) {
 		$parm = substr($fld->FldVar, 2);
-		$this->GetSessionValue($fld->SearchValue, 'sv_r_rekon_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator, 'so_r_rekon_' . $parm);
-		$this->GetSessionValue($fld->SearchCondition, 'sc_r_rekon_' . $parm);
-		$this->GetSessionValue($fld->SearchValue2, 'sv2_r_rekon_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator2, 'so2_r_rekon_' . $parm);
+		$this->GetSessionValue($fld->SearchValue, 'sv_r_rekon2_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator, 'so_r_rekon2_' . $parm);
+		$this->GetSessionValue($fld->SearchCondition, 'sc_r_rekon2_' . $parm);
+		$this->GetSessionValue($fld->SearchValue2, 'sv2_r_rekon2_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator2, 'so2_r_rekon2_' . $parm);
 	}
 
 	// Get value from session
@@ -1495,17 +1538,17 @@ class crr_rekon_crosstab extends crr_rekon {
 
 	// Set dropdown value to session
 	function SetSessionDropDownValue($sv, $so, $parm) {
-		$_SESSION['sv_r_rekon_' . $parm] = $sv;
-		$_SESSION['so_r_rekon_' . $parm] = $so;
+		$_SESSION['sv_r_rekon2_' . $parm] = $sv;
+		$_SESSION['so_r_rekon2_' . $parm] = $so;
 	}
 
 	// Set filter values to session
 	function SetSessionFilterValues($sv1, $so1, $sc, $sv2, $so2, $parm) {
-		$_SESSION['sv_r_rekon_' . $parm] = $sv1;
-		$_SESSION['so_r_rekon_' . $parm] = $so1;
-		$_SESSION['sc_r_rekon_' . $parm] = $sc;
-		$_SESSION['sv2_r_rekon_' . $parm] = $sv2;
-		$_SESSION['so2_r_rekon_' . $parm] = $so2;
+		$_SESSION['sv_r_rekon2_' . $parm] = $sv1;
+		$_SESSION['so_r_rekon2_' . $parm] = $so1;
+		$_SESSION['sc_r_rekon2_' . $parm] = $sc;
+		$_SESSION['sv2_r_rekon2_' . $parm] = $sv2;
+		$_SESSION['so2_r_rekon2_' . $parm] = $so2;
 	}
 
 	// Check if has Session filter values
@@ -1539,10 +1582,6 @@ class crr_rekon_crosstab extends crr_rekon {
 		// Check if validation required
 		if (!EWR_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!ewr_CheckInteger($this->pegawai_id->SearchValue)) {
-			if ($gsFormError <> "") $gsFormError .= "<br>";
-			$gsFormError .= $this->pegawai_id->FldErrMsg();
-		}
 		if (!ewr_CheckDateDef($this->tgl_shift->SearchValue)) {
 			if ($gsFormError <> "") $gsFormError .= "<br>";
 			$gsFormError .= $this->tgl_shift->FldErrMsg();
@@ -1567,17 +1606,17 @@ class crr_rekon_crosstab extends crr_rekon {
 
 	// Clear selection stored in session
 	function ClearSessionSelection($parm) {
-		$_SESSION["sel_r_rekon_$parm"] = "";
-		$_SESSION["rf_r_rekon_$parm"] = "";
-		$_SESSION["rt_r_rekon_$parm"] = "";
+		$_SESSION["sel_r_rekon2_$parm"] = "";
+		$_SESSION["rf_r_rekon2_$parm"] = "";
+		$_SESSION["rt_r_rekon2_$parm"] = "";
 	}
 
 	// Load selection from session
 	function LoadSelectionFromSession($parm) {
 		$fld = &$this->fields($parm);
-		$fld->SelectionList = @$_SESSION["sel_r_rekon_$parm"];
-		$fld->RangeFrom = @$_SESSION["rf_r_rekon_$parm"];
-		$fld->RangeTo = @$_SESSION["rt_r_rekon_$parm"];
+		$fld->SelectionList = @$_SESSION["sel_r_rekon2_$parm"];
+		$fld->RangeFrom = @$_SESSION["rf_r_rekon2_$parm"];
+		$fld->RangeTo = @$_SESSION["rt_r_rekon2_$parm"];
 	}
 
 	// Load default value for filters
@@ -1597,13 +1636,13 @@ class crr_rekon_crosstab extends crr_rekon {
 		* $sv2 - Default ext filter value 2 (if operator 2 is enabled)
 		*/
 
-		// Field pegawai_id
-		$this->SetDefaultExtFilter($this->pegawai_id, "=", NULL, 'AND', "=", NULL);
-		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->pegawai_id);
+		// Field pegawai_nip
+		$this->SetDefaultExtFilter($this->pegawai_nip, "LIKE", NULL, 'AND', "=", NULL);
+		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->pegawai_nip);
 		$sWrk = "";
-		$this->BuildExtendedFilter($this->pegawai_id, $sWrk, TRUE);
-		ewr_LoadSelectionFromFilter($this->pegawai_id, $sWrk, $this->pegawai_id->DefaultSelectionList);
-		if (!$this->SearchCommand) $this->pegawai_id->SelectionList = $this->pegawai_id->DefaultSelectionList;
+		$this->BuildExtendedFilter($this->pegawai_nip, $sWrk, TRUE);
+		ewr_LoadSelectionFromFilter($this->pegawai_nip, $sWrk, $this->pegawai_nip->DefaultSelectionList);
+		if (!$this->SearchCommand) $this->pegawai_nip->SelectionList = $this->pegawai_nip->DefaultSelectionList;
 
 		// Field tgl_shift
 		$this->SetDefaultExtFilter($this->tgl_shift, "BETWEEN", NULL, 'AND', "=", NULL);
@@ -1616,8 +1655,8 @@ class crr_rekon_crosstab extends crr_rekon {
 		* Set up default values for popup filters
 		*/
 
-		// Field pegawai_id
-		// $this->pegawai_id->DefaultSelectionList = array("val1", "val2");
+		// Field pegawai_nip
+		// $this->pegawai_nip->DefaultSelectionList = array("val1", "val2");
 		// Field tgl_shift
 		// $this->tgl_shift->DefaultSelectionList = array("val1", "val2");
 
@@ -1626,12 +1665,12 @@ class crr_rekon_crosstab extends crr_rekon {
 	// Check if filter applied
 	function CheckFilter() {
 
-		// Check pegawai_id text filter
-		if ($this->TextFilterApplied($this->pegawai_id))
+		// Check pegawai_nip text filter
+		if ($this->TextFilterApplied($this->pegawai_nip))
 			return TRUE;
 
-		// Check pegawai_id popup filter
-		if (!ewr_MatchedArray($this->pegawai_id->DefaultSelectionList, $this->pegawai_id->SelectionList))
+		// Check pegawai_nip popup filter
+		if (!ewr_MatchedArray($this->pegawai_nip->DefaultSelectionList, $this->pegawai_nip->SelectionList))
 			return TRUE;
 
 		// Check tgl_shift text filter
@@ -1655,19 +1694,19 @@ class crr_rekon_crosstab extends crr_rekon {
 		// Initialize
 		$sFilterList = "";
 
-		// Field pegawai_id
+		// Field pegawai_nip
 		$sExtWrk = "";
 		$sWrk = "";
-		$this->BuildExtendedFilter($this->pegawai_id, $sExtWrk);
-		if (is_array($this->pegawai_id->SelectionList))
-			$sWrk = ewr_JoinArray($this->pegawai_id->SelectionList, ", ", EWR_DATATYPE_NUMBER, 0, $this->DBID);
+		$this->BuildExtendedFilter($this->pegawai_nip, $sExtWrk);
+		if (is_array($this->pegawai_nip->SelectionList))
+			$sWrk = ewr_JoinArray($this->pegawai_nip->SelectionList, ", ", EWR_DATATYPE_STRING, 0, $this->DBID);
 		$sFilter = "";
 		if ($sExtWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sExtWrk</span>";
 		elseif ($sWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sWrk</span>";
 		if ($sFilter <> "")
-			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->pegawai_id->FldCaption() . "</span>" . $sFilter . "</div>";
+			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->pegawai_nip->FldCaption() . "</span>" . $sFilter . "</div>";
 
 		// Field tgl_shift
 		$sExtWrk = "";
@@ -1704,21 +1743,21 @@ class crr_rekon_crosstab extends crr_rekon {
 		// Initialize
 		$sFilterList = "";
 
-		// Field pegawai_id
+		// Field pegawai_nip
 		$sWrk = "";
-		if ($this->pegawai_id->SearchValue <> "" || $this->pegawai_id->SearchValue2 <> "") {
-			$sWrk = "\"sv_pegawai_id\":\"" . ewr_JsEncode2($this->pegawai_id->SearchValue) . "\"," .
-				"\"so_pegawai_id\":\"" . ewr_JsEncode2($this->pegawai_id->SearchOperator) . "\"," .
-				"\"sc_pegawai_id\":\"" . ewr_JsEncode2($this->pegawai_id->SearchCondition) . "\"," .
-				"\"sv2_pegawai_id\":\"" . ewr_JsEncode2($this->pegawai_id->SearchValue2) . "\"," .
-				"\"so2_pegawai_id\":\"" . ewr_JsEncode2($this->pegawai_id->SearchOperator2) . "\"";
+		if ($this->pegawai_nip->SearchValue <> "" || $this->pegawai_nip->SearchValue2 <> "") {
+			$sWrk = "\"sv_pegawai_nip\":\"" . ewr_JsEncode2($this->pegawai_nip->SearchValue) . "\"," .
+				"\"so_pegawai_nip\":\"" . ewr_JsEncode2($this->pegawai_nip->SearchOperator) . "\"," .
+				"\"sc_pegawai_nip\":\"" . ewr_JsEncode2($this->pegawai_nip->SearchCondition) . "\"," .
+				"\"sv2_pegawai_nip\":\"" . ewr_JsEncode2($this->pegawai_nip->SearchValue2) . "\"," .
+				"\"so2_pegawai_nip\":\"" . ewr_JsEncode2($this->pegawai_nip->SearchOperator2) . "\"";
 		}
 		if ($sWrk == "") {
-			$sWrk = ($this->pegawai_id->SelectionList <> EWR_INIT_VALUE) ? $this->pegawai_id->SelectionList : "";
+			$sWrk = ($this->pegawai_nip->SelectionList <> EWR_INIT_VALUE) ? $this->pegawai_nip->SelectionList : "";
 			if (is_array($sWrk))
 				$sWrk = implode("||", $sWrk);
 			if ($sWrk <> "")
-				$sWrk = "\"sel_pegawai_id\":\"" . ewr_JsEncode2($sWrk) . "\"";
+				$sWrk = "\"sel_pegawai_nip\":\"" . ewr_JsEncode2($sWrk) . "\"";
 		}
 		if ($sWrk <> "") {
 			if ($sFilterList <> "") $sFilterList .= ",";
@@ -1768,26 +1807,26 @@ class crr_rekon_crosstab extends crr_rekon {
 		if (!is_array($filter))
 			return FALSE;
 
-		// Field pegawai_id
+		// Field pegawai_nip
 		$bRestoreFilter = FALSE;
-		if (array_key_exists("sv_pegawai_id", $filter) || array_key_exists("so_pegawai_id", $filter) ||
-			array_key_exists("sc_pegawai_id", $filter) ||
-			array_key_exists("sv2_pegawai_id", $filter) || array_key_exists("so2_pegawai_id", $filter)) {
-			$this->SetSessionFilterValues(@$filter["sv_pegawai_id"], @$filter["so_pegawai_id"], @$filter["sc_pegawai_id"], @$filter["sv2_pegawai_id"], @$filter["so2_pegawai_id"], "pegawai_id");
+		if (array_key_exists("sv_pegawai_nip", $filter) || array_key_exists("so_pegawai_nip", $filter) ||
+			array_key_exists("sc_pegawai_nip", $filter) ||
+			array_key_exists("sv2_pegawai_nip", $filter) || array_key_exists("so2_pegawai_nip", $filter)) {
+			$this->SetSessionFilterValues(@$filter["sv_pegawai_nip"], @$filter["so_pegawai_nip"], @$filter["sc_pegawai_nip"], @$filter["sv2_pegawai_nip"], @$filter["so2_pegawai_nip"], "pegawai_nip");
 			$bRestoreFilter = TRUE;
 		}
-		if (array_key_exists("sel_pegawai_id", $filter)) {
-			$sWrk = $filter["sel_pegawai_id"];
+		if (array_key_exists("sel_pegawai_nip", $filter)) {
+			$sWrk = $filter["sel_pegawai_nip"];
 			$sWrk = explode("||", $sWrk);
-			$this->pegawai_id->SelectionList = $sWrk;
-			$_SESSION["sel_r_rekon_pegawai_id"] = $sWrk;
-			$this->SetSessionFilterValues("", "=", "AND", "", "=", "pegawai_id"); // Clear extended filter
+			$this->pegawai_nip->SelectionList = $sWrk;
+			$_SESSION["sel_r_rekon2_pegawai_nip"] = $sWrk;
+			$this->SetSessionFilterValues("", "=", "AND", "", "=", "pegawai_nip"); // Clear extended filter
 			$bRestoreFilter = TRUE;
 		}
 		if (!$bRestoreFilter) { // Clear filter
-			$this->SetSessionFilterValues("", "=", "AND", "", "=", "pegawai_id");
-			$this->pegawai_id->SelectionList = "";
-			$_SESSION["sel_r_rekon_pegawai_id"] = "";
+			$this->SetSessionFilterValues("", "=", "AND", "", "=", "pegawai_nip");
+			$this->pegawai_nip->SelectionList = "";
+			$_SESSION["sel_r_rekon2_pegawai_nip"] = "";
 		}
 
 		// Field tgl_shift
@@ -1802,14 +1841,14 @@ class crr_rekon_crosstab extends crr_rekon {
 			$sWrk = $filter["sel_tgl_shift"];
 			$sWrk = explode("||", $sWrk);
 			$this->tgl_shift->SelectionList = $sWrk;
-			$_SESSION["sel_r_rekon_tgl_shift"] = $sWrk;
+			$_SESSION["sel_r_rekon2_tgl_shift"] = $sWrk;
 			$this->SetSessionFilterValues("", "=", "AND", "", "=", "tgl_shift"); // Clear extended filter
 			$bRestoreFilter = TRUE;
 		}
 		if (!$bRestoreFilter) { // Clear filter
 			$this->SetSessionFilterValues("", "=", "AND", "", "=", "tgl_shift");
 			$this->tgl_shift->SelectionList = "";
-			$_SESSION["sel_r_rekon_tgl_shift"] = "";
+			$_SESSION["sel_r_rekon2_tgl_shift"] = "";
 		}
 		return TRUE;
 	}
@@ -1819,13 +1858,13 @@ class crr_rekon_crosstab extends crr_rekon {
 		$sWrk = "";
 		if ($this->DrillDown)
 			return "";
-		if (!$this->ExtendedFilterExist($this->pegawai_id)) {
-			if (is_array($this->pegawai_id->SelectionList)) {
-				$sFilter = ewr_FilterSQL($this->pegawai_id, "`pegawai_id`", EWR_DATATYPE_NUMBER, $this->DBID);
+		if (!$this->ExtendedFilterExist($this->pegawai_nip)) {
+			if (is_array($this->pegawai_nip->SelectionList)) {
+				$sFilter = ewr_FilterSQL($this->pegawai_nip, "`pegawai_nip`", EWR_DATATYPE_STRING, $this->DBID);
 
 				// Call Page Filtering event
-				$this->Page_Filtering($this->pegawai_id, $sFilter, "popup");
-				$this->pegawai_id->CurrentFilter = $sFilter;
+				$this->Page_Filtering($this->pegawai_nip, $sFilter, "popup");
+				$this->pegawai_nip->CurrentFilter = $sFilter;
 				ewr_AddFilter($sWrk, $sFilter);
 			}
 		}
@@ -1860,13 +1899,15 @@ class crr_rekon_crosstab extends crr_rekon {
 		if ($bResetSort) {
 			$this->setOrderBy("");
 			$this->setStartGroup(1);
-			$this->pegawai_id->setSort("");
+			$this->pegawai_nama->setSort("");
+			$this->pegawai_nip->setSort("");
 
 		// Check for an Order parameter
 		} elseif ($orderBy <> "") {
 			$this->CurrentOrder = $orderBy;
 			$this->CurrentOrderType = $orderType;
-			$this->UpdateSort($this->pegawai_id, $bCtrl); // pegawai_id
+			$this->UpdateSort($this->pegawai_nama, $bCtrl); // pegawai_nama
+			$this->UpdateSort($this->pegawai_nip, $bCtrl); // pegawai_nip
 			$sSortSql = $this->SortSql();
 			$this->setOrderBy($sSortSql);
 			$this->setStartGroup(1);
@@ -2141,9 +2182,9 @@ class crr_rekon_crosstab extends crr_rekon {
 <?php
 
 // Create page object
-if (!isset($r_rekon_crosstab)) $r_rekon_crosstab = new crr_rekon_crosstab();
+if (!isset($r_rekon2_crosstab)) $r_rekon2_crosstab = new crr_rekon2_crosstab();
 if (isset($Page)) $OldPage = $Page;
-$Page = &$r_rekon_crosstab;
+$Page = &$r_rekon2_crosstab;
 
 // Page init
 $Page->Page_Init();
@@ -2163,21 +2204,21 @@ $Page->Page_Render();
 <script type="text/javascript">
 
 // Create page object
-var r_rekon_crosstab = new ewr_Page("r_rekon_crosstab");
+var r_rekon2_crosstab = new ewr_Page("r_rekon2_crosstab");
 
 // Page properties
-r_rekon_crosstab.PageID = "crosstab"; // Page ID
-var EWR_PAGE_ID = r_rekon_crosstab.PageID;
+r_rekon2_crosstab.PageID = "crosstab"; // Page ID
+var EWR_PAGE_ID = r_rekon2_crosstab.PageID;
 
 // Extend page with Chart_Rendering function
-r_rekon_crosstab.Chart_Rendering = 
+r_rekon2_crosstab.Chart_Rendering = 
  function(chart, chartid) { // DO NOT CHANGE THIS LINE!
 
  	//alert(chartid);
  }
 
 // Extend page with Chart_Rendered function
-r_rekon_crosstab.Chart_Rendered = 
+r_rekon2_crosstab.Chart_Rendered = 
  function(chart, chartid) { // DO NOT CHANGE THIS LINE!
 
  	//alert(chartid);
@@ -2188,18 +2229,13 @@ r_rekon_crosstab.Chart_Rendered =
 <script type="text/javascript">
 
 // Form object
-var CurrentForm = fr_rekoncrosstab = new ewr_Form("fr_rekoncrosstab");
+var CurrentForm = fr_rekon2crosstab = new ewr_Form("fr_rekon2crosstab");
 
 // Validate method
-fr_rekoncrosstab.Validate = function() {
+fr_rekon2crosstab.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
-	var elm = fobj.sv_pegawai_id;
-	if (elm && !ewr_CheckInteger(elm.value)) {
-		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->pegawai_id->FldErrMsg()) ?>"))
-			return false;
-	}
 	var elm = fobj.sv_tgl_shift;
 	if (elm && !ewr_CheckDateDef(elm.value)) {
 		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->tgl_shift->FldErrMsg()) ?>"))
@@ -2218,16 +2254,16 @@ fr_rekoncrosstab.Validate = function() {
 }
 
 // Form_CustomValidate method
-fr_rekoncrosstab.Form_CustomValidate = 
+fr_rekon2crosstab.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
  	return true;
  }
 <?php if (EWR_CLIENT_VALIDATE) { ?>
-fr_rekoncrosstab.ValidateRequired = true; // Uses JavaScript validation
+fr_rekon2crosstab.ValidateRequired = true; // Uses JavaScript validation
 <?php } else { ?>
-fr_rekoncrosstab.ValidateRequired = false; // No JavaScript validation
+fr_rekon2crosstab.ValidateRequired = false; // No JavaScript validation
 <?php } ?>
 
 // Use Ajax
@@ -2242,7 +2278,7 @@ fr_rekoncrosstab.ValidateRequired = false; // No JavaScript validation
 <?php if ($Page->Export == "" && !$Page->DrillDown) { ?>
 <script type="text/javascript">
 <?php $jsdb = ewr_GetJsDb($Page->tgl_shift, $Page->tgl_shift->FldType); ?>
-ewr_CreatePopup("r_rekon_tgl_shift", <?php echo $jsdb ?>); // Popup filters
+ewr_CreatePopup("r_rekon2_tgl_shift", <?php echo $jsdb ?>); // Popup filters
 </script>
 <?php } ?>
 <?php if ($Page->Export == "") { ?>
@@ -2295,17 +2331,17 @@ if (!$Page->DrillDownInPanel) {
 <?php } ?>
 <?php if ($Page->Export == "" && !$Page->DrillDown) { ?>
 <!-- Search form (begin) -->
-<form name="fr_rekoncrosstab" id="fr_rekoncrosstab" class="form-inline ewForm ewExtFilterForm" action="<?php echo ewr_CurrentPage() ?>">
+<form name="fr_rekon2crosstab" id="fr_rekon2crosstab" class="form-inline ewForm ewExtFilterForm" action="<?php echo ewr_CurrentPage() ?>">
 <?php $SearchPanelClass = ($Page->Filter <> "") ? " in" : " in"; ?>
-<div id="fr_rekoncrosstab_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<div id="fr_rekon2crosstab_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
 <div id="r_1" class="ewRow">
-<div id="c_pegawai_id" class="ewCell form-group">
-	<label for="sv_pegawai_id" class="ewSearchCaption ewLabel"><?php echo $Page->pegawai_id->FldCaption() ?></label>
-	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("="); ?><input type="hidden" name="so_pegawai_id" id="so_pegawai_id" value="="></span>
+<div id="c_pegawai_nip" class="ewCell form-group">
+	<label for="sv_pegawai_nip" class="ewSearchCaption ewLabel"><?php echo $Page->pegawai_nip->FldCaption() ?></label>
+	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("LIKE"); ?><input type="hidden" name="so_pegawai_nip" id="so_pegawai_nip" value="LIKE"></span>
 	<span class="control-group ewSearchField">
-<?php ewr_PrependClass($Page->pegawai_id->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon" data-field="x_pegawai_id" id="sv_pegawai_id" name="sv_pegawai_id" size="30" placeholder="<?php echo $Page->pegawai_id->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->pegawai_id->SearchValue) ?>"<?php echo $Page->pegawai_id->EditAttributes() ?>>
+<?php ewr_PrependClass($Page->pegawai_nip->EditAttrs["class"], "form-control"); // PR8 ?>
+<input type="text" data-table="r_rekon2" data-field="x_pegawai_nip" id="sv_pegawai_nip" name="sv_pegawai_nip" size="30" maxlength="30" placeholder="<?php echo $Page->pegawai_nip->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->pegawai_nip->SearchValue) ?>"<?php echo $Page->pegawai_nip->EditAttributes() ?>>
 </span>
 </div>
 </div>
@@ -2315,12 +2351,12 @@ if (!$Page->DrillDownInPanel) {
 	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("BETWEEN"); ?><input type="hidden" name="so_tgl_shift" id="so_tgl_shift" value="BETWEEN"></span>
 	<span class="control-group ewSearchField">
 <?php ewr_PrependClass($Page->tgl_shift->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon" data-field="x_tgl_shift" id="sv_tgl_shift" name="sv_tgl_shift" placeholder="<?php echo $Page->tgl_shift->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl_shift->SearchValue) ?>" data-calendar="true" data-formatid="0"<?php echo $Page->tgl_shift->EditAttributes() ?>>
+<input type="text" data-table="r_rekon2" data-field="x_tgl_shift" id="sv_tgl_shift" name="sv_tgl_shift" placeholder="<?php echo $Page->tgl_shift->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl_shift->SearchValue) ?>"<?php echo $Page->tgl_shift->EditAttributes() ?>>
 </span>
 	<span class="ewSearchCond btw1_tgl_shift"><?php echo $ReportLanguage->Phrase("AND") ?></span>
 	<span class="ewSearchField btw1_tgl_shift">
 <?php ewr_PrependClass($Page->tgl_shift->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon" data-field="x_tgl_shift" id="sv2_tgl_shift" name="sv2_tgl_shift" placeholder="<?php echo $Page->tgl_shift->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl_shift->SearchValue2) ?>" data-calendar="true" data-formatid="0"<?php echo $Page->tgl_shift->EditAttributes() ?>>
+<input type="text" data-table="r_rekon2" data-field="x_tgl_shift" id="sv2_tgl_shift" name="sv2_tgl_shift" placeholder="<?php echo $Page->tgl_shift->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl_shift->SearchValue2) ?>"<?php echo $Page->tgl_shift->EditAttributes() ?>>
 </span>
 </div>
 </div>
@@ -2329,8 +2365,8 @@ if (!$Page->DrillDownInPanel) {
 </div>
 </form>
 <script type="text/javascript">
-fr_rekoncrosstab.Init();
-fr_rekoncrosstab.FilterList = <?php echo $Page->GetFilterList() ?>;
+fr_rekon2crosstab.Init();
+fr_rekon2crosstab.FilterList = <?php echo $Page->GetFilterList() ?>;
 </script>
 <!-- Search form (end) -->
 <?php } ?>
@@ -2374,7 +2410,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <?php if ($Page->TotalGrps > 0) { ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-footer ewGridLowerPanel">
-<?php include "r_rekonctbpager.php" ?>
+<?php include "r_rekon2ctbpager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -2393,7 +2429,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <?php } ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-heading ewGridUpperPanel">
-<?php include "r_rekonctbpager.php" ?>
+<?php include "r_rekon2ctbpager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -2412,29 +2448,49 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 			<div class="ewTableHeaderBtn">
 				<span class="ewTableHeaderCaption"><?php echo $Page->tgl_shift->FldCaption() ?></span>
 <?php if ($Page->Export == "" && !$Page->DrillDown) { ?>
-				<a class="ewTableHeaderPopup" title="<?php echo $ReportLanguage->Phrase("Filter"); ?>" onclick="ewr_ShowPopup.call(this, event, 'r_rekon_tgl_shift', false, '<?php echo $Page->tgl_shift->RangeFrom ?>', '<?php echo $Page->tgl_shift->RangeTo ?>');" name="x_tgl_shift" id="x_tgl_shift"><span class="icon-filter"></span></a>
+				<a class="ewTableHeaderPopup" title="<?php echo $ReportLanguage->Phrase("Filter"); ?>" onclick="ewr_ShowPopup.call(this, event, 'r_rekon2_tgl_shift', false, '<?php echo $Page->tgl_shift->RangeFrom ?>', '<?php echo $Page->tgl_shift->RangeTo ?>');" name="x_tgl_shift" id="x_tgl_shift"><span class="icon-filter"></span></a>
 <?php } ?>
 			</div>
 		</td>
 	</tr>
 	<tr class="ewTableHeader">
-<?php if ($Page->pegawai_id->Visible) { ?>
+<?php if ($Page->pegawai_nama->Visible) { ?>
 <?php if ($Page->Export <> "" || $Page->DrillDown) { ?>
-	<td data-field="pegawai_id">
-		<div class="r_rekon_pegawai_id"><span class="ewTableHeaderCaption"><?php echo $Page->pegawai_id->FldCaption() ?></span></div>
+	<td data-field="pegawai_nama">
+		<div class="r_rekon2_pegawai_nama"><span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span></div>
 	</td>
 <?php } else { ?>
-	<td data-field="pegawai_id">
-<?php if ($Page->SortUrl($Page->pegawai_id) == "") { ?>
-		<div class="ewTableHeaderBtn r_rekon_pegawai_id">
-			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_id->FldCaption() ?></span>			
-			<a class="ewTableHeaderPopup" title="<?php echo $ReportLanguage->Phrase("Filter"); ?>" onclick="ewr_ShowPopup.call(this, event, 'r_rekon_pegawai_id', false, '<?php echo $Page->pegawai_id->RangeFrom; ?>', '<?php echo $Page->pegawai_id->RangeTo; ?>');" id="x_pegawai_id"><span class="icon-filter"></span></a>
+	<td data-field="pegawai_nama">
+<?php if ($Page->SortUrl($Page->pegawai_nama) == "") { ?>
+		<div class="ewTableHeaderBtn r_rekon2_pegawai_nama">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span>			
 		</div>
 <?php } else { ?>
-		<div class="ewTableHeaderBtn ewPointer r_rekon_pegawai_id" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->pegawai_id) ?>',2);">
-			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_id->FldCaption() ?></span>
-			<span class="ewTableHeaderSort"><?php if ($Page->pegawai_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->pegawai_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
-			<a class="ewTableHeaderPopup" title="<?php echo $ReportLanguage->Phrase("Filter"); ?>" onclick="ewr_ShowPopup.call(this, event, 'r_rekon_pegawai_id', false, '<?php echo $Page->pegawai_id->RangeFrom; ?>', '<?php echo $Page->pegawai_id->RangeTo; ?>');" id="x_pegawai_id"><span class="icon-filter"></span></a>
+		<div class="ewTableHeaderBtn ewPointer r_rekon2_pegawai_nama" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->pegawai_nama) ?>',2);">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span>
+			<span class="ewTableHeaderSort"><?php if ($Page->pegawai_nama->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->pegawai_nama->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
+		</div>
+<?php } ?>
+	</td>
+<?php } ?>
+<?php } ?>
+<?php if ($Page->pegawai_nip->Visible) { ?>
+<?php if ($Page->Export <> "" || $Page->DrillDown) { ?>
+	<td data-field="pegawai_nip">
+		<div class="r_rekon2_pegawai_nip"><span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nip->FldCaption() ?></span></div>
+	</td>
+<?php } else { ?>
+	<td data-field="pegawai_nip">
+<?php if ($Page->SortUrl($Page->pegawai_nip) == "") { ?>
+		<div class="ewTableHeaderBtn r_rekon2_pegawai_nip">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nip->FldCaption() ?></span>			
+			<a class="ewTableHeaderPopup" title="<?php echo $ReportLanguage->Phrase("Filter"); ?>" onclick="ewr_ShowPopup.call(this, event, 'r_rekon2_pegawai_nip', false, '<?php echo $Page->pegawai_nip->RangeFrom; ?>', '<?php echo $Page->pegawai_nip->RangeTo; ?>');" id="x_pegawai_nip"><span class="icon-filter"></span></a>
+		</div>
+<?php } else { ?>
+		<div class="ewTableHeaderBtn ewPointer r_rekon2_pegawai_nip" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->pegawai_nip) ?>',2);">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nip->FldCaption() ?></span>
+			<span class="ewTableHeaderSort"><?php if ($Page->pegawai_nip->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->pegawai_nip->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
+			<a class="ewTableHeaderPopup" title="<?php echo $ReportLanguage->Phrase("Filter"); ?>" onclick="ewr_ShowPopup.call(this, event, 'r_rekon2_pegawai_nip', false, '<?php echo $Page->pegawai_nip->RangeFrom; ?>', '<?php echo $Page->pegawai_nip->RangeTo; ?>');" id="x_pegawai_nip"><span class="icon-filter"></span></a>
 		</div>
 <?php } ?>
 	</td>
@@ -2463,7 +2519,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 	}
 
 	// Build detail SQL
-	$sWhere = ewr_DetailFilterSQL($Page->pegawai_id, $Page->getSqlFirstGroupField(), $Page->pegawai_id->GroupValue(), $Page->DBID);
+	$sWhere = ewr_DetailFilterSQL($Page->pegawai_nama, $Page->getSqlFirstGroupField(), $Page->pegawai_nama->GroupValue(), $Page->DBID);
 	if ($Page->PageFirstGroupFilter <> "") $Page->PageFirstGroupFilter .= " OR ";
 	$Page->PageFirstGroupFilter .= $sWhere;
 	if ($Page->Filter != "")
@@ -2483,10 +2539,15 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 		$Page->RenderRow();
 ?>
 	<tr<?php echo $Page->RowAttributes(); ?>>
-<?php if ($Page->pegawai_id->Visible) { ?>
-		<!-- pegawai_id -->
-		<td data-field="pegawai_id"<?php echo $Page->pegawai_id->CellAttributes(); ?>>
-<span data-class="tpx<?php echo $Page->GrpCount ?>_r_rekon_pegawai_id"<?php echo $Page->pegawai_id->ViewAttributes() ?>><?php echo $Page->pegawai_id->GroupViewValue ?></span></td>
+<?php if ($Page->pegawai_nama->Visible) { ?>
+		<!-- pegawai_nama -->
+		<td data-field="pegawai_nama"<?php echo $Page->pegawai_nama->CellAttributes(); ?>>
+<span data-class="tpx<?php echo $Page->GrpCount ?>_r_rekon2_pegawai_nama"<?php echo $Page->pegawai_nama->ViewAttributes() ?>><?php echo $Page->pegawai_nama->GroupViewValue ?></span></td>
+<?php } ?>
+<?php if ($Page->pegawai_nip->Visible) { ?>
+		<!-- pegawai_nip -->
+		<td data-field="pegawai_nip"<?php echo $Page->pegawai_nip->CellAttributes(); ?>>
+<span data-class="tpx<?php echo $Page->GrpCount ?>_r_rekon2_pegawai_nip"<?php echo $Page->pegawai_nip->ViewAttributes() ?>><?php echo $Page->pegawai_nip->GroupViewValue ?></span></td>
 <?php } ?>
 <!-- Dynamic columns begin -->
 <?php
@@ -2546,7 +2607,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <?php } ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-heading ewGridUpperPanel">
-<?php include "r_rekonctbpager.php" ?>
+<?php include "r_rekon2ctbpager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -2564,7 +2625,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <?php if ($Page->TotalGrps > 0) { ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-footer ewGridLowerPanel">
-<?php include "r_rekonctbpager.php" ?>
+<?php include "r_rekon2ctbpager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>

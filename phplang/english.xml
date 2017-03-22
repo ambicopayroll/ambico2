@@ -592,11 +592,11 @@
     <menu id="1">
       <phrase id="menutext" value="Data Finger Pegawai" />
     </menu>
-    <menu id="10001">
-      <phrase id="menutext" value="att log" />
-    </menu>
     <menu id="10063">
       <phrase id="menutext" value="r rekon" />
+    </menu>
+    <menu id="10065">
+      <phrase id="menutext" value="r rekon 2" />
     </menu>
     <menu id="21">
       <phrase id="menutext" value="jdw kerja d" />
@@ -789,6 +789,12 @@
     </menu>
     <menu id="62">
       <phrase id="menutext" value="t user" />
+    </menu>
+    <menu id="10064">
+      <phrase id="menutext" value="view 1" />
+    </menu>
+    <menu id="10001">
+      <phrase id="menutext" value="att log" />
     </menu>
     <menu id="10002">
       <phrase id="menutext" value="audittrail" />
