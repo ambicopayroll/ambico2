@@ -1,10 +1,47 @@
 11:23 AM 3/21/2017
 - baca data finger
-	- sampai dengan proses ini :: data masih mentah, yang tersimpan [tanggal dan jam] dan [pin]
+	- sampai dengan tahap ini :: data masih mentah, data yang tersimpan hanyalah [tanggal dan jam] dan [pin]
 	- data tersimpan di tabel att_log
 	- tabel penghubung dengan proses berikutnya adalah tabel pegawai,
 	  karena di tabel pegawai terdapat field pegawai_pin yang terhubung dengan tabel att_log
-	- koneksi antara tabel att_log dengan tabel pegawai ::
+	- koneksi antara tabel tt_log dengan tabel pegawai adalah ::
 	  att_log.pin = pegawai.pegawai_pin
-	- sampai dengan proses ini :: sudah bisa didapat data -> scan_date, pegawai_pin, pegawai_id
+	-
+	- sampai dengan tahap ini :: sudah bisa didapat data -> scan_date, pegawai_pin, pegawai_id
+	- informasi mengenai jadwal kerja pegawai terdapat pada tabel jdw_kerja_pegawai dengan field penghubung pegawai_id
+	- koneksi antara tabel pegawai dengan tabel jdw_kerja_pegawai adalah ::
+	  pegawai.pegawai_id = jdw_kerja_pegawai.pegawai_id
+	-
+	- sampai dengan tahap ini :: sudah bisa didapat data -> scan_data, pegawai_pin, pegawai_id, jdw_kerja_m_id
+	- sampai dengan tahap ini :: sudah terdapat 3 koneksi tabel ::
 	
+      |---------|-------------|-------------------|----------------|----------------|-----------|
+      | att_log | pegawai     | jdw_kerja_pegawai | jdw_kerja_m    | jdw_kerja_d    | jam_kerja |
+      |---------|-------------|-------------------|----------------|----------------|-----------|
+      | pin     | pegawai_pin |                   |                |                |           |
+      |         | pegawai_id  | pegawai_id        |                |                |           |
+      |         |             | jdw_kerja_m_id    | jdw_kerja_m_id | jdw_kerja_m_id |           |
+	  |         |             |                   |                | jk_id          | jk_id     |
+	  |         |             |                   |                |                |           |
+	  |         |             |                   |                |                |           |
+	  |         |             |                   |                |                |           |
+	  |         |             |                   |                |                |           |
+	  |         |             |                   |                |                |           |
+	  |---------|-------------|-------------------|----------------|----------------|-----------|
+	  
+
+
+6:40 PM 3/21/2017
+- gambaran sementara :: 
+	- input periode penggajian
+		tgl : xx-xx-xxxx s.d. xx-xx-xxxx
+		
+	- variabel :: 
+		[tgl1]
+		[tgl2]
+		
+	- 2 (dua) variabel tersebut akan digunakan untuk memfilter tabel att_log
+	
+	- filtering tabel att_log
+	
+	- 

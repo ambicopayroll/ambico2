@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/3/20" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/3/22" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -586,23 +586,35 @@
     <menu id="64">
       <phrase id="menutext" value="Dashboard" />
     </menu>
+    <menu id="129">
+      <phrase id="menutext" value="Absensi" />
+    </menu>
+    <menu id="1">
+      <phrase id="menutext" value="Finger Scan" />
+    </menu>
+    <menu id="21">
+      <phrase id="menutext" value="jdw kerja d" />
+    </menu>
+    <menu id="128">
+      <phrase id="menutext" value="Pegawai" />
+    </menu>
+    <menu id="29">
+      <phrase id="menutext" value="Pegawai" />
+    </menu>
     <menu id="63">
-      <phrase id="menutext" value="Setting" />
+      <phrase id="menutext" value="Pengaturan" />
     </menu>
     <menu id="22">
       <phrase id="menutext" value="Jadwal Kerja" />
     </menu>
     <menu id="18">
-      <phrase id="menutext" value="jam kerja" />
+      <phrase id="menutext" value="Jam Kerja" />
     </menu>
     <menu id="19">
-      <phrase id="menutext" value="jam kerja extra" />
+      <phrase id="menutext" value="Jam Kerja Extra" />
     </menu>
-    <menu id="21">
-      <phrase id="menutext" value="jdw kerja d" />
-    </menu>
-    <menu id="1">
-      <phrase id="menutext" value="att log" />
+    <menu id="130">
+      <phrase id="menutext" value="Penggajian" />
     </menu>
     <menu id="2">
       <phrase id="menutext" value="cuti normatif" />
@@ -673,11 +685,8 @@
     <menu id="28">
       <phrase id="menutext" value="libur" />
     </menu>
-    <menu id="29">
-      <phrase id="menutext" value="pegawai" />
-    </menu>
     <menu id="30">
-      <phrase id="menutext" value="pegawai d" />
+      <phrase id="menutext" value="Detil Pegawai" />
     </menu>
     <menu id="31">
       <phrase id="menutext" value="pembagian 1" />
@@ -776,7 +785,7 @@
       <phrase id="menutext" value="t user" />
     </menu>
     <table id="att_log">
-      <phrase id="tblcaption" value="att log" />
+      <phrase id="tblcaption" value="Finger Scan" />
       <field id="sn">
         <phrase id="fldcaption" value="sn" />
       </field>
@@ -1448,7 +1457,7 @@
       </field>
     </table>
     <table id="pegawai">
-      <phrase id="tblcaption" value="pegawai" />
+      <phrase id="tblcaption" value="Pegawai" />
       <field id="pegawai_id">
         <phrase id="fldcaption" value="pegawai id" />
       </field>
@@ -1520,7 +1529,7 @@
       </field>
     </table>
     <table id="pegawai_d">
-      <phrase id="tblcaption" value="pegawai d" />
+      <phrase id="tblcaption" value="Detil Pegawai" />
       <field id="pegawai_id">
         <phrase id="fldcaption" value="pegawai id" />
       </field>
