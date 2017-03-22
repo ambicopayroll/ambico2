@@ -590,7 +590,7 @@
       <phrase id="menutext" value="Absensi" />
     </menu>
     <menu id="1">
-      <phrase id="menutext" value="Finger Scan" />
+      <phrase id="menutext" value="Data Finger Pegawai" />
     </menu>
     <menu id="21">
       <phrase id="menutext" value="jdw kerja d" />
@@ -785,7 +785,7 @@
       <phrase id="menutext" value="t user" />
     </menu>
     <table id="att_log">
-      <phrase id="tblcaption" value="Finger Scan" />
+      <phrase id="tblcaption" value="Data Finger Pegawai" />
       <field id="sn">
         <phrase id="fldcaption" value="sn" />
       </field>

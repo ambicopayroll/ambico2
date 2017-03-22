@@ -1102,30 +1102,6 @@ class catt_log_list extends catt_log {
 		$item->OnLeft = FALSE;
 		$item->Visible = FALSE;
 
-		// "view"
-		$item = &$this->ListOptions->Add("view");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanView();
-		$item->OnLeft = FALSE;
-
-		// "edit"
-		$item = &$this->ListOptions->Add("edit");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanEdit();
-		$item->OnLeft = FALSE;
-
-		// "copy"
-		$item = &$this->ListOptions->Add("copy");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanAdd();
-		$item->OnLeft = FALSE;
-
-		// "delete"
-		$item = &$this->ListOptions->Add("delete");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanDelete();
-		$item->OnLeft = FALSE;
-
 		// List actions
 		$item = &$this->ListOptions->Add("listactions");
 		$item->CssStyle = "white-space: nowrap;";
@@ -1139,6 +1115,14 @@ class catt_log_list extends catt_log {
 		$item->Visible = FALSE;
 		$item->OnLeft = FALSE;
 		$item->Header = "<input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew_SelectAllKey(this);\">";
+		$item->ShowInDropDown = FALSE;
+		$item->ShowInButtonGroup = FALSE;
+
+		// "sequence"
+		$item = &$this->ListOptions->Add("sequence");
+		$item->CssStyle = "white-space: nowrap;";
+		$item->Visible = TRUE;
+		$item->OnLeft = TRUE; // Always on left
 		$item->ShowInDropDown = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 
@@ -1163,39 +1147,9 @@ class catt_log_list extends catt_log {
 		global $Security, $Language, $objForm;
 		$this->ListOptions->LoadDefault();
 
-		// "view"
-		$oListOpt = &$this->ListOptions->Items["view"];
-		$viewcaption = ew_HtmlTitle($Language->Phrase("ViewLink"));
-		if ($Security->CanView()) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewView\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . ew_HtmlEncode($this->ViewUrl) . "\">" . $Language->Phrase("ViewLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
-		// "edit"
-		$oListOpt = &$this->ListOptions->Items["edit"];
-		$editcaption = ew_HtmlTitle($Language->Phrase("EditLink"));
-		if ($Security->CanEdit()) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewEdit\" title=\"" . ew_HtmlTitle($Language->Phrase("EditLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("EditLink")) . "\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("EditLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
-		// "copy"
-		$oListOpt = &$this->ListOptions->Items["copy"];
-		$copycaption = ew_HtmlTitle($Language->Phrase("CopyLink"));
-		if ($Security->CanAdd()) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewCopy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . ew_HtmlEncode($this->CopyUrl) . "\">" . $Language->Phrase("CopyLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
-		// "delete"
-		$oListOpt = &$this->ListOptions->Items["delete"];
-		if ($Security->CanDelete())
-			$oListOpt->Body = "<a class=\"ewRowLink ewDelete\"" . "" . " title=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("DeleteLink") . "</a>";
-		else
-			$oListOpt->Body = "";
+		// "sequence"
+		$oListOpt = &$this->ListOptions->Items["sequence"];
+		$oListOpt->Body = ew_FormatSeqNo($this->RecCnt);
 
 		// Set up list action buttons
 		$oListOpt = &$this->ListOptions->GetItem("listactions");
@@ -1239,13 +1193,6 @@ class catt_log_list extends catt_log {
 	function SetupOtherOptions() {
 		global $Language, $Security;
 		$options = &$this->OtherOptions;
-		$option = $options["addedit"];
-
-		// Add
-		$item = &$option->Add("add");
-		$addcaption = ew_HtmlTitle($Language->Phrase("AddLink"));
-		$item->Body = "<a class=\"ewAddEdit ewAdd\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
-		$item->Visible = ($this->AddUrl <> "" && $Security->CanAdd());
 		$option = $options["action"];
 
 		// Set up options default
@@ -2207,6 +2154,13 @@ var CurrentSearchForm = fatt_loglistsrch = new ew_Form("fatt_loglistsrch");
 			$att_log_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
 			$att_log_list->setWarningMessage($Language->Phrase("NoRecord"));
+	}
+
+	// Audit trail on search
+	if ($att_log_list->AuditTrailOnSearch && $att_log_list->Command == "search" && !$att_log_list->RestoreSearch) {
+		$searchparm = ew_ServerVar("QUERY_STRING");
+		$searchsql = $att_log_list->getSessionWhere();
+		$att_log_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
 	}
 $att_log_list->RenderOtherOptions();
 ?>
