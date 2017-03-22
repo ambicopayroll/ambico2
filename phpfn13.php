@@ -4757,16 +4757,6 @@ function Database_Connecting(&$info) {
 		$info["user"] = "u945388674_ambic"; // sesuaikan dengan username database di komputer server
 		$info["pass"] = "M457r1P 81"; // sesuaikan deengan password database di komputer server
 		$info["db"] = "u945388674_ambic"; // sesuaikan dengan nama database di komputer server
-	} elseif (ew_CurrentHost () == "ambico.890m.com") { // setting koneksi database untuk komputer server
-		$info["host"] = "mysql.idhostinger.com";  // sesuaikan dengan ip address atau hostname komputer server
-		$info["user"] = "u942964223_ambic"; // sesuaikan dengan username database di komputer server
-		$info["pass"] = "PresarioCQ43"; // sesuaikan deengan password database di komputer server
-		$info["db"] = "u942964223_ambic"; // sesuaikan dengan nama database di komputer server
-	} elseif (ew_CurrentHost () == "ambico.16mb.com") { // setting koneksi database untuk komputer server
-		$info["host"] = "mysql.idhostinger.com";  // sesuaikan dengan ip address atau hostname komputer server
-		$info["user"] = "u885137693_ambic"; // sesuaikan dengan username database di komputer server
-		$info["pass"] = "PresarioCQ43"; // sesuaikan deengan password database di komputer server
-		$info["db"] = "u885137693_ambic"; // sesuaikan dengan nama database di komputer server
 	} elseif (ew_CurrentHost () == "ambico2.890m.com") { // setting koneksi database untuk komputer server
 		$info["host"] = "mysql.idhostinger.com";  // sesuaikan dengan ip address atau hostname komputer server
 		$info["user"] = "u616044283_ambic"; // sesuaikan dengan username database di komputer server

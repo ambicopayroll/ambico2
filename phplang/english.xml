@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/3/22" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/3/23" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -582,7 +582,7 @@
   </global>
   <project>
     <phrase id="bodytitle" value="AMBICO" />
-    <phrase id="footertext" value="&amp;copy;2016 e.World Technology Ltd. All rights reserved." />
+    <phrase id="footertext" value="&amp;copy;2017 AMBICO. All rights reserved." />
     <menu id="64">
       <phrase id="menutext" value="Dashboard" />
     </menu>
@@ -591,6 +591,12 @@
     </menu>
     <menu id="1">
       <phrase id="menutext" value="Data Finger Pegawai" />
+    </menu>
+    <menu id="10001">
+      <phrase id="menutext" value="att log" />
+    </menu>
+    <menu id="10063">
+      <phrase id="menutext" value="r rekon" />
     </menu>
     <menu id="21">
       <phrase id="menutext" value="jdw kerja d" />
@@ -783,6 +789,189 @@
     </menu>
     <menu id="62">
       <phrase id="menutext" value="t user" />
+    </menu>
+    <menu id="10002">
+      <phrase id="menutext" value="audittrail" />
+    </menu>
+    <menu id="10003">
+      <phrase id="menutext" value="cuti normatif" />
+    </menu>
+    <menu id="10004">
+      <phrase id="menutext" value="dev type" />
+    </menu>
+    <menu id="10005">
+      <phrase id="menutext" value="device" />
+    </menu>
+    <menu id="10006">
+      <phrase id="menutext" value="ganti jdw d" />
+    </menu>
+    <menu id="10007">
+      <phrase id="menutext" value="ganti jdw jk" />
+    </menu>
+    <menu id="10008">
+      <phrase id="menutext" value="ganti jdw pegawai" />
+    </menu>
+    <menu id="10009">
+      <phrase id="menutext" value="ganti jdw pembagian" />
+    </menu>
+    <menu id="10010">
+      <phrase id="menutext" value="ganti jk" />
+    </menu>
+    <menu id="10011">
+      <phrase id="menutext" value="ganti jk d" />
+    </menu>
+    <menu id="10012">
+      <phrase id="menutext" value="ganti jk pegawai" />
+    </menu>
+    <menu id="10013">
+      <phrase id="menutext" value="ganti jk pembagian" />
+    </menu>
+    <menu id="10014">
+      <phrase id="menutext" value="grp user d" />
+    </menu>
+    <menu id="10015">
+      <phrase id="menutext" value="grp user m" />
+    </menu>
+    <menu id="10016">
+      <phrase id="menutext" value="index ot" />
+    </menu>
+    <menu id="10017">
+      <phrase id="menutext" value="index type" />
+    </menu>
+    <menu id="10018">
+      <phrase id="menutext" value="izin" />
+    </menu>
+    <menu id="10019">
+      <phrase id="menutext" value="jam kerja" />
+    </menu>
+    <menu id="10020">
+      <phrase id="menutext" value="jam kerja extra" />
+    </menu>
+    <menu id="10021">
+      <phrase id="menutext" value="jatah cuti" />
+    </menu>
+    <menu id="10022">
+      <phrase id="menutext" value="jdw kerja d" />
+    </menu>
+    <menu id="10023">
+      <phrase id="menutext" value="jdw kerja m" />
+    </menu>
+    <menu id="10024">
+      <phrase id="menutext" value="jdw kerja pegawai" />
+    </menu>
+    <menu id="10025">
+      <phrase id="menutext" value="jns izin" />
+    </menu>
+    <menu id="10026">
+      <phrase id="menutext" value="kategori izin" />
+    </menu>
+    <menu id="10027">
+      <phrase id="menutext" value="kontrak kerja" />
+    </menu>
+    <menu id="10028">
+      <phrase id="menutext" value="lembur" />
+    </menu>
+    <menu id="10029">
+      <phrase id="menutext" value="libur" />
+    </menu>
+    <menu id="10030">
+      <phrase id="menutext" value="pegawai" />
+    </menu>
+    <menu id="10031">
+      <phrase id="menutext" value="pegawai d" />
+    </menu>
+    <menu id="10032">
+      <phrase id="menutext" value="pembagian 1" />
+    </menu>
+    <menu id="10033">
+      <phrase id="menutext" value="pembagian 2" />
+    </menu>
+    <menu id="10034">
+      <phrase id="menutext" value="pembagian 3" />
+    </menu>
+    <menu id="10035">
+      <phrase id="menutext" value="pendidikan" />
+    </menu>
+    <menu id="10036">
+      <phrase id="menutext" value="setting" />
+    </menu>
+    <menu id="10037">
+      <phrase id="menutext" value="shift result" />
+    </menu>
+    <menu id="10038">
+      <phrase id="menutext" value="sms group" />
+    </menu>
+    <menu id="10039">
+      <phrase id="menutext" value="sms group member" />
+    </menu>
+    <menu id="10040">
+      <phrase id="menutext" value="sms recipient" />
+    </menu>
+    <menu id="10041">
+      <phrase id="menutext" value="t user" />
+    </menu>
+    <menu id="10042">
+      <phrase id="menutext" value="temp pegawai" />
+    </menu>
+    <menu id="10043">
+      <phrase id="menutext" value="tmp" />
+    </menu>
+    <menu id="10044">
+      <phrase id="menutext" value="tmp uareu" />
+    </menu>
+    <menu id="10045">
+      <phrase id="menutext" value="tukar jam" />
+    </menu>
+    <menu id="10046">
+      <phrase id="menutext" value="uareu device" />
+    </menu>
+    <menu id="10047">
+      <phrase id="menutext" value="user log" />
+    </menu>
+    <menu id="10048">
+      <phrase id="menutext" value="user login" />
+    </menu>
+    <menu id="10049">
+      <phrase id="menutext" value="versi db" />
+    </menu>
+    <menu id="10050">
+      <phrase id="menutext" value="z pay com" />
+    </menu>
+    <menu id="10051">
+      <phrase id="menutext" value="z pay grp" />
+    </menu>
+    <menu id="10052">
+      <phrase id="menutext" value="z pay grp com" />
+    </menu>
+    <menu id="10053">
+      <phrase id="menutext" value="z pay grp emp" />
+    </menu>
+    <menu id="10054">
+      <phrase id="menutext" value="z pay money" />
+    </menu>
+    <menu id="10055">
+      <phrase id="menutext" value="z pay process d" />
+    </menu>
+    <menu id="10056">
+      <phrase id="menutext" value="z pay process m" />
+    </menu>
+    <menu id="10057">
+      <phrase id="menutext" value="z pay process sd" />
+    </menu>
+    <menu id="10058">
+      <phrase id="menutext" value="z pay report" />
+    </menu>
+    <menu id="10059">
+      <phrase id="menutext" value="zx bayar kredit" />
+    </menu>
+    <menu id="10060">
+      <phrase id="menutext" value="zx jns krd" />
+    </menu>
+    <menu id="10061">
+      <phrase id="menutext" value="zx kredit d" />
+    </menu>
+    <menu id="10062">
+      <phrase id="menutext" value="zx kredit m" />
     </menu>
     <table id="att_log">
       <phrase id="tblcaption" value="Data Finger Pegawai" />
