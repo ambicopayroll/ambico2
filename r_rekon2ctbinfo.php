@@ -62,9 +62,9 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->jdw_kerja_m_kode->SqlOrderBy = "";
 
 		// tgl_shift
-		$this->tgl_shift = new crField('r_rekon2', 'r_rekon2', 'x_tgl_shift', 'tgl_shift', '`tgl_shift`', 133, EWR_DATATYPE_DATE, 0);
+		$this->tgl_shift = new crField('r_rekon2', 'r_rekon2', 'x_tgl_shift', 'tgl_shift', '`tgl_shift`', 133, EWR_DATATYPE_DATE, 7);
 		$this->tgl_shift->Sortable = TRUE; // Allow sort
-		$this->tgl_shift->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_FORMAT"], $ReportLanguage->Phrase("IncorrectDate"));
+		$this->tgl_shift->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_SEPARATOR"], $ReportLanguage->Phrase("IncorrectDateDMY"));
 		$this->fields['tgl_shift'] = &$this->tgl_shift;
 		$this->tgl_shift->DateFilter = "";
 		$this->tgl_shift->SqlSelect = "SELECT DISTINCT `tgl_shift`, `tgl_shift` AS `DispFld` FROM " . $this->getSqlFrom();

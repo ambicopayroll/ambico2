@@ -1582,11 +1582,11 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Check if validation required
 		if (!EWR_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!ewr_CheckDateDef($this->tgl_shift->SearchValue)) {
+		if (!ewr_CheckEuroDate($this->tgl_shift->SearchValue)) {
 			if ($gsFormError <> "") $gsFormError .= "<br>";
 			$gsFormError .= $this->tgl_shift->FldErrMsg();
 		}
-		if (!ewr_CheckDateDef($this->tgl_shift->SearchValue2)) {
+		if (!ewr_CheckEuroDate($this->tgl_shift->SearchValue2)) {
 			if ($gsFormError <> "") $gsFormError .= "<br>";
 			$gsFormError .= $this->tgl_shift->FldErrMsg();
 		}
@@ -2237,12 +2237,12 @@ fr_rekon2crosstab.Validate = function() {
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
 	var elm = fobj.sv_tgl_shift;
-	if (elm && !ewr_CheckDateDef(elm.value)) {
+	if (elm && !ewr_CheckEuroDate(elm.value)) {
 		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->tgl_shift->FldErrMsg()) ?>"))
 			return false;
 	}
 	var elm = fobj.sv2_tgl_shift;
-	if (elm && !ewr_CheckDateDef(elm.value)) {
+	if (elm && !ewr_CheckEuroDate(elm.value)) {
 		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->tgl_shift->FldErrMsg()) ?>"))
 			return false;
 	}
@@ -2351,12 +2351,12 @@ if (!$Page->DrillDownInPanel) {
 	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("BETWEEN"); ?><input type="hidden" name="so_tgl_shift" id="so_tgl_shift" value="BETWEEN"></span>
 	<span class="control-group ewSearchField">
 <?php ewr_PrependClass($Page->tgl_shift->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon2" data-field="x_tgl_shift" id="sv_tgl_shift" name="sv_tgl_shift" placeholder="<?php echo $Page->tgl_shift->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl_shift->SearchValue) ?>"<?php echo $Page->tgl_shift->EditAttributes() ?>>
+<input type="text" data-table="r_rekon2" data-field="x_tgl_shift" id="sv_tgl_shift" name="sv_tgl_shift" placeholder="<?php echo $Page->tgl_shift->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl_shift->SearchValue) ?>" data-calendar="true" data-formatid="7"<?php echo $Page->tgl_shift->EditAttributes() ?>>
 </span>
 	<span class="ewSearchCond btw1_tgl_shift"><?php echo $ReportLanguage->Phrase("AND") ?></span>
 	<span class="ewSearchField btw1_tgl_shift">
 <?php ewr_PrependClass($Page->tgl_shift->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon2" data-field="x_tgl_shift" id="sv2_tgl_shift" name="sv2_tgl_shift" placeholder="<?php echo $Page->tgl_shift->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl_shift->SearchValue2) ?>"<?php echo $Page->tgl_shift->EditAttributes() ?>>
+<input type="text" data-table="r_rekon2" data-field="x_tgl_shift" id="sv2_tgl_shift" name="sv2_tgl_shift" placeholder="<?php echo $Page->tgl_shift->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl_shift->SearchValue2) ?>" data-calendar="true" data-formatid="7"<?php echo $Page->tgl_shift->EditAttributes() ?>>
 </span>
 </div>
 </div>
@@ -2502,7 +2502,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 	for ($iy = 1; $iy < $cntval; $iy++) {
 		if ($Page->Col[$iy]->Visible) {
 			$Page->SummaryCurrentValue[$iy-1] = $Page->Col[$iy]->Caption;
-			$Page->SummaryViewValue[$iy-1] = ewr_FormatDateTime($Page->SummaryCurrentValue[$iy-1], 0);
+			$Page->SummaryViewValue[$iy-1] = ewr_FormatDateTime($Page->SummaryCurrentValue[$iy-1], 7);
 ?>
 		<td class="ewTableHeader"<?php echo $Page->tgl_shift->CellAttributes() ?>><div<?php echo $Page->tgl_shift->ViewAttributes() ?>><?php echo $Page->SummaryViewValue[$iy-1]; ?></div></td>
 <?php
