@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/4/4" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/4/5" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -595,9 +595,6 @@
     <menu id="1">
       <phrase id="menutext" value="Data Finger Pegawai" />
     </menu>
-    <menu id="10070">
-      <phrase id="menutext" value="Rekonsiliasi" />
-    </menu>
     <menu id="10063">
       <phrase id="menutext" value="r rekon" />
     </menu>
@@ -618,6 +615,9 @@
     </menu>
     <menu id="10078">
       <phrase id="menutext" value="Jadwal Kerja Pegawai Default" />
+    </menu>
+    <menu id="10080">
+      <phrase id="menutext" value="Rekonsiliasi Absensi" />
     </menu>
     <menu id="63">
       <phrase id="menutext" value="Pengaturan" />
@@ -2581,9 +2581,6 @@
     <table id="dashboard_php">
       <phrase id="tblcaption" value="Dashboard" />
     </table>
-    <table id="rekon_php">
-      <phrase id="tblcaption" value="Rekonsiliasi" />
-    </table>
     <table id="kartu_scanlog">
       <phrase id="tblcaption" value="kartu scanlog" />
       <field id="ks_id">
@@ -2667,6 +2664,9 @@
     </table>
     <table id="generate__php">
       <phrase id="tblcaption" value="Generate Jadwal Kerja" />
+    </table>
+    <table id="rekon__php">
+      <phrase id="tblcaption" value="Rekonsiliasi Absensi" />
     </table>
   </project>
 </ew-language>
