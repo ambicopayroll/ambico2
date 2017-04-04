@@ -7,7 +7,8 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "pegawaiinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
-<?php include_once "t_jdkr_peggridcls.php" ?>
+<?php include_once "t_jdw_krj_peggridcls.php" ?>
+<?php include_once "t_jdw_krj_defgridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -74,12 +75,6 @@ class cpegawai_view extends cpegawai {
 	var $GridEditUrl;
 	var $MultiDeleteUrl;
 	var $MultiUpdateUrl;
-	var $AuditTrailOnAdd = FALSE;
-	var $AuditTrailOnEdit = FALSE;
-	var $AuditTrailOnDelete = FALSE;
-	var $AuditTrailOnView = FALSE;
-	var $AuditTrailOnViewData = FALSE;
-	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -414,6 +409,9 @@ class cpegawai_view extends cpegawai {
 		$this->nama_rek->SetVisibility();
 		$this->no_rek->SetVisibility();
 
+		// Set up detail page object
+		$this->SetupDetailPages();
+
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
 
@@ -495,6 +493,7 @@ class cpegawai_view extends cpegawai {
 	var $RecKey = array();
 	var $IsModal = FALSE;
 	var $Recordset;
+	var $DetailPages; // Detail pages object
 
 	//
 	// Page main
@@ -634,25 +633,25 @@ class cpegawai_view extends cpegawai {
 		$DetailCopyTblVar = "";
 		$DetailEditTblVar = "";
 
-		// "detail_t_jdkr_peg"
-		$item = &$option->Add("detail_t_jdkr_peg");
-		$body = $Language->Phrase("ViewPageDetailLink") . $Language->TablePhrase("t_jdkr_peg", "TblCaption");
-		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("t_jdkr_peglist.php?" . EW_TABLE_SHOW_MASTER . "=pegawai&fk_pegawai_id=" . urlencode(strval($this->pegawai_id->CurrentValue)) . "") . "\">" . $body . "</a>";
+		// "detail_t_jdw_krj_peg"
+		$item = &$option->Add("detail_t_jdw_krj_peg");
+		$body = $Language->Phrase("ViewPageDetailLink") . $Language->TablePhrase("t_jdw_krj_peg", "TblCaption");
+		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("t_jdw_krj_peglist.php?" . EW_TABLE_SHOW_MASTER . "=pegawai&fk_pegawai_id=" . urlencode(strval($this->pegawai_id->CurrentValue)) . "") . "\">" . $body . "</a>";
 		$links = "";
-		if ($GLOBALS["t_jdkr_peg_grid"] && $GLOBALS["t_jdkr_peg_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 't_jdkr_peg')) {
-			$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
+		if ($GLOBALS["t_jdw_krj_peg_grid"] && $GLOBALS["t_jdw_krj_peg_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 't_jdw_krj_peg')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=t_jdw_krj_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
 			if ($DetailViewTblVar <> "") $DetailViewTblVar .= ",";
-			$DetailViewTblVar .= "t_jdkr_peg";
+			$DetailViewTblVar .= "t_jdw_krj_peg";
 		}
-		if ($GLOBALS["t_jdkr_peg_grid"] && $GLOBALS["t_jdkr_peg_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 't_jdkr_peg')) {
-			$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
+		if ($GLOBALS["t_jdw_krj_peg_grid"] && $GLOBALS["t_jdw_krj_peg_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 't_jdw_krj_peg')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=t_jdw_krj_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
 			if ($DetailEditTblVar <> "") $DetailEditTblVar .= ",";
-			$DetailEditTblVar .= "t_jdkr_peg";
+			$DetailEditTblVar .= "t_jdw_krj_peg";
 		}
-		if ($GLOBALS["t_jdkr_peg_grid"] && $GLOBALS["t_jdkr_peg_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 't_jdkr_peg')) {
-			$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
+		if ($GLOBALS["t_jdw_krj_peg_grid"] && $GLOBALS["t_jdw_krj_peg_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 't_jdw_krj_peg')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=t_jdw_krj_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
 			if ($DetailCopyTblVar <> "") $DetailCopyTblVar .= ",";
-			$DetailCopyTblVar .= "t_jdkr_peg";
+			$DetailCopyTblVar .= "t_jdw_krj_peg";
 		}
 		if ($links <> "") {
 			$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewDetail\" data-toggle=\"dropdown\"><b class=\"caret\"></b></button>";
@@ -660,10 +659,43 @@ class cpegawai_view extends cpegawai {
 		}
 		$body = "<div class=\"btn-group\">" . $body . "</div>";
 		$item->Body = $body;
-		$item->Visible = $Security->AllowList(CurrentProjectID() . 't_jdkr_peg');
+		$item->Visible = $Security->AllowList(CurrentProjectID() . 't_jdw_krj_peg');
 		if ($item->Visible) {
 			if ($DetailTableLink <> "") $DetailTableLink .= ",";
-			$DetailTableLink .= "t_jdkr_peg";
+			$DetailTableLink .= "t_jdw_krj_peg";
+		}
+		if ($this->ShowMultipleDetails) $item->Visible = FALSE;
+
+		// "detail_t_jdw_krj_def"
+		$item = &$option->Add("detail_t_jdw_krj_def");
+		$body = $Language->Phrase("ViewPageDetailLink") . $Language->TablePhrase("t_jdw_krj_def", "TblCaption");
+		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("t_jdw_krj_deflist.php?" . EW_TABLE_SHOW_MASTER . "=pegawai&fk_pegawai_id=" . urlencode(strval($this->pegawai_id->CurrentValue)) . "") . "\">" . $body . "</a>";
+		$links = "";
+		if ($GLOBALS["t_jdw_krj_def_grid"] && $GLOBALS["t_jdw_krj_def_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 't_jdw_krj_def')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=t_jdw_krj_def")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
+			if ($DetailViewTblVar <> "") $DetailViewTblVar .= ",";
+			$DetailViewTblVar .= "t_jdw_krj_def";
+		}
+		if ($GLOBALS["t_jdw_krj_def_grid"] && $GLOBALS["t_jdw_krj_def_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 't_jdw_krj_def')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=t_jdw_krj_def")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
+			if ($DetailEditTblVar <> "") $DetailEditTblVar .= ",";
+			$DetailEditTblVar .= "t_jdw_krj_def";
+		}
+		if ($GLOBALS["t_jdw_krj_def_grid"] && $GLOBALS["t_jdw_krj_def_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 't_jdw_krj_def')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=t_jdw_krj_def")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
+			if ($DetailCopyTblVar <> "") $DetailCopyTblVar .= ",";
+			$DetailCopyTblVar .= "t_jdw_krj_def";
+		}
+		if ($links <> "") {
+			$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewDetail\" data-toggle=\"dropdown\"><b class=\"caret\"></b></button>";
+			$body .= "<ul class=\"dropdown-menu\">". $links . "</ul>";
+		}
+		$body = "<div class=\"btn-group\">" . $body . "</div>";
+		$item->Body = $body;
+		$item->Visible = $Security->AllowList(CurrentProjectID() . 't_jdw_krj_def');
+		if ($item->Visible) {
+			if ($DetailTableLink <> "") $DetailTableLink .= ",";
+			$DetailTableLink .= "t_jdw_krj_def";
 		}
 		if ($this->ShowMultipleDetails) $item->Visible = FALSE;
 
@@ -1233,18 +1265,36 @@ class cpegawai_view extends cpegawai {
 		$Doc->Text .= $sHeader;
 		$this->ExportDocument($Doc, $rs, $this->StartRec, $this->StopRec, "view");
 
-		// Export detail records (t_jdkr_peg)
-		if (EW_EXPORT_DETAIL_RECORDS && in_array("t_jdkr_peg", explode(",", $this->getCurrentDetailTable()))) {
-			global $t_jdkr_peg;
-			if (!isset($t_jdkr_peg)) $t_jdkr_peg = new ct_jdkr_peg;
-			$rsdetail = $t_jdkr_peg->LoadRs($t_jdkr_peg->GetDetailFilter()); // Load detail records
+		// Export detail records (t_jdw_krj_peg)
+		if (EW_EXPORT_DETAIL_RECORDS && in_array("t_jdw_krj_peg", explode(",", $this->getCurrentDetailTable()))) {
+			global $t_jdw_krj_peg;
+			if (!isset($t_jdw_krj_peg)) $t_jdw_krj_peg = new ct_jdw_krj_peg;
+			$rsdetail = $t_jdw_krj_peg->LoadRs($t_jdw_krj_peg->GetDetailFilter()); // Load detail records
 			if ($rsdetail && !$rsdetail->EOF) {
 				$ExportStyle = $Doc->Style;
 				$Doc->SetStyle("h"); // Change to horizontal
 				if ($this->Export <> "csv" || EW_EXPORT_DETAIL_RECORDS_FOR_CSV) {
 					$Doc->ExportEmptyRow();
 					$detailcnt = $rsdetail->RecordCount();
-					$t_jdkr_peg->ExportDocument($Doc, $rsdetail, 1, $detailcnt);
+					$t_jdw_krj_peg->ExportDocument($Doc, $rsdetail, 1, $detailcnt);
+				}
+				$Doc->SetStyle($ExportStyle); // Restore
+				$rsdetail->Close();
+			}
+		}
+
+		// Export detail records (t_jdw_krj_def)
+		if (EW_EXPORT_DETAIL_RECORDS && in_array("t_jdw_krj_def", explode(",", $this->getCurrentDetailTable()))) {
+			global $t_jdw_krj_def;
+			if (!isset($t_jdw_krj_def)) $t_jdw_krj_def = new ct_jdw_krj_def;
+			$rsdetail = $t_jdw_krj_def->LoadRs($t_jdw_krj_def->GetDetailFilter()); // Load detail records
+			if ($rsdetail && !$rsdetail->EOF) {
+				$ExportStyle = $Doc->Style;
+				$Doc->SetStyle("h"); // Change to horizontal
+				if ($this->Export <> "csv" || EW_EXPORT_DETAIL_RECORDS_FOR_CSV) {
+					$Doc->ExportEmptyRow();
+					$detailcnt = $rsdetail->RecordCount();
+					$t_jdw_krj_def->ExportDocument($Doc, $rsdetail, 1, $detailcnt);
 				}
 				$Doc->SetStyle($ExportStyle); // Restore
 				$rsdetail->Close();
@@ -1397,18 +1447,32 @@ class cpegawai_view extends cpegawai {
 		}
 		if ($sDetailTblVar <> "") {
 			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("t_jdkr_peg", $DetailTblVar)) {
-				if (!isset($GLOBALS["t_jdkr_peg_grid"]))
-					$GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid;
-				if ($GLOBALS["t_jdkr_peg_grid"]->DetailView) {
-					$GLOBALS["t_jdkr_peg_grid"]->CurrentMode = "view";
+			if (in_array("t_jdw_krj_peg", $DetailTblVar)) {
+				if (!isset($GLOBALS["t_jdw_krj_peg_grid"]))
+					$GLOBALS["t_jdw_krj_peg_grid"] = new ct_jdw_krj_peg_grid;
+				if ($GLOBALS["t_jdw_krj_peg_grid"]->DetailView) {
+					$GLOBALS["t_jdw_krj_peg_grid"]->CurrentMode = "view";
 
 					// Save current master table to detail table
-					$GLOBALS["t_jdkr_peg_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["t_jdkr_peg_grid"]->setStartRecordNumber(1);
-					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->FldIsDetailKey = TRUE;
-					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
-					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdkr_peg_grid"]->pegawai_id->CurrentValue);
+					$GLOBALS["t_jdw_krj_peg_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t_jdw_krj_peg_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t_jdw_krj_peg_grid"]->pegawai_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t_jdw_krj_peg_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
+					$GLOBALS["t_jdw_krj_peg_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdw_krj_peg_grid"]->pegawai_id->CurrentValue);
+				}
+			}
+			if (in_array("t_jdw_krj_def", $DetailTblVar)) {
+				if (!isset($GLOBALS["t_jdw_krj_def_grid"]))
+					$GLOBALS["t_jdw_krj_def_grid"] = new ct_jdw_krj_def_grid;
+				if ($GLOBALS["t_jdw_krj_def_grid"]->DetailView) {
+					$GLOBALS["t_jdw_krj_def_grid"]->CurrentMode = "view";
+
+					// Save current master table to detail table
+					$GLOBALS["t_jdw_krj_def_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t_jdw_krj_def_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
+					$GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->CurrentValue);
 				}
 			}
 		}
@@ -1422,6 +1486,15 @@ class cpegawai_view extends cpegawai {
 		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("pegawailist.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
+	}
+
+	// Set up detail pages
+	function SetupDetailPages() {
+		$pages = new cSubPages();
+		$pages->Style = "tabs";
+		$pages->Add('t_jdw_krj_peg');
+		$pages->Add('t_jdw_krj_def');
+		$this->DetailPages = $pages;
 	}
 
 	// Setup lookup filters of a field
@@ -1438,13 +1511,6 @@ class cpegawai_view extends cpegawai {
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
 		}
-	}
-
-	// Write Audit Trail start/end for grid update
-	function WriteAuditTrailDummy($typ) {
-		$table = 'pegawai';
-		$usr = CurrentUserID();
-		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
 
 	// Page Load event
@@ -1963,13 +2029,59 @@ $pegawai_view->ShowMessage();
 <div class="clearfix"></div>
 <?php } ?>
 <?php } ?>
-<?php
-	if (in_array("t_jdkr_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdkr_peg->DetailView) {
-?>
 <?php if ($pegawai->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t_jdkr_peg", "TblCaption") ?></h4>
+<?php
+	$pegawai_view->DetailPages->ValidKeys = explode(",", $pegawai->getCurrentDetailTable());
+	$FirstActiveDetailTable = $pegawai_view->DetailPages->ActivePageIndex();
+?>
+<div class="ewDetailPages">
+<div class="tabbable" id="pegawai_view_details">
+	<ul class="nav<?php echo $pegawai_view->DetailPages->NavStyle() ?>">
+<?php
+	if (in_array("t_jdw_krj_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdw_krj_peg->DetailView) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_jdw_krj_peg") {
+			$FirstActiveDetailTable = "t_jdw_krj_peg";
+		}
+?>
+		<li<?php echo $pegawai_view->DetailPages->TabStyle("t_jdw_krj_peg") ?>><a href="#tab_t_jdw_krj_peg" data-toggle="tab"><?php echo $Language->TablePhrase("t_jdw_krj_peg", "TblCaption") ?></a></li>
+<?php
+	}
+?>
+<?php
+	if (in_array("t_jdw_krj_def", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdw_krj_def->DetailView) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_jdw_krj_def") {
+			$FirstActiveDetailTable = "t_jdw_krj_def";
+		}
+?>
+		<li<?php echo $pegawai_view->DetailPages->TabStyle("t_jdw_krj_def") ?>><a href="#tab_t_jdw_krj_def" data-toggle="tab"><?php echo $Language->TablePhrase("t_jdw_krj_def", "TblCaption") ?></a></li>
+<?php
+	}
+?>
+	</ul>
+	<div class="tab-content">
+<?php
+	if (in_array("t_jdw_krj_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdw_krj_peg->DetailView) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_jdw_krj_peg") {
+			$FirstActiveDetailTable = "t_jdw_krj_peg";
+		}
+?>
+		<div class="tab-pane<?php echo $pegawai_view->DetailPages->PageStyle("t_jdw_krj_peg") ?>" id="tab_t_jdw_krj_peg">
+<?php include_once "t_jdw_krj_peggrid.php" ?>
+		</div>
 <?php } ?>
-<?php include_once "t_jdkr_peggrid.php" ?>
+<?php
+	if (in_array("t_jdw_krj_def", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdw_krj_def->DetailView) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_jdw_krj_def") {
+			$FirstActiveDetailTable = "t_jdw_krj_def";
+		}
+?>
+		<div class="tab-pane<?php echo $pegawai_view->DetailPages->PageStyle("t_jdw_krj_def") ?>" id="tab_t_jdw_krj_def">
+<?php include_once "t_jdw_krj_defgrid.php" ?>
+		</div>
+<?php } ?>
+	</div>
+</div>
+</div>
 <?php } ?>
 </form>
 <?php if ($pegawai->Export == "") { ?>

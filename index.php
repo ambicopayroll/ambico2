@@ -272,12 +272,12 @@ class cdefault {
 			$this->Page_Terminate("pegawailist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't_jk'))
 			$this->Page_Terminate("t_jklist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't_tgl_2017'))
-			$this->Page_Terminate("t_tgl_2017list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't_jd_krj_peg'))
-			$this->Page_Terminate("t_jd_krj_peglist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't_jdkr_peg'))
-			$this->Page_Terminate("t_jdkr_peglist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't_jdw_krj_peg'))
+			$this->Page_Terminate("t_jdw_krj_peglist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't_jdw_krj_def'))
+			$this->Page_Terminate("t_jdw_krj_deflist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'generate_.php'))
+			$this->Page_Terminate("generate_.php");
 		if ($Security->IsLoggedIn()) {
 			$this->setFailureMessage(ew_DeniedMsg() . "<br><br><a href=\"logout.php\">" . $Language->Phrase("BackToLogin") . "</a>");
 		} else {

@@ -6,7 +6,6 @@ ob_start(); // Turn on output buffering
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
 <?php include_once "t_jdkr_peginfo.php" ?>
-<?php include_once "pegawaiinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
@@ -42,12 +41,6 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		if ($this->UseTokenInUrl) $PageUrl .= "t=" . $this->TableVar . "&"; // Add page token
 		return $PageUrl;
 	}
-	var $AuditTrailOnAdd = FALSE;
-	var $AuditTrailOnEdit = FALSE;
-	var $AuditTrailOnDelete = TRUE;
-	var $AuditTrailOnView = FALSE;
-	var $AuditTrailOnViewData = FALSE;
-	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -239,9 +232,6 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 			$GLOBALS["Table"] = &$GLOBALS["t_jdkr_peg"];
 		}
 
-		// Table object (pegawai)
-		if (!isset($GLOBALS['pegawai'])) $GLOBALS['pegawai'] = new cpegawai();
-
 		// Table object (t_user)
 		if (!isset($GLOBALS['t_user'])) $GLOBALS['t_user'] = new ct_user();
 
@@ -295,7 +285,7 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		$this->jdkr_id->SetVisibility();
 		$this->jdkr_id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->pegawai_id->SetVisibility();
-		$this->tgl_id->SetVisibility();
+		$this->tgl->SetVisibility();
 		$this->jk_id->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
@@ -372,9 +362,6 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 	//
 	function Page_Main() {
 		global $Language;
-
-		// Set up master/detail parameters
-		$this->SetUpMasterParms();
 
 		// Set up Breadcrumb
 		$this->SetupBreadcrumb();
@@ -481,12 +468,7 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		} else {
 			$this->pegawai_id->VirtualValue = ""; // Clear value
 		}
-		$this->tgl_id->setDbValue($rs->fields('tgl_id'));
-		if (array_key_exists('EV__tgl_id', $rs->fields)) {
-			$this->tgl_id->VirtualValue = $rs->fields('EV__tgl_id'); // Set up virtual field value
-		} else {
-			$this->tgl_id->VirtualValue = ""; // Clear value
-		}
+		$this->tgl->setDbValue($rs->fields('tgl'));
 		$this->jk_id->setDbValue($rs->fields('jk_id'));
 		if (array_key_exists('EV__jk_id', $rs->fields)) {
 			$this->jk_id->VirtualValue = $rs->fields('EV__jk_id'); // Set up virtual field value
@@ -501,7 +483,7 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->jdkr_id->DbValue = $row['jdkr_id'];
 		$this->pegawai_id->DbValue = $row['pegawai_id'];
-		$this->tgl_id->DbValue = $row['tgl_id'];
+		$this->tgl->DbValue = $row['tgl'];
 		$this->jk_id->DbValue = $row['jk_id'];
 	}
 
@@ -517,7 +499,7 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		// Common render codes for all row types
 		// jdkr_id
 		// pegawai_id
-		// tgl_id
+		// tgl
 		// jk_id
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
@@ -554,40 +536,15 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		}
 		$this->pegawai_id->ViewCustomAttributes = "";
 
-		// tgl_id
-		if ($this->tgl_id->VirtualValue <> "") {
-			$this->tgl_id->ViewValue = $this->tgl_id->VirtualValue;
-		} else {
-			$this->tgl_id->ViewValue = $this->tgl_id->CurrentValue;
-		if (strval($this->tgl_id->CurrentValue) <> "") {
-			$sFilterWrk = "`tgl_id`" . ew_SearchString("=", $this->tgl_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `tgl_id`, `tgl` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t_tgl_2017`";
-		$sWhereWrk = "";
-		$this->tgl_id->LookupFilters = array("df1" => "0", "dx1" => ew_CastDateFieldForLike('`tgl`', 0, "DB"));
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->tgl_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = ew_FormatDateTime($rswrk->fields('DispFld'), 0);
-				$this->tgl_id->ViewValue = $this->tgl_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->tgl_id->ViewValue = $this->tgl_id->CurrentValue;
-			}
-		} else {
-			$this->tgl_id->ViewValue = NULL;
-		}
-		}
-		$this->tgl_id->ViewValue = tgl_indo($this->tgl_id->ViewValue);
-		$this->tgl_id->ViewCustomAttributes = "";
+		// tgl
+		$this->tgl->ViewValue = $this->tgl->CurrentValue;
+		$this->tgl->ViewValue = tgl_indo($this->tgl->ViewValue);
+		$this->tgl->ViewCustomAttributes = "";
 
 		// jk_id
 		if ($this->jk_id->VirtualValue <> "") {
 			$this->jk_id->ViewValue = $this->jk_id->VirtualValue;
 		} else {
-			$this->jk_id->ViewValue = $this->jk_id->CurrentValue;
 		if (strval($this->jk_id->CurrentValue) <> "") {
 			$sFilterWrk = "`jk_id`" . ew_SearchString("=", $this->jk_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `jk_id`, `jk_nm` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t_jk`";
@@ -621,10 +578,10 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 			$this->pegawai_id->HrefValue = "";
 			$this->pegawai_id->TooltipValue = "";
 
-			// tgl_id
-			$this->tgl_id->LinkCustomAttributes = "";
-			$this->tgl_id->HrefValue = "";
-			$this->tgl_id->TooltipValue = "";
+			// tgl
+			$this->tgl->LinkCustomAttributes = "";
+			$this->tgl->HrefValue = "";
+			$this->tgl->TooltipValue = "";
 
 			// jk_id
 			$this->jk_id->LinkCustomAttributes = "";
@@ -708,10 +665,6 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		}
 		if ($DeleteRows) {
 			$conn->CommitTrans(); // Commit the changes
-			if ($DeleteRows) {
-				foreach ($rsold as $row)
-					$this->WriteAuditTrailOnDelete($row);
-			}
 			if ($this->AuditTrailOnDelete) $this->WriteAuditTrailDummy($Language->Phrase("BatchDeleteSuccess")); // Batch delete success
 		} else {
 			$conn->RollbackTrans(); // Rollback changes
@@ -725,66 +678,6 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 			}
 		}
 		return $DeleteRows;
-	}
-
-	// Set up master/detail based on QueryString
-	function SetUpMasterParms() {
-		$bValidMaster = FALSE;
-
-		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "pegawai") {
-				$bValidMaster = TRUE;
-				if (@$_GET["fk_pegawai_id"] <> "") {
-					$GLOBALS["pegawai"]->pegawai_id->setQueryStringValue($_GET["fk_pegawai_id"]);
-					$this->pegawai_id->setQueryStringValue($GLOBALS["pegawai"]->pegawai_id->QueryStringValue);
-					$this->pegawai_id->setSessionValue($this->pegawai_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["pegawai"]->pegawai_id->QueryStringValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "pegawai") {
-				$bValidMaster = TRUE;
-				if (@$_POST["fk_pegawai_id"] <> "") {
-					$GLOBALS["pegawai"]->pegawai_id->setFormValue($_POST["fk_pegawai_id"]);
-					$this->pegawai_id->setFormValue($GLOBALS["pegawai"]->pegawai_id->FormValue);
-					$this->pegawai_id->setSessionValue($this->pegawai_id->FormValue);
-					if (!is_numeric($GLOBALS["pegawai"]->pegawai_id->FormValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		}
-		if ($bValidMaster) {
-
-			// Save current master table
-			$this->setCurrentMasterTable($sMasterTblVar);
-
-			// Reset start record counter (new master key)
-			$this->StartRec = 1;
-			$this->setStartRecordNumber($this->StartRec);
-
-			// Clear previous master key from Session
-			if ($sMasterTblVar <> "pegawai") {
-				if ($this->pegawai_id->CurrentValue == "") $this->pegawai_id->setSessionValue("");
-			}
-		}
-		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
-		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb
@@ -810,48 +703,6 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
-		}
-	}
-
-	// Write Audit Trail start/end for grid update
-	function WriteAuditTrailDummy($typ) {
-		$table = 't_jdkr_peg';
-		$usr = CurrentUserID();
-		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
-	}
-
-	// Write Audit Trail (delete page)
-	function WriteAuditTrailOnDelete(&$rs) {
-		global $Language;
-		if (!$this->AuditTrailOnDelete) return;
-		$table = 't_jdkr_peg';
-
-		// Get key value
-		$key = "";
-		if ($key <> "")
-			$key .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-		$key .= $rs['jdkr_id'];
-
-		// Write Audit Trail
-		$dt = ew_StdCurrentDateTime();
-		$id = ew_ScriptName();
-		$curUser = CurrentUserID();
-		foreach (array_keys($rs) as $fldname) {
-			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->FldDataType <> EW_DATATYPE_BLOB) { // Ignore BLOB fields
-				if ($this->fields[$fldname]->FldHtmlTag == "PASSWORD") {
-					$oldvalue = $Language->Phrase("PasswordMask"); // Password Field
-				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_MEMO) {
-					if (EW_AUDIT_TRAIL_TO_DATABASE)
-						$oldvalue = $rs[$fldname];
-					else
-						$oldvalue = "[MEMO]"; // Memo field
-				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_XML) {
-					$oldvalue = "[XML]"; // XML field
-				} else {
-					$oldvalue = $rs[$fldname];
-				}
-				ew_WriteAuditTrail("log", $dt, $id, $curUser, "D", $table, $fldname, $key, $oldvalue, "");
-			}
 		}
 	}
 
@@ -958,7 +809,6 @@ ft_jdkr_pegdelete.ValidateRequired = false;
 
 // Dynamic selection lists
 ft_jdkr_pegdelete.Lists["x_pegawai_id"] = {"LinkField":"x_pegawai_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pegawai_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pegawai"};
-ft_jdkr_pegdelete.Lists["x_tgl_id"] = {"LinkField":"x_tgl_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_tgl","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t_tgl_2017"};
 ft_jdkr_pegdelete.Lists["x_jk_id"] = {"LinkField":"x_jk_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_jk_nm","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t_jk"};
 
 // Form object for search
@@ -998,8 +848,8 @@ $t_jdkr_peg_delete->ShowMessage();
 <?php if ($t_jdkr_peg->pegawai_id->Visible) { // pegawai_id ?>
 		<th><span id="elh_t_jdkr_peg_pegawai_id" class="t_jdkr_peg_pegawai_id"><?php echo $t_jdkr_peg->pegawai_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t_jdkr_peg->tgl_id->Visible) { // tgl_id ?>
-		<th><span id="elh_t_jdkr_peg_tgl_id" class="t_jdkr_peg_tgl_id"><?php echo $t_jdkr_peg->tgl_id->FldCaption() ?></span></th>
+<?php if ($t_jdkr_peg->tgl->Visible) { // tgl ?>
+		<th><span id="elh_t_jdkr_peg_tgl" class="t_jdkr_peg_tgl"><?php echo $t_jdkr_peg->tgl->FldCaption() ?></span></th>
 <?php } ?>
 <?php if ($t_jdkr_peg->jk_id->Visible) { // jk_id ?>
 		<th><span id="elh_t_jdkr_peg_jk_id" class="t_jdkr_peg_jk_id"><?php echo $t_jdkr_peg->jk_id->FldCaption() ?></span></th>
@@ -1041,11 +891,11 @@ while (!$t_jdkr_peg_delete->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($t_jdkr_peg->tgl_id->Visible) { // tgl_id ?>
-		<td<?php echo $t_jdkr_peg->tgl_id->CellAttributes() ?>>
-<span id="el<?php echo $t_jdkr_peg_delete->RowCnt ?>_t_jdkr_peg_tgl_id" class="t_jdkr_peg_tgl_id">
-<span<?php echo $t_jdkr_peg->tgl_id->ViewAttributes() ?>>
-<?php echo $t_jdkr_peg->tgl_id->ListViewValue() ?></span>
+<?php if ($t_jdkr_peg->tgl->Visible) { // tgl ?>
+		<td<?php echo $t_jdkr_peg->tgl->CellAttributes() ?>>
+<span id="el<?php echo $t_jdkr_peg_delete->RowCnt ?>_t_jdkr_peg_tgl" class="t_jdkr_peg_tgl">
+<span<?php echo $t_jdkr_peg->tgl->ViewAttributes() ?>>
+<?php echo $t_jdkr_peg->tgl->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

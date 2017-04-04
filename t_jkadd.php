@@ -7,7 +7,6 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "t_jkinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
-<?php include_once "t_jdkr_peginfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -42,12 +41,6 @@ class ct_jk_add extends ct_jk {
 		if ($this->UseTokenInUrl) $PageUrl .= "t=" . $this->TableVar . "&"; // Add page token
 		return $PageUrl;
 	}
-	var $AuditTrailOnAdd = TRUE;
-	var $AuditTrailOnEdit = FALSE;
-	var $AuditTrailOnDelete = FALSE;
-	var $AuditTrailOnView = FALSE;
-	var $AuditTrailOnViewData = FALSE;
-	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -242,9 +235,6 @@ class ct_jk_add extends ct_jk {
 		// Table object (t_user)
 		if (!isset($GLOBALS['t_user'])) $GLOBALS['t_user'] = new ct_user();
 
-		// Table object (t_jdkr_peg)
-		if (!isset($GLOBALS['t_jdkr_peg'])) $GLOBALS['t_jdkr_peg'] = new ct_jdkr_peg();
-
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
 			define("EW_PAGE_ID", 'add', TRUE);
@@ -402,9 +392,6 @@ class ct_jk_add extends ct_jk {
 		$this->IsModal = (@$_GET["modal"] == "1" || @$_POST["modal"] == "1");
 		if ($this->IsModal)
 			$gbSkipHeaderFooter = TRUE;
-
-		// Set up master/detail parameters
-		$this->SetUpMasterParms();
 
 		// Process form if post back
 		if (@$_POST["a_add"] <> "") {
@@ -822,11 +809,6 @@ class ct_jk_add extends ct_jk {
 		// jk_ket
 		$this->jk_ket->SetDbValueDef($rsnew, $this->jk_ket->CurrentValue, NULL, FALSE);
 
-		// jk_id
-		if ($this->jk_id->getSessionValue() <> "") {
-			$rsnew['jk_id'] = $this->jk_id->getSessionValue();
-		}
-
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
 		$bInsertRow = $this->Row_Inserting($rs, $rsnew);
@@ -835,10 +817,6 @@ class ct_jk_add extends ct_jk {
 			$AddRow = $this->Insert($rsnew);
 			$conn->raiseErrorFn = '';
 			if ($AddRow) {
-
-				// Get insert id if necessary
-				$this->jk_id->setDbValue($conn->Insert_ID());
-				$rsnew['jk_id'] = $this->jk_id->DbValue;
 			}
 		} else {
 			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
@@ -857,69 +835,8 @@ class ct_jk_add extends ct_jk {
 			// Call Row Inserted event
 			$rs = ($rsold == NULL) ? NULL : $rsold->fields;
 			$this->Row_Inserted($rs, $rsnew);
-			$this->WriteAuditTrailOnAdd($rsnew);
 		}
 		return $AddRow;
-	}
-
-	// Set up master/detail based on QueryString
-	function SetUpMasterParms() {
-		$bValidMaster = FALSE;
-
-		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t_jdkr_peg") {
-				$bValidMaster = TRUE;
-				if (@$_GET["fk_jk_id"] <> "") {
-					$GLOBALS["t_jdkr_peg"]->jk_id->setQueryStringValue($_GET["fk_jk_id"]);
-					$this->jk_id->setQueryStringValue($GLOBALS["t_jdkr_peg"]->jk_id->QueryStringValue);
-					$this->jk_id->setSessionValue($this->jk_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["t_jdkr_peg"]->jk_id->QueryStringValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t_jdkr_peg") {
-				$bValidMaster = TRUE;
-				if (@$_POST["fk_jk_id"] <> "") {
-					$GLOBALS["t_jdkr_peg"]->jk_id->setFormValue($_POST["fk_jk_id"]);
-					$this->jk_id->setFormValue($GLOBALS["t_jdkr_peg"]->jk_id->FormValue);
-					$this->jk_id->setSessionValue($this->jk_id->FormValue);
-					if (!is_numeric($GLOBALS["t_jdkr_peg"]->jk_id->FormValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		}
-		if ($bValidMaster) {
-
-			// Save current master table
-			$this->setCurrentMasterTable($sMasterTblVar);
-
-			// Reset start record counter (new master key)
-			$this->StartRec = 1;
-			$this->setStartRecordNumber($this->StartRec);
-
-			// Clear previous master key from Session
-			if ($sMasterTblVar <> "t_jdkr_peg") {
-				if ($this->jk_id->CurrentValue == "") $this->jk_id->setSessionValue("");
-			}
-		}
-		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
-		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb
@@ -945,47 +862,6 @@ class ct_jk_add extends ct_jk {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
-		}
-	}
-
-	// Write Audit Trail start/end for grid update
-	function WriteAuditTrailDummy($typ) {
-		$table = 't_jk';
-		$usr = CurrentUserID();
-		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
-	}
-
-	// Write Audit Trail (add page)
-	function WriteAuditTrailOnAdd(&$rs) {
-		global $Language;
-		if (!$this->AuditTrailOnAdd) return;
-		$table = 't_jk';
-
-		// Get key value
-		$key = "";
-		if ($key <> "") $key .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-		$key .= $rs['jk_id'];
-
-		// Write Audit Trail
-		$dt = ew_StdCurrentDateTime();
-		$id = ew_ScriptName();
-		$usr = CurrentUserID();
-		foreach (array_keys($rs) as $fldname) {
-			if ($this->fields[$fldname]->FldDataType <> EW_DATATYPE_BLOB) { // Ignore BLOB fields
-				if ($this->fields[$fldname]->FldHtmlTag == "PASSWORD") {
-					$newvalue = $Language->Phrase("PasswordMask"); // Password Field
-				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_MEMO) {
-					if (EW_AUDIT_TRAIL_TO_DATABASE)
-						$newvalue = $rs[$fldname];
-					else
-						$newvalue = "[MEMO]"; // Memo Field
-				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_XML) {
-					$newvalue = "[XML]"; // XML Field
-				} else {
-					$newvalue = $rs[$fldname];
-				}
-				ew_WriteAuditTrail("log", $dt, $id, $usr, "A", $table, $fldname, $key, "", $newvalue);
-			}
 		}
 	}
 
@@ -1175,10 +1051,6 @@ $t_jk_add->ShowMessage();
 <?php if ($t_jk_add->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
-<?php if ($t_jk->getCurrentMasterTable() == "t_jdkr_peg") { ?>
-<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t_jdkr_peg">
-<input type="hidden" name="fk_jk_id" value="<?php echo $t_jk->jk_id->getSessionValue() ?>">
-<?php } ?>
 <div>
 <?php if ($t_jk->jk_nm->Visible) { // jk_nm ?>
 	<div id="r_jk_nm" class="form-group">
@@ -1231,9 +1103,6 @@ $t_jk_add->ShowMessage();
 	</div>
 <?php } ?>
 </div>
-<?php if (strval($t_jk->jk_id->getSessionValue()) <> "") { ?>
-<input type="hidden" name="x_jk_id" id="x_jk_id" value="<?php echo ew_HtmlEncode(strval($t_jk->jk_id->getSessionValue())) ?>">
-<?php } ?>
 <?php if (!$t_jk_add->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">

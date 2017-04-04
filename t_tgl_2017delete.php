@@ -7,7 +7,6 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "t_tgl_2017info.php" ?>
 <?php include_once "t_userinfo.php" ?>
-<?php include_once "t_jdkr_peginfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -236,9 +235,6 @@ class ct_tgl_2017_delete extends ct_tgl_2017 {
 		// Table object (t_user)
 		if (!isset($GLOBALS['t_user'])) $GLOBALS['t_user'] = new ct_user();
 
-		// Table object (t_jdkr_peg)
-		if (!isset($GLOBALS['t_jdkr_peg'])) $GLOBALS['t_jdkr_peg'] = new ct_jdkr_peg();
-
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
 			define("EW_PAGE_ID", 'delete', TRUE);
@@ -364,9 +360,6 @@ class ct_tgl_2017_delete extends ct_tgl_2017 {
 	//
 	function Page_Main() {
 		global $Language;
-
-		// Set up master/detail parameters
-		$this->SetUpMasterParms();
 
 		// Set up Breadcrumb
 		$this->SetupBreadcrumb();
@@ -599,66 +592,6 @@ class ct_tgl_2017_delete extends ct_tgl_2017 {
 			}
 		}
 		return $DeleteRows;
-	}
-
-	// Set up master/detail based on QueryString
-	function SetUpMasterParms() {
-		$bValidMaster = FALSE;
-
-		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t_jdkr_peg") {
-				$bValidMaster = TRUE;
-				if (@$_GET["fk_tgl_id"] <> "") {
-					$GLOBALS["t_jdkr_peg"]->tgl_id->setQueryStringValue($_GET["fk_tgl_id"]);
-					$this->tgl_id->setQueryStringValue($GLOBALS["t_jdkr_peg"]->tgl_id->QueryStringValue);
-					$this->tgl_id->setSessionValue($this->tgl_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["t_jdkr_peg"]->tgl_id->QueryStringValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t_jdkr_peg") {
-				$bValidMaster = TRUE;
-				if (@$_POST["fk_tgl_id"] <> "") {
-					$GLOBALS["t_jdkr_peg"]->tgl_id->setFormValue($_POST["fk_tgl_id"]);
-					$this->tgl_id->setFormValue($GLOBALS["t_jdkr_peg"]->tgl_id->FormValue);
-					$this->tgl_id->setSessionValue($this->tgl_id->FormValue);
-					if (!is_numeric($GLOBALS["t_jdkr_peg"]->tgl_id->FormValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		}
-		if ($bValidMaster) {
-
-			// Save current master table
-			$this->setCurrentMasterTable($sMasterTblVar);
-
-			// Reset start record counter (new master key)
-			$this->StartRec = 1;
-			$this->setStartRecordNumber($this->StartRec);
-
-			// Clear previous master key from Session
-			if ($sMasterTblVar <> "t_jdkr_peg") {
-				if ($this->tgl_id->CurrentValue == "") $this->tgl_id->setSessionValue("");
-			}
-		}
-		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
-		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb

@@ -87,53 +87,6 @@ class ct_tgl_2017 extends cTable {
 		}
 	}
 
-	// Current master table name
-	function getCurrentMasterTable() {
-		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE];
-	}
-
-	function setCurrentMasterTable($v) {
-		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE] = $v;
-	}
-
-	// Session master WHERE clause
-	function GetMasterFilter() {
-
-		// Master filter
-		$sMasterFilter = "";
-		if ($this->getCurrentMasterTable() == "t_jdkr_peg") {
-			if ($this->tgl_id->getSessionValue() <> "")
-				$sMasterFilter .= "`tgl_id`=" . ew_QuotedValue($this->tgl_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
-			else
-				return "";
-		}
-		return $sMasterFilter;
-	}
-
-	// Session detail WHERE clause
-	function GetDetailFilter() {
-
-		// Detail filter
-		$sDetailFilter = "";
-		if ($this->getCurrentMasterTable() == "t_jdkr_peg") {
-			if ($this->tgl_id->getSessionValue() <> "")
-				$sDetailFilter .= "`tgl_id`=" . ew_QuotedValue($this->tgl_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
-			else
-				return "";
-		}
-		return $sDetailFilter;
-	}
-
-	// Master filter
-	function SqlMasterFilter_t_jdkr_peg() {
-		return "`tgl_id`=@tgl_id@";
-	}
-
-	// Detail filter
-	function SqlDetailFilter_t_jdkr_peg() {
-		return "`tgl_id`=@tgl_id@";
-	}
-
 	// Table level SQL
 	var $_SqlFrom = "";
 
@@ -357,7 +310,14 @@ class ct_tgl_2017 extends cTable {
 	// Insert
 	function Insert(&$rs) {
 		$conn = &$this->Connection();
-		return $conn->Execute($this->InsertSQL($rs));
+		$bInsert = $conn->Execute($this->InsertSQL($rs));
+		if ($bInsert) {
+
+			// Get insert id if necessary
+			$this->tgl_id->setDbValue($conn->Insert_ID());
+			$rs['tgl_id'] = $this->tgl_id->DbValue;
+		}
+		return $bInsert;
 	}
 
 	// UPDATE statement
@@ -382,7 +342,8 @@ class ct_tgl_2017 extends cTable {
 	// Update
 	function Update(&$rs, $where = "", $rsold = NULL, $curfilter = TRUE) {
 		$conn = &$this->Connection();
-		return $conn->Execute($this->UpdateSQL($rs, $where, $curfilter));
+		$bUpdate = $conn->Execute($this->UpdateSQL($rs, $where, $curfilter));
+		return $bUpdate;
 	}
 
 	// DELETE statement
@@ -406,7 +367,8 @@ class ct_tgl_2017 extends cTable {
 	// Delete
 	function Delete(&$rs, $where = "", $curfilter = TRUE) {
 		$conn = &$this->Connection();
-		return $conn->Execute($this->DeleteSQL($rs, $where, $curfilter));
+		$bDelete = $conn->Execute($this->DeleteSQL($rs, $where, $curfilter));
+		return $bDelete;
 	}
 
 	// Key filter WHERE clause
@@ -495,10 +457,6 @@ class ct_tgl_2017 extends cTable {
 
 	// Add master url
 	function AddMasterUrl($url) {
-		if ($this->getCurrentMasterTable() == "t_jdkr_peg" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
-			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
-			$url .= "&fk_tgl_id=" . urlencode($this->tgl_id->CurrentValue);
-		}
 		return $url;
 	}
 

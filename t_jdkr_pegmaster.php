@@ -2,7 +2,7 @@
 
 // jdkr_id
 // pegawai_id
-// tgl_id
+// tgl
 // jk_id
 
 ?>
@@ -33,13 +33,13 @@
 </td>
 		</tr>
 <?php } ?>
-<?php if ($t_jdkr_peg->tgl_id->Visible) { // tgl_id ?>
-		<tr id="r_tgl_id">
-			<td><?php echo $t_jdkr_peg->tgl_id->FldCaption() ?></td>
-			<td<?php echo $t_jdkr_peg->tgl_id->CellAttributes() ?>>
-<span id="el_t_jdkr_peg_tgl_id">
-<span<?php echo $t_jdkr_peg->tgl_id->ViewAttributes() ?>>
-<?php echo $t_jdkr_peg->tgl_id->ListViewValue() ?></span>
+<?php if ($t_jdkr_peg->tgl->Visible) { // tgl ?>
+		<tr id="r_tgl">
+			<td><?php echo $t_jdkr_peg->tgl->FldCaption() ?></td>
+			<td<?php echo $t_jdkr_peg->tgl->CellAttributes() ?>>
+<span id="el_t_jdkr_peg_tgl">
+<span<?php echo $t_jdkr_peg->tgl->ViewAttributes() ?>>
+<?php echo $t_jdkr_peg->tgl->ListViewValue() ?></span>
 </span>
 </td>
 		</tr>

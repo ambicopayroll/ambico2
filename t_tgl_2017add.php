@@ -7,7 +7,6 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "t_tgl_2017info.php" ?>
 <?php include_once "t_userinfo.php" ?>
-<?php include_once "t_jdkr_peginfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -236,9 +235,6 @@ class ct_tgl_2017_add extends ct_tgl_2017 {
 		// Table object (t_user)
 		if (!isset($GLOBALS['t_user'])) $GLOBALS['t_user'] = new ct_user();
 
-		// Table object (t_jdkr_peg)
-		if (!isset($GLOBALS['t_jdkr_peg'])) $GLOBALS['t_jdkr_peg'] = new ct_jdkr_peg();
-
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
 			define("EW_PAGE_ID", 'add', TRUE);
@@ -392,9 +388,6 @@ class ct_tgl_2017_add extends ct_tgl_2017 {
 		$this->IsModal = (@$_GET["modal"] == "1" || @$_POST["modal"] == "1");
 		if ($this->IsModal)
 			$gbSkipHeaderFooter = TRUE;
-
-		// Set up master/detail parameters
-		$this->SetUpMasterParms();
 
 		// Process form if post back
 		if (@$_POST["a_add"] <> "") {
@@ -662,11 +655,6 @@ class ct_tgl_2017_add extends ct_tgl_2017 {
 		// tgl
 		$this->tgl->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->tgl->CurrentValue, 0), ew_CurrentDate(), FALSE);
 
-		// tgl_id
-		if ($this->tgl_id->getSessionValue() <> "") {
-			$rsnew['tgl_id'] = $this->tgl_id->getSessionValue();
-		}
-
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
 		$bInsertRow = $this->Row_Inserting($rs, $rsnew);
@@ -675,10 +663,6 @@ class ct_tgl_2017_add extends ct_tgl_2017 {
 			$AddRow = $this->Insert($rsnew);
 			$conn->raiseErrorFn = '';
 			if ($AddRow) {
-
-				// Get insert id if necessary
-				$this->tgl_id->setDbValue($conn->Insert_ID());
-				$rsnew['tgl_id'] = $this->tgl_id->DbValue;
 			}
 		} else {
 			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
@@ -699,66 +683,6 @@ class ct_tgl_2017_add extends ct_tgl_2017 {
 			$this->Row_Inserted($rs, $rsnew);
 		}
 		return $AddRow;
-	}
-
-	// Set up master/detail based on QueryString
-	function SetUpMasterParms() {
-		$bValidMaster = FALSE;
-
-		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t_jdkr_peg") {
-				$bValidMaster = TRUE;
-				if (@$_GET["fk_tgl_id"] <> "") {
-					$GLOBALS["t_jdkr_peg"]->tgl_id->setQueryStringValue($_GET["fk_tgl_id"]);
-					$this->tgl_id->setQueryStringValue($GLOBALS["t_jdkr_peg"]->tgl_id->QueryStringValue);
-					$this->tgl_id->setSessionValue($this->tgl_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["t_jdkr_peg"]->tgl_id->QueryStringValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t_jdkr_peg") {
-				$bValidMaster = TRUE;
-				if (@$_POST["fk_tgl_id"] <> "") {
-					$GLOBALS["t_jdkr_peg"]->tgl_id->setFormValue($_POST["fk_tgl_id"]);
-					$this->tgl_id->setFormValue($GLOBALS["t_jdkr_peg"]->tgl_id->FormValue);
-					$this->tgl_id->setSessionValue($this->tgl_id->FormValue);
-					if (!is_numeric($GLOBALS["t_jdkr_peg"]->tgl_id->FormValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		}
-		if ($bValidMaster) {
-
-			// Save current master table
-			$this->setCurrentMasterTable($sMasterTblVar);
-
-			// Reset start record counter (new master key)
-			$this->StartRec = 1;
-			$this->setStartRecordNumber($this->StartRec);
-
-			// Clear previous master key from Session
-			if ($sMasterTblVar <> "t_jdkr_peg") {
-				if ($this->tgl_id->CurrentValue == "") $this->tgl_id->setSessionValue("");
-			}
-		}
-		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
-		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb
@@ -961,10 +885,6 @@ $t_tgl_2017_add->ShowMessage();
 <?php if ($t_tgl_2017_add->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
-<?php if ($t_tgl_2017->getCurrentMasterTable() == "t_jdkr_peg") { ?>
-<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t_jdkr_peg">
-<input type="hidden" name="fk_tgl_id" value="<?php echo $t_tgl_2017->tgl_id->getSessionValue() ?>">
-<?php } ?>
 <div>
 <?php if ($t_tgl_2017->tgl->Visible) { // tgl ?>
 	<div id="r_tgl" class="form-group">
@@ -977,9 +897,6 @@ $t_tgl_2017_add->ShowMessage();
 	</div>
 <?php } ?>
 </div>
-<?php if (strval($t_tgl_2017->tgl_id->getSessionValue()) <> "") { ?>
-<input type="hidden" name="x_tgl_id" id="x_tgl_id" value="<?php echo ew_HtmlEncode(strval($t_tgl_2017->tgl_id->getSessionValue())) ?>">
-<?php } ?>
 <?php if (!$t_tgl_2017_add->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">

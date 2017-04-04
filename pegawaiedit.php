@@ -7,7 +7,8 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "pegawaiinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
-<?php include_once "t_jdkr_peggridcls.php" ?>
+<?php include_once "t_jdw_krj_peggridcls.php" ?>
+<?php include_once "t_jdw_krj_defgridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -42,12 +43,6 @@ class cpegawai_edit extends cpegawai {
 		if ($this->UseTokenInUrl) $PageUrl .= "t=" . $this->TableVar . "&"; // Add page token
 		return $PageUrl;
 	}
-	var $AuditTrailOnAdd = FALSE;
-	var $AuditTrailOnEdit = TRUE;
-	var $AuditTrailOnDelete = FALSE;
-	var $AuditTrailOnView = FALSE;
-	var $AuditTrailOnViewData = FALSE;
-	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -316,6 +311,9 @@ class cpegawai_edit extends cpegawai {
 		$this->nama_rek->SetVisibility();
 		$this->no_rek->SetVisibility();
 
+		// Set up detail page object
+		$this->SetupDetailPages();
+
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
 
@@ -332,10 +330,18 @@ class cpegawai_edit extends cpegawai {
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
 
-			// Process auto fill for detail table 't_jdkr_peg'
-			if (@$_POST["grid"] == "ft_jdkr_peggrid") {
-				if (!isset($GLOBALS["t_jdkr_peg_grid"])) $GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid;
-				$GLOBALS["t_jdkr_peg_grid"]->Page_Init();
+			// Process auto fill for detail table 't_jdw_krj_peg'
+			if (@$_POST["grid"] == "ft_jdw_krj_peggrid") {
+				if (!isset($GLOBALS["t_jdw_krj_peg_grid"])) $GLOBALS["t_jdw_krj_peg_grid"] = new ct_jdw_krj_peg_grid;
+				$GLOBALS["t_jdw_krj_peg_grid"]->Page_Init();
+				$this->Page_Terminate();
+				exit();
+			}
+
+			// Process auto fill for detail table 't_jdw_krj_def'
+			if (@$_POST["grid"] == "ft_jdw_krj_defgrid") {
+				if (!isset($GLOBALS["t_jdw_krj_def_grid"])) $GLOBALS["t_jdw_krj_def_grid"] = new ct_jdw_krj_def_grid;
+				$GLOBALS["t_jdw_krj_def_grid"]->Page_Init();
 				$this->Page_Terminate();
 				exit();
 			}
@@ -418,6 +424,7 @@ class cpegawai_edit extends cpegawai {
 	var $RecCnt;
 	var $RecKey = array();
 	var $Recordset;
+	var $DetailPages; // Detail pages object
 
 	// 
 	// Page main
@@ -1361,9 +1368,13 @@ class cpegawai_edit extends cpegawai {
 
 		// Validate detail grid
 		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-		if (in_array("t_jdkr_peg", $DetailTblVar) && $GLOBALS["t_jdkr_peg"]->DetailEdit) {
-			if (!isset($GLOBALS["t_jdkr_peg_grid"])) $GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid(); // get detail page object
-			$GLOBALS["t_jdkr_peg_grid"]->ValidateGridForm();
+		if (in_array("t_jdw_krj_peg", $DetailTblVar) && $GLOBALS["t_jdw_krj_peg"]->DetailEdit) {
+			if (!isset($GLOBALS["t_jdw_krj_peg_grid"])) $GLOBALS["t_jdw_krj_peg_grid"] = new ct_jdw_krj_peg_grid(); // get detail page object
+			$GLOBALS["t_jdw_krj_peg_grid"]->ValidateGridForm();
+		}
+		if (in_array("t_jdw_krj_def", $DetailTblVar) && $GLOBALS["t_jdw_krj_def"]->DetailEdit) {
+			if (!isset($GLOBALS["t_jdw_krj_def_grid"])) $GLOBALS["t_jdw_krj_def_grid"] = new ct_jdw_krj_def_grid(); // get detail page object
+			$GLOBALS["t_jdw_krj_def_grid"]->ValidateGridForm();
 		}
 
 		// Return validate result
@@ -1507,10 +1518,18 @@ class cpegawai_edit extends cpegawai {
 				// Update detail records
 				$DetailTblVar = explode(",", $this->getCurrentDetailTable());
 				if ($EditRow) {
-					if (in_array("t_jdkr_peg", $DetailTblVar) && $GLOBALS["t_jdkr_peg"]->DetailEdit) {
-						if (!isset($GLOBALS["t_jdkr_peg_grid"])) $GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid(); // Get detail page object
-						$Security->LoadCurrentUserLevel($this->ProjectID . "t_jdkr_peg"); // Load user level of detail table
-						$EditRow = $GLOBALS["t_jdkr_peg_grid"]->GridUpdate();
+					if (in_array("t_jdw_krj_peg", $DetailTblVar) && $GLOBALS["t_jdw_krj_peg"]->DetailEdit) {
+						if (!isset($GLOBALS["t_jdw_krj_peg_grid"])) $GLOBALS["t_jdw_krj_peg_grid"] = new ct_jdw_krj_peg_grid(); // Get detail page object
+						$Security->LoadCurrentUserLevel($this->ProjectID . "t_jdw_krj_peg"); // Load user level of detail table
+						$EditRow = $GLOBALS["t_jdw_krj_peg_grid"]->GridUpdate();
+						$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+					}
+				}
+				if ($EditRow) {
+					if (in_array("t_jdw_krj_def", $DetailTblVar) && $GLOBALS["t_jdw_krj_def"]->DetailEdit) {
+						if (!isset($GLOBALS["t_jdw_krj_def_grid"])) $GLOBALS["t_jdw_krj_def_grid"] = new ct_jdw_krj_def_grid(); // Get detail page object
+						$Security->LoadCurrentUserLevel($this->ProjectID . "t_jdw_krj_def"); // Load user level of detail table
+						$EditRow = $GLOBALS["t_jdw_krj_def_grid"]->GridUpdate();
 						$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
 					}
 				}
@@ -1540,9 +1559,6 @@ class cpegawai_edit extends cpegawai {
 		// Call Row_Updated event
 		if ($EditRow)
 			$this->Row_Updated($rsold, $rsnew);
-		if ($EditRow) {
-			$this->WriteAuditTrailOnEdit($rsold, $rsnew);
-		}
 		$rs->Close();
 		return $EditRow;
 	}
@@ -1559,19 +1575,34 @@ class cpegawai_edit extends cpegawai {
 		}
 		if ($sDetailTblVar <> "") {
 			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("t_jdkr_peg", $DetailTblVar)) {
-				if (!isset($GLOBALS["t_jdkr_peg_grid"]))
-					$GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid;
-				if ($GLOBALS["t_jdkr_peg_grid"]->DetailEdit) {
-					$GLOBALS["t_jdkr_peg_grid"]->CurrentMode = "edit";
-					$GLOBALS["t_jdkr_peg_grid"]->CurrentAction = "gridedit";
+			if (in_array("t_jdw_krj_peg", $DetailTblVar)) {
+				if (!isset($GLOBALS["t_jdw_krj_peg_grid"]))
+					$GLOBALS["t_jdw_krj_peg_grid"] = new ct_jdw_krj_peg_grid;
+				if ($GLOBALS["t_jdw_krj_peg_grid"]->DetailEdit) {
+					$GLOBALS["t_jdw_krj_peg_grid"]->CurrentMode = "edit";
+					$GLOBALS["t_jdw_krj_peg_grid"]->CurrentAction = "gridedit";
 
 					// Save current master table to detail table
-					$GLOBALS["t_jdkr_peg_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["t_jdkr_peg_grid"]->setStartRecordNumber(1);
-					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->FldIsDetailKey = TRUE;
-					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
-					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdkr_peg_grid"]->pegawai_id->CurrentValue);
+					$GLOBALS["t_jdw_krj_peg_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t_jdw_krj_peg_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t_jdw_krj_peg_grid"]->pegawai_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t_jdw_krj_peg_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
+					$GLOBALS["t_jdw_krj_peg_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdw_krj_peg_grid"]->pegawai_id->CurrentValue);
+				}
+			}
+			if (in_array("t_jdw_krj_def", $DetailTblVar)) {
+				if (!isset($GLOBALS["t_jdw_krj_def_grid"]))
+					$GLOBALS["t_jdw_krj_def_grid"] = new ct_jdw_krj_def_grid;
+				if ($GLOBALS["t_jdw_krj_def_grid"]->DetailEdit) {
+					$GLOBALS["t_jdw_krj_def_grid"]->CurrentMode = "edit";
+					$GLOBALS["t_jdw_krj_def_grid"]->CurrentAction = "gridedit";
+
+					// Save current master table to detail table
+					$GLOBALS["t_jdw_krj_def_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t_jdw_krj_def_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
+					$GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->CurrentValue);
 				}
 			}
 		}
@@ -1587,6 +1618,15 @@ class cpegawai_edit extends cpegawai {
 		$Breadcrumb->Add("edit", $PageId, $url);
 	}
 
+	// Set up detail pages
+	function SetupDetailPages() {
+		$pages = new cSubPages();
+		$pages->Style = "tabs";
+		$pages->Add('t_jdw_krj_peg');
+		$pages->Add('t_jdw_krj_def');
+		$this->DetailPages = $pages;
+	}
+
 	// Setup lookup filters of a field
 	function SetupLookupFilters($fld, $pageId = null) {
 		global $gsLanguage;
@@ -1600,60 +1640,6 @@ class cpegawai_edit extends cpegawai {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
-		}
-	}
-
-	// Write Audit Trail start/end for grid update
-	function WriteAuditTrailDummy($typ) {
-		$table = 'pegawai';
-		$usr = CurrentUserID();
-		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
-	}
-
-	// Write Audit Trail (edit page)
-	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
-		global $Language;
-		if (!$this->AuditTrailOnEdit) return;
-		$table = 'pegawai';
-
-		// Get key value
-		$key = "";
-		if ($key <> "") $key .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-		$key .= $rsold['pegawai_id'];
-
-		// Write Audit Trail
-		$dt = ew_StdCurrentDateTime();
-		$id = ew_ScriptName();
-		$usr = CurrentUserID();
-		foreach (array_keys($rsnew) as $fldname) {
-			if ($this->fields[$fldname]->FldDataType <> EW_DATATYPE_BLOB) { // Ignore BLOB fields
-				if ($this->fields[$fldname]->FldDataType == EW_DATATYPE_DATE) { // DateTime field
-					$modified = (ew_FormatDateTime($rsold[$fldname], 0) <> ew_FormatDateTime($rsnew[$fldname], 0));
-				} else {
-					$modified = !ew_CompareValue($rsold[$fldname], $rsnew[$fldname]);
-				}
-				if ($modified) {
-					if ($this->fields[$fldname]->FldHtmlTag == "PASSWORD") { // Password Field
-						$oldvalue = $Language->Phrase("PasswordMask");
-						$newvalue = $Language->Phrase("PasswordMask");
-					} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_MEMO) { // Memo field
-						if (EW_AUDIT_TRAIL_TO_DATABASE) {
-							$oldvalue = $rsold[$fldname];
-							$newvalue = $rsnew[$fldname];
-						} else {
-							$oldvalue = "[MEMO]";
-							$newvalue = "[MEMO]";
-						}
-					} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_XML) { // XML field
-						$oldvalue = "[XML]";
-						$newvalue = "[XML]";
-					} else {
-						$oldvalue = $rsold[$fldname];
-						$newvalue = $rsnew[$fldname];
-					}
-					ew_WriteAuditTrail("log", $dt, $id, $usr, "U", $table, $fldname, $key, $oldvalue, $newvalue);
-				}
-			}
 		}
 	}
 
@@ -2168,13 +2154,59 @@ ew_CreateCalendar("fpegawaiedit", "x_tgl_resign", 7);
 	</div>
 <?php } ?>
 </div>
-<?php
-	if (in_array("t_jdkr_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdkr_peg->DetailEdit) {
-?>
 <?php if ($pegawai->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t_jdkr_peg", "TblCaption") ?></h4>
+<?php
+	$pegawai_edit->DetailPages->ValidKeys = explode(",", $pegawai->getCurrentDetailTable());
+	$FirstActiveDetailTable = $pegawai_edit->DetailPages->ActivePageIndex();
+?>
+<div class="ewDetailPages">
+<div class="tabbable" id="pegawai_edit_details">
+	<ul class="nav<?php echo $pegawai_edit->DetailPages->NavStyle() ?>">
+<?php
+	if (in_array("t_jdw_krj_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdw_krj_peg->DetailEdit) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_jdw_krj_peg") {
+			$FirstActiveDetailTable = "t_jdw_krj_peg";
+		}
+?>
+		<li<?php echo $pegawai_edit->DetailPages->TabStyle("t_jdw_krj_peg") ?>><a href="#tab_t_jdw_krj_peg" data-toggle="tab"><?php echo $Language->TablePhrase("t_jdw_krj_peg", "TblCaption") ?></a></li>
+<?php
+	}
+?>
+<?php
+	if (in_array("t_jdw_krj_def", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdw_krj_def->DetailEdit) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_jdw_krj_def") {
+			$FirstActiveDetailTable = "t_jdw_krj_def";
+		}
+?>
+		<li<?php echo $pegawai_edit->DetailPages->TabStyle("t_jdw_krj_def") ?>><a href="#tab_t_jdw_krj_def" data-toggle="tab"><?php echo $Language->TablePhrase("t_jdw_krj_def", "TblCaption") ?></a></li>
+<?php
+	}
+?>
+	</ul>
+	<div class="tab-content">
+<?php
+	if (in_array("t_jdw_krj_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdw_krj_peg->DetailEdit) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_jdw_krj_peg") {
+			$FirstActiveDetailTable = "t_jdw_krj_peg";
+		}
+?>
+		<div class="tab-pane<?php echo $pegawai_edit->DetailPages->PageStyle("t_jdw_krj_peg") ?>" id="tab_t_jdw_krj_peg">
+<?php include_once "t_jdw_krj_peggrid.php" ?>
+		</div>
 <?php } ?>
-<?php include_once "t_jdkr_peggrid.php" ?>
+<?php
+	if (in_array("t_jdw_krj_def", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdw_krj_def->DetailEdit) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_jdw_krj_def") {
+			$FirstActiveDetailTable = "t_jdw_krj_def";
+		}
+?>
+		<div class="tab-pane<?php echo $pegawai_edit->DetailPages->PageStyle("t_jdw_krj_def") ?>" id="tab_t_jdw_krj_def">
+<?php include_once "t_jdw_krj_defgrid.php" ?>
+		</div>
+<?php } ?>
+	</div>
+</div>
+</div>
 <?php } ?>
 <?php if (!$pegawai_edit->IsModal) { ?>
 <div class="form-group">
