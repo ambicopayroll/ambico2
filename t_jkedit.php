@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "t_jkinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
+<?php include_once "t_jdkr_peginfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -41,6 +42,12 @@ class ct_jk_edit extends ct_jk {
 		if ($this->UseTokenInUrl) $PageUrl .= "t=" . $this->TableVar . "&"; // Add page token
 		return $PageUrl;
 	}
+	var $AuditTrailOnAdd = FALSE;
+	var $AuditTrailOnEdit = TRUE;
+	var $AuditTrailOnDelete = FALSE;
+	var $AuditTrailOnView = FALSE;
+	var $AuditTrailOnViewData = FALSE;
+	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -235,6 +242,9 @@ class ct_jk_edit extends ct_jk {
 		// Table object (t_user)
 		if (!isset($GLOBALS['t_user'])) $GLOBALS['t_user'] = new ct_user();
 
+		// Table object (t_jdkr_peg)
+		if (!isset($GLOBALS['t_jdkr_peg'])) $GLOBALS['t_jdkr_peg'] = new ct_jdkr_peg();
+
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
 			define("EW_PAGE_ID", 'edit', TRUE);
@@ -410,6 +420,9 @@ class ct_jk_edit extends ct_jk {
 		} else {
 			$bLoadCurrentRecord = TRUE;
 		}
+
+		// Set up master detail parameters
+		$this->SetUpMasterParms();
 
 		// Load recordset
 		$this->StartRec = 1; // Initialize start position
@@ -911,8 +924,72 @@ class ct_jk_edit extends ct_jk {
 		// Call Row_Updated event
 		if ($EditRow)
 			$this->Row_Updated($rsold, $rsnew);
+		if ($EditRow) {
+			$this->WriteAuditTrailOnEdit($rsold, $rsnew);
+		}
 		$rs->Close();
 		return $EditRow;
+	}
+
+	// Set up master/detail based on QueryString
+	function SetUpMasterParms() {
+		$bValidMaster = FALSE;
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "t_jdkr_peg") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_jk_id"] <> "") {
+					$GLOBALS["t_jdkr_peg"]->jk_id->setQueryStringValue($_GET["fk_jk_id"]);
+					$this->jk_id->setQueryStringValue($GLOBALS["t_jdkr_peg"]->jk_id->QueryStringValue);
+					$this->jk_id->setSessionValue($this->jk_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["t_jdkr_peg"]->jk_id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "t_jdkr_peg") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_jk_id"] <> "") {
+					$GLOBALS["t_jdkr_peg"]->jk_id->setFormValue($_POST["fk_jk_id"]);
+					$this->jk_id->setFormValue($GLOBALS["t_jdkr_peg"]->jk_id->FormValue);
+					$this->jk_id->setSessionValue($this->jk_id->FormValue);
+					if (!is_numeric($GLOBALS["t_jdkr_peg"]->jk_id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		}
+		if ($bValidMaster) {
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+			$this->setSessionWhere($this->GetDetailFilter());
+
+			// Reset start record counter (new master key)
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "t_jdkr_peg") {
+				if ($this->jk_id->CurrentValue == "") $this->jk_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb
@@ -938,6 +1015,60 @@ class ct_jk_edit extends ct_jk {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		}
+	}
+
+	// Write Audit Trail start/end for grid update
+	function WriteAuditTrailDummy($typ) {
+		$table = 't_jk';
+		$usr = CurrentUserID();
+		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
+	}
+
+	// Write Audit Trail (edit page)
+	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
+		global $Language;
+		if (!$this->AuditTrailOnEdit) return;
+		$table = 't_jk';
+
+		// Get key value
+		$key = "";
+		if ($key <> "") $key .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rsold['jk_id'];
+
+		// Write Audit Trail
+		$dt = ew_StdCurrentDateTime();
+		$id = ew_ScriptName();
+		$usr = CurrentUserID();
+		foreach (array_keys($rsnew) as $fldname) {
+			if ($this->fields[$fldname]->FldDataType <> EW_DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->FldDataType == EW_DATATYPE_DATE) { // DateTime field
+					$modified = (ew_FormatDateTime($rsold[$fldname], 0) <> ew_FormatDateTime($rsnew[$fldname], 0));
+				} else {
+					$modified = !ew_CompareValue($rsold[$fldname], $rsnew[$fldname]);
+				}
+				if ($modified) {
+					if ($this->fields[$fldname]->FldHtmlTag == "PASSWORD") { // Password Field
+						$oldvalue = $Language->Phrase("PasswordMask");
+						$newvalue = $Language->Phrase("PasswordMask");
+					} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_MEMO) { // Memo field
+						if (EW_AUDIT_TRAIL_TO_DATABASE) {
+							$oldvalue = $rsold[$fldname];
+							$newvalue = $rsnew[$fldname];
+						} else {
+							$oldvalue = "[MEMO]";
+							$newvalue = "[MEMO]";
+						}
+					} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_XML) { // XML field
+						$oldvalue = "[XML]";
+						$newvalue = "[XML]";
+					} else {
+						$oldvalue = $rsold[$fldname];
+						$newvalue = $rsnew[$fldname];
+					}
+					ew_WriteAuditTrail("log", $dt, $id, $usr, "U", $table, $fldname, $key, $oldvalue, $newvalue);
+				}
+			}
 		}
 	}
 
@@ -1171,6 +1302,10 @@ $t_jk_edit->ShowMessage();
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <?php if ($t_jk_edit->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
+<?php } ?>
+<?php if ($t_jk->getCurrentMasterTable() == "t_jdkr_peg") { ?>
+<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t_jdkr_peg">
+<input type="hidden" name="fk_jk_id" value="<?php echo $t_jk->jk_id->getSessionValue() ?>">
 <?php } ?>
 <div>
 <?php if ($t_jk->jk_nm->Visible) { // jk_nm ?>

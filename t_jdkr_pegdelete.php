@@ -42,6 +42,12 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		if ($this->UseTokenInUrl) $PageUrl .= "t=" . $this->TableVar . "&"; // Add page token
 		return $PageUrl;
 	}
+	var $AuditTrailOnAdd = FALSE;
+	var $AuditTrailOnEdit = FALSE;
+	var $AuditTrailOnDelete = TRUE;
+	var $AuditTrailOnView = FALSE;
+	var $AuditTrailOnViewData = FALSE;
+	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -470,6 +476,11 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		$this->Row_Selected($row);
 		$this->jdkr_id->setDbValue($rs->fields('jdkr_id'));
 		$this->pegawai_id->setDbValue($rs->fields('pegawai_id'));
+		if (array_key_exists('EV__pegawai_id', $rs->fields)) {
+			$this->pegawai_id->VirtualValue = $rs->fields('EV__pegawai_id'); // Set up virtual field value
+		} else {
+			$this->pegawai_id->VirtualValue = ""; // Clear value
+		}
 		$this->tgl_id->setDbValue($rs->fields('tgl_id'));
 		if (array_key_exists('EV__tgl_id', $rs->fields)) {
 			$this->tgl_id->VirtualValue = $rs->fields('EV__tgl_id'); // Set up virtual field value
@@ -516,12 +527,15 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		$this->jdkr_id->ViewCustomAttributes = "";
 
 		// pegawai_id
-		$this->pegawai_id->ViewValue = $this->pegawai_id->CurrentValue;
+		if ($this->pegawai_id->VirtualValue <> "") {
+			$this->pegawai_id->ViewValue = $this->pegawai_id->VirtualValue;
+		} else {
+			$this->pegawai_id->ViewValue = $this->pegawai_id->CurrentValue;
 		if (strval($this->pegawai_id->CurrentValue) <> "") {
 			$sFilterWrk = "`pegawai_id`" . ew_SearchString("=", $this->pegawai_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `pegawai_id`, `pegawai_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pegawai`";
 		$sWhereWrk = "";
-		$this->pegawai_id->LookupFilters = array();
+		$this->pegawai_id->LookupFilters = array("dx1" => '`pegawai_nama`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->pegawai_id, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -536,6 +550,7 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 			}
 		} else {
 			$this->pegawai_id->ViewValue = NULL;
+		}
 		}
 		$this->pegawai_id->ViewCustomAttributes = "";
 
@@ -565,7 +580,7 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 			$this->tgl_id->ViewValue = NULL;
 		}
 		}
-		$this->tgl_id->ViewValue = ew_FormatDateTime($this->tgl_id->ViewValue, 0);
+		$this->tgl_id->ViewValue = tgl_indo($this->tgl_id->ViewValue);
 		$this->tgl_id->ViewCustomAttributes = "";
 
 		// jk_id
@@ -594,7 +609,6 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 			$this->jk_id->ViewValue = NULL;
 		}
 		}
-		$this->jk_id->ViewValue = ew_FormatDateTime($this->jk_id->ViewValue, 4);
 		$this->jk_id->ViewCustomAttributes = "";
 
 			// jdkr_id
@@ -694,6 +708,10 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		}
 		if ($DeleteRows) {
 			$conn->CommitTrans(); // Commit the changes
+			if ($DeleteRows) {
+				foreach ($rsold as $row)
+					$this->WriteAuditTrailOnDelete($row);
+			}
 			if ($this->AuditTrailOnDelete) $this->WriteAuditTrailDummy($Language->Phrase("BatchDeleteSuccess")); // Batch delete success
 		} else {
 			$conn->RollbackTrans(); // Rollback changes
@@ -792,6 +810,48 @@ class ct_jdkr_peg_delete extends ct_jdkr_peg {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		}
+	}
+
+	// Write Audit Trail start/end for grid update
+	function WriteAuditTrailDummy($typ) {
+		$table = 't_jdkr_peg';
+		$usr = CurrentUserID();
+		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
+	}
+
+	// Write Audit Trail (delete page)
+	function WriteAuditTrailOnDelete(&$rs) {
+		global $Language;
+		if (!$this->AuditTrailOnDelete) return;
+		$table = 't_jdkr_peg';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rs['jdkr_id'];
+
+		// Write Audit Trail
+		$dt = ew_StdCurrentDateTime();
+		$id = ew_ScriptName();
+		$curUser = CurrentUserID();
+		foreach (array_keys($rs) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->FldDataType <> EW_DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->FldHtmlTag == "PASSWORD") {
+					$oldvalue = $Language->Phrase("PasswordMask"); // Password Field
+				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_MEMO) {
+					if (EW_AUDIT_TRAIL_TO_DATABASE)
+						$oldvalue = $rs[$fldname];
+					else
+						$oldvalue = "[MEMO]"; // Memo field
+				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_XML) {
+					$oldvalue = "[XML]"; // XML field
+				} else {
+					$oldvalue = $rs[$fldname];
+				}
+				ew_WriteAuditTrail("log", $dt, $id, $curUser, "D", $table, $fldname, $key, $oldvalue, "");
+			}
 		}
 	}
 

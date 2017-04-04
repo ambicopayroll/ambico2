@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "t_jkinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
+<?php include_once "t_jdkr_peginfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -81,6 +82,12 @@ class ct_jk_list extends ct_jk {
 	var $GridEditUrl;
 	var $MultiDeleteUrl;
 	var $MultiUpdateUrl;
+	var $AuditTrailOnAdd = FALSE;
+	var $AuditTrailOnEdit = FALSE;
+	var $AuditTrailOnDelete = FALSE;
+	var $AuditTrailOnView = FALSE;
+	var $AuditTrailOnViewData = FALSE;
+	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -290,6 +297,9 @@ class ct_jk_list extends ct_jk {
 		// Table object (t_user)
 		if (!isset($GLOBALS['t_user'])) $GLOBALS['t_user'] = new ct_user();
 
+		// Table object (t_jdkr_peg)
+		if (!isset($GLOBALS['t_jdkr_peg'])) $GLOBALS['t_jdkr_peg'] = new ct_jdkr_peg();
+
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
 			define("EW_PAGE_ID", 'list', TRUE);
@@ -445,6 +455,9 @@ class ct_jk_list extends ct_jk {
 
 		// Create Token
 		$this->CreateToken();
+
+		// Set up master detail parameters
+		$this->SetUpMasterParms();
 
 		// Setup other options
 		$this->SetupOtherOptions();
@@ -660,8 +673,28 @@ class ct_jk_list extends ct_jk {
 		$sFilter = "";
 		if (!$Security->CanList())
 			$sFilter = "(0=1)"; // Filter all records
+
+		// Restore master/detail filter
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Restore master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Restore detail filter
 		ew_AddFilter($sFilter, $this->DbDetailFilter);
 		ew_AddFilter($sFilter, $this->SearchWhere);
+
+		// Load master record
+		if ($this->CurrentMode <> "add" && $this->GetMasterFilter() <> "" && $this->getCurrentMasterTable() == "t_jdkr_peg") {
+			global $t_jdkr_peg;
+			$rsmaster = $t_jdkr_peg->LoadRs($this->DbMasterFilter);
+			$this->MasterRecordExists = ($rsmaster && !$rsmaster->EOF);
+			if (!$this->MasterRecordExists) {
+				$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record found
+				$this->Page_Terminate("t_jdkr_peglist.php"); // Return to master page
+			} else {
+				$t_jdkr_peg->LoadListRowValues($rsmaster);
+				$t_jdkr_peg->RowType = EW_ROWTYPE_MASTER; // Master row
+				$t_jdkr_peg->RenderListRow();
+				$rsmaster->Close();
+			}
+		}
 
 		// Set up filter in session
 		$this->setSessionWhere($sFilter);
@@ -852,7 +885,6 @@ class ct_jk_list extends ct_jk {
 
 	// Build basic search SQL
 	function BuildBasicSearchSQL(&$Where, &$Fld, $arKeywords, $type) {
-		global $EW_BASIC_SEARCH_IGNORE_PATTERN;
 		$sDefCond = ($type == "OR") ? "OR" : "AND";
 		$arSQL = array(); // Array for SQL parts
 		$arCond = array(); // Array for search conditions
@@ -861,8 +893,8 @@ class ct_jk_list extends ct_jk {
 		for ($i = 0; $i < $cnt; $i++) {
 			$Keyword = $arKeywords[$i];
 			$Keyword = trim($Keyword);
-			if ($EW_BASIC_SEARCH_IGNORE_PATTERN <> "") {
-				$Keyword = preg_replace($EW_BASIC_SEARCH_IGNORE_PATTERN, "\\", $Keyword);
+			if (EW_BASIC_SEARCH_IGNORE_PATTERN <> "") {
+				$Keyword = preg_replace(EW_BASIC_SEARCH_IGNORE_PATTERN, "\\", $Keyword);
 				$ar = explode("\\", $Keyword);
 			} else {
 				$ar = array($Keyword);
@@ -1047,6 +1079,14 @@ class ct_jk_list extends ct_jk {
 			// Reset search criteria
 			if ($this->Command == "reset" || $this->Command == "resetall")
 				$this->ResetSearchParms();
+
+			// Reset master/detail keys
+			if ($this->Command == "resetall") {
+				$this->setCurrentMasterTable(""); // Clear master table
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+				$this->jk_id->setSessionValue("");
+			}
 
 			// Reset sorting order
 			if ($this->Command == "resetsort") {
@@ -1747,6 +1787,25 @@ class ct_jk_list extends ct_jk {
 		// Call Page Exporting server event
 		$this->ExportDoc->ExportCustom = !$this->Page_Exporting();
 		$ParentTable = "";
+
+		// Export master record
+		if (EW_EXPORT_MASTER_RECORD && $this->GetMasterFilter() <> "" && $this->getCurrentMasterTable() == "t_jdkr_peg") {
+			global $t_jdkr_peg;
+			if (!isset($t_jdkr_peg)) $t_jdkr_peg = new ct_jdkr_peg;
+			$rsmaster = $t_jdkr_peg->LoadRs($this->DbMasterFilter); // Load master record
+			if ($rsmaster && !$rsmaster->EOF) {
+				$ExportStyle = $Doc->Style;
+				$Doc->SetStyle("v"); // Change to vertical
+				if ($this->Export <> "csv" || EW_EXPORT_MASTER_RECORD_FOR_CSV) {
+					$Doc->Table = &$t_jdkr_peg;
+					$t_jdkr_peg->ExportDocument($Doc, $rsmaster, 1, 1);
+					$Doc->ExportEmptyRow();
+					$Doc->Table = &$this;
+				}
+				$Doc->SetStyle($ExportStyle); // Restore
+				$rsmaster->Close();
+			}
+		}
 		$sHeader = $this->PageHeader;
 		$this->Page_DataRendering($sHeader);
 		$Doc->Text .= $sHeader;
@@ -1907,6 +1966,72 @@ class ct_jk_list extends ct_jk {
 		}
 	}
 
+	// Set up master/detail based on QueryString
+	function SetUpMasterParms() {
+		$bValidMaster = FALSE;
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "t_jdkr_peg") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_jk_id"] <> "") {
+					$GLOBALS["t_jdkr_peg"]->jk_id->setQueryStringValue($_GET["fk_jk_id"]);
+					$this->jk_id->setQueryStringValue($GLOBALS["t_jdkr_peg"]->jk_id->QueryStringValue);
+					$this->jk_id->setSessionValue($this->jk_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["t_jdkr_peg"]->jk_id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "t_jdkr_peg") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_jk_id"] <> "") {
+					$GLOBALS["t_jdkr_peg"]->jk_id->setFormValue($_POST["fk_jk_id"]);
+					$this->jk_id->setFormValue($GLOBALS["t_jdkr_peg"]->jk_id->FormValue);
+					$this->jk_id->setSessionValue($this->jk_id->FormValue);
+					if (!is_numeric($GLOBALS["t_jdkr_peg"]->jk_id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		}
+		if ($bValidMaster) {
+
+			// Update URL
+			$this->AddUrl = $this->AddMasterUrl($this->AddUrl);
+			$this->InlineAddUrl = $this->AddMasterUrl($this->InlineAddUrl);
+			$this->GridAddUrl = $this->AddMasterUrl($this->GridAddUrl);
+			$this->GridEditUrl = $this->AddMasterUrl($this->GridEditUrl);
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+
+			// Reset start record counter (new master key)
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "t_jdkr_peg") {
+				if ($this->jk_id->CurrentValue == "") $this->jk_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
+	}
+
 	// Set up Breadcrumb
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
@@ -1930,6 +2055,13 @@ class ct_jk_list extends ct_jk {
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
 		}
+	}
+
+	// Write Audit Trail start/end for grid update
+	function WriteAuditTrailDummy($typ) {
+		$table = 't_jk';
+		$usr = CurrentUserID();
+		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
 
 	// Page Load event
@@ -2124,6 +2256,17 @@ var CurrentSearchForm = ft_jklistsrch = new ew_Form("ft_jklistsrch");
 <div class="clearfix"></div>
 </div>
 <?php } ?>
+<?php if (($t_jk->Export == "") || (EW_EXPORT_MASTER_RECORD && $t_jk->Export == "print")) { ?>
+<?php
+if ($t_jk_list->DbMasterFilter <> "" && $t_jk->getCurrentMasterTable() == "t_jdkr_peg") {
+	if ($t_jk_list->MasterRecordExists) {
+?>
+<?php include_once "t_jdkr_pegmaster.php" ?>
+<?php
+	}
+}
+?>
+<?php } ?>
 <?php
 	$bSelectLimit = $t_jk_list->UseSelectLimit;
 	if ($bSelectLimit) {
@@ -2257,6 +2400,10 @@ $t_jk_list->ShowMessage();
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t_jk_list->Token ?>">
 <?php } ?>
 <input type="hidden" name="t" value="t_jk">
+<?php if ($t_jk->getCurrentMasterTable() == "t_jdkr_peg" && $t_jk->CurrentAction <> "") { ?>
+<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t_jdkr_peg">
+<input type="hidden" name="fk_jk_id" value="<?php echo $t_jk->jk_id->getSessionValue() ?>">
+<?php } ?>
 <div id="gmp_t_jk" class="<?php if (ew_IsResponsiveLayout()) { echo "table-responsive "; } ?>ewGridMiddlePanel">
 <?php if ($t_jk_list->TotalRecs > 0 || $t_jk->CurrentAction == "gridedit") { ?>
 <table id="tbl_t_jklist" class="table ewTable">

@@ -675,6 +675,10 @@ class ct_tgl_2017_add extends ct_tgl_2017 {
 			$AddRow = $this->Insert($rsnew);
 			$conn->raiseErrorFn = '';
 			if ($AddRow) {
+
+				// Get insert id if necessary
+				$this->tgl_id->setDbValue($conn->Insert_ID());
+				$rsnew['tgl_id'] = $this->tgl_id->DbValue;
 			}
 		} else {
 			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {

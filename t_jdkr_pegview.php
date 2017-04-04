@@ -9,6 +9,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "pegawaiinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
 <?php include_once "t_tgl_2017gridcls.php" ?>
+<?php include_once "t_jkgridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -75,6 +76,12 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 	var $GridEditUrl;
 	var $MultiDeleteUrl;
 	var $MultiUpdateUrl;
+	var $AuditTrailOnAdd = FALSE;
+	var $AuditTrailOnEdit = FALSE;
+	var $AuditTrailOnDelete = FALSE;
+	var $AuditTrailOnView = FALSE;
+	var $AuditTrailOnViewData = FALSE;
+	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -650,6 +657,39 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 		}
 		if ($this->ShowMultipleDetails) $item->Visible = FALSE;
 
+		// "detail_t_jk"
+		$item = &$option->Add("detail_t_jk");
+		$body = $Language->Phrase("ViewPageDetailLink") . $Language->TablePhrase("t_jk", "TblCaption");
+		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("t_jklist.php?" . EW_TABLE_SHOW_MASTER . "=t_jdkr_peg&fk_jk_id=" . urlencode(strval($this->jk_id->CurrentValue)) . "") . "\">" . $body . "</a>";
+		$links = "";
+		if ($GLOBALS["t_jk_grid"] && $GLOBALS["t_jk_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 't_jk')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=t_jk")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
+			if ($DetailViewTblVar <> "") $DetailViewTblVar .= ",";
+			$DetailViewTblVar .= "t_jk";
+		}
+		if ($GLOBALS["t_jk_grid"] && $GLOBALS["t_jk_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 't_jk')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=t_jk")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
+			if ($DetailEditTblVar <> "") $DetailEditTblVar .= ",";
+			$DetailEditTblVar .= "t_jk";
+		}
+		if ($GLOBALS["t_jk_grid"] && $GLOBALS["t_jk_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 't_jk')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=t_jk")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
+			if ($DetailCopyTblVar <> "") $DetailCopyTblVar .= ",";
+			$DetailCopyTblVar .= "t_jk";
+		}
+		if ($links <> "") {
+			$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewDetail\" data-toggle=\"dropdown\"><b class=\"caret\"></b></button>";
+			$body .= "<ul class=\"dropdown-menu\">". $links . "</ul>";
+		}
+		$body = "<div class=\"btn-group\">" . $body . "</div>";
+		$item->Body = $body;
+		$item->Visible = $Security->AllowList(CurrentProjectID() . 't_jk');
+		if ($item->Visible) {
+			if ($DetailTableLink <> "") $DetailTableLink .= ",";
+			$DetailTableLink .= "t_jk";
+		}
+		if ($this->ShowMultipleDetails) $item->Visible = FALSE;
+
 		// Multiple details
 		if ($this->ShowMultipleDetails) {
 			$body = $Language->Phrase("MultipleMasterDetails");
@@ -792,6 +832,11 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->jdkr_id->setDbValue($rs->fields('jdkr_id'));
 		$this->pegawai_id->setDbValue($rs->fields('pegawai_id'));
+		if (array_key_exists('EV__pegawai_id', $rs->fields)) {
+			$this->pegawai_id->VirtualValue = $rs->fields('EV__pegawai_id'); // Set up virtual field value
+		} else {
+			$this->pegawai_id->VirtualValue = ""; // Clear value
+		}
 		$this->tgl_id->setDbValue($rs->fields('tgl_id'));
 		if (array_key_exists('EV__tgl_id', $rs->fields)) {
 			$this->tgl_id->VirtualValue = $rs->fields('EV__tgl_id'); // Set up virtual field value
@@ -844,12 +889,15 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 		$this->jdkr_id->ViewCustomAttributes = "";
 
 		// pegawai_id
-		$this->pegawai_id->ViewValue = $this->pegawai_id->CurrentValue;
+		if ($this->pegawai_id->VirtualValue <> "") {
+			$this->pegawai_id->ViewValue = $this->pegawai_id->VirtualValue;
+		} else {
+			$this->pegawai_id->ViewValue = $this->pegawai_id->CurrentValue;
 		if (strval($this->pegawai_id->CurrentValue) <> "") {
 			$sFilterWrk = "`pegawai_id`" . ew_SearchString("=", $this->pegawai_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `pegawai_id`, `pegawai_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pegawai`";
 		$sWhereWrk = "";
-		$this->pegawai_id->LookupFilters = array();
+		$this->pegawai_id->LookupFilters = array("dx1" => '`pegawai_nama`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->pegawai_id, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -864,6 +912,7 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 			}
 		} else {
 			$this->pegawai_id->ViewValue = NULL;
+		}
 		}
 		$this->pegawai_id->ViewCustomAttributes = "";
 
@@ -893,7 +942,7 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 			$this->tgl_id->ViewValue = NULL;
 		}
 		}
-		$this->tgl_id->ViewValue = ew_FormatDateTime($this->tgl_id->ViewValue, 0);
+		$this->tgl_id->ViewValue = tgl_indo($this->tgl_id->ViewValue);
 		$this->tgl_id->ViewCustomAttributes = "";
 
 		// jk_id
@@ -922,7 +971,6 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 			$this->jk_id->ViewValue = NULL;
 		}
 		}
-		$this->jk_id->ViewValue = ew_FormatDateTime($this->jk_id->ViewValue, 4);
 		$this->jk_id->ViewCustomAttributes = "";
 
 			// jdkr_id
@@ -1076,6 +1124,24 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 					$Doc->ExportEmptyRow();
 					$detailcnt = $rsdetail->RecordCount();
 					$t_tgl_2017->ExportDocument($Doc, $rsdetail, 1, $detailcnt);
+				}
+				$Doc->SetStyle($ExportStyle); // Restore
+				$rsdetail->Close();
+			}
+		}
+
+		// Export detail records (t_jk)
+		if (EW_EXPORT_DETAIL_RECORDS && in_array("t_jk", explode(",", $this->getCurrentDetailTable()))) {
+			global $t_jk;
+			if (!isset($t_jk)) $t_jk = new ct_jk;
+			$rsdetail = $t_jk->LoadRs($t_jk->GetDetailFilter()); // Load detail records
+			if ($rsdetail && !$rsdetail->EOF) {
+				$ExportStyle = $Doc->Style;
+				$Doc->SetStyle("h"); // Change to horizontal
+				if ($this->Export <> "csv" || EW_EXPORT_DETAIL_RECORDS_FOR_CSV) {
+					$Doc->ExportEmptyRow();
+					$detailcnt = $rsdetail->RecordCount();
+					$t_jk->ExportDocument($Doc, $rsdetail, 1, $detailcnt);
 				}
 				$Doc->SetStyle($ExportStyle); // Restore
 				$rsdetail->Close();
@@ -1303,6 +1369,20 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 					$GLOBALS["t_tgl_2017_grid"]->tgl_id->setSessionValue($GLOBALS["t_tgl_2017_grid"]->tgl_id->CurrentValue);
 				}
 			}
+			if (in_array("t_jk", $DetailTblVar)) {
+				if (!isset($GLOBALS["t_jk_grid"]))
+					$GLOBALS["t_jk_grid"] = new ct_jk_grid;
+				if ($GLOBALS["t_jk_grid"]->DetailView) {
+					$GLOBALS["t_jk_grid"]->CurrentMode = "view";
+
+					// Save current master table to detail table
+					$GLOBALS["t_jk_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t_jk_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t_jk_grid"]->jk_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t_jk_grid"]->jk_id->CurrentValue = $this->jk_id->CurrentValue;
+					$GLOBALS["t_jk_grid"]->jk_id->setSessionValue($GLOBALS["t_jk_grid"]->jk_id->CurrentValue);
+				}
+			}
 		}
 	}
 
@@ -1330,6 +1410,13 @@ class ct_jdkr_peg_view extends ct_jdkr_peg {
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
 		}
+	}
+
+	// Write Audit Trail start/end for grid update
+	function WriteAuditTrailDummy($typ) {
+		$table = 't_jdkr_peg';
+		$usr = CurrentUserID();
+		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
 
 	// Page Load event
@@ -1649,6 +1736,14 @@ $t_jdkr_peg_view->ShowMessage();
 <h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t_tgl_2017", "TblCaption") ?></h4>
 <?php } ?>
 <?php include_once "t_tgl_2017grid.php" ?>
+<?php } ?>
+<?php
+	if (in_array("t_jk", explode(",", $t_jdkr_peg->getCurrentDetailTable())) && $t_jk->DetailView) {
+?>
+<?php if ($t_jdkr_peg->getCurrentDetailTable() <> "") { ?>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t_jk", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "t_jkgrid.php" ?>
 <?php } ?>
 </form>
 <?php if ($t_jdkr_peg->Export == "") { ?>

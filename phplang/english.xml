@@ -613,8 +613,8 @@
     <menu id="29">
       <phrase id="menutext" value="Pegawai" />
     </menu>
-    <menu id="10073">
-      <phrase id="menutext" value="Jadwal Pegawai" />
+    <menu id="10076">
+      <phrase id="menutext" value="Jadwal Kerja" />
     </menu>
     <menu id="10068">
       <phrase id="menutext" value="Setup Jam Kerja" />
@@ -2998,21 +2998,6 @@
         <phrase id="fldcaption" value="Keterangan" />
       </field>
     </table>
-    <table id="t_jdkr_peg">
-      <phrase id="tblcaption" value="Jadwal Pegawai" />
-      <field id="jdkr_id">
-        <phrase id="fldcaption" value="jdkr id" />
-      </field>
-      <field id="pegawai_id">
-        <phrase id="fldcaption" value="pegawai id" />
-      </field>
-      <field id="tgl_id">
-        <phrase id="fldcaption" value="tgl" />
-      </field>
-      <field id="jk_id">
-        <phrase id="fldcaption" value="jk id" />
-      </field>
-    </table>
     <table id="t_tgl_2017">
       <phrase id="tblcaption" value="Kalendar 2017" />
       <field id="tgl_id">
@@ -4127,6 +4112,21 @@
       </field>
       <field id="f20171231">
         <phrase id="fldcaption" value="f 20171231" />
+      </field>
+    </table>
+    <table id="t_jdkr_peg">
+      <phrase id="tblcaption" value="Jadwal Kerja" />
+      <field id="jdkr_id">
+        <phrase id="fldcaption" value="jdkr id" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="tgl_id">
+        <phrase id="fldcaption" value="tgl id" />
+      </field>
+      <field id="jk_id">
+        <phrase id="fldcaption" value="jk id" />
       </field>
     </table>
   </project>

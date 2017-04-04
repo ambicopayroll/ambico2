@@ -44,9 +44,6 @@ ft_jdkr_peggrid.Validate = function() {
 			elm = this.GetElements("x" + infix + "_pegawai_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdkr_peg->pegawai_id->FldCaption(), $t_jdkr_peg->pegawai_id->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_pegawai_id");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdkr_peg->pegawai_id->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_tgl_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdkr_peg->tgl_id->FldCaption(), $t_jdkr_peg->tgl_id->ReqErrMsg)) ?>");
@@ -363,11 +360,13 @@ $t_jdkr_peg->pegawai_id->EditAttrs["onchange"] = "";
 <span id="as_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t_jdkr_peg_grid->RowCnt * 10) ?>">
 	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->pegawai_id->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t_jdkr_peg" data-field="x_pegawai_id" data-value-separator="<?php echo $t_jdkr_peg->pegawai_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="t_jdkr_peg" data-field="x_pegawai_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t_jdkr_peg->pegawai_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <input type="hidden" name="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->LookupFilterQuery(true) ?>">
 <script type="text/javascript">
-ft_jdkr_peggrid.CreateAutoSuggest({"id":"x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id","forceSelect":false});
+ft_jdkr_peggrid.CreateAutoSuggest({"id":"x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id","forceSelect":true});
 </script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t_jdkr_peg->pegawai_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="s_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->LookupFilterQuery(false) ?>">
 </span>
 <?php } ?>
 <input type="hidden" data-table="t_jdkr_peg" data-field="x_pegawai_id" name="o<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="o<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->OldValue) ?>">
@@ -389,11 +388,13 @@ $t_jdkr_peg->pegawai_id->EditAttrs["onchange"] = "";
 <span id="as_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t_jdkr_peg_grid->RowCnt * 10) ?>">
 	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->pegawai_id->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t_jdkr_peg" data-field="x_pegawai_id" data-value-separator="<?php echo $t_jdkr_peg->pegawai_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="t_jdkr_peg" data-field="x_pegawai_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t_jdkr_peg->pegawai_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <input type="hidden" name="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->LookupFilterQuery(true) ?>">
 <script type="text/javascript">
-ft_jdkr_peggrid.CreateAutoSuggest({"id":"x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id","forceSelect":false});
+ft_jdkr_peggrid.CreateAutoSuggest({"id":"x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id","forceSelect":true});
 </script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t_jdkr_peg->pegawai_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="s_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->LookupFilterQuery(false) ?>">
 </span>
 <?php } ?>
 <?php } ?>
@@ -422,7 +423,7 @@ if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchang
 $t_jdkr_peg->tgl_id->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t_jdkr_peg_grid->RowCnt * 10) ?>">
-	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->EditValue ?>" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->tgl_id->EditAttributes() ?>>
+	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->tgl_id->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdkr_peg" data-field="x_tgl_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t_jdkr_peg->tgl_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <input type="hidden" name="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->LookupFilterQuery(true) ?>">
@@ -442,7 +443,7 @@ if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchang
 $t_jdkr_peg->tgl_id->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t_jdkr_peg_grid->RowCnt * 10) ?>">
-	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->EditValue ?>" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->tgl_id->EditAttributes() ?>>
+	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->tgl_id->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdkr_peg" data-field="x_tgl_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t_jdkr_peg->tgl_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <input type="hidden" name="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->LookupFilterQuery(true) ?>">
@@ -598,11 +599,13 @@ $t_jdkr_peg->pegawai_id->EditAttrs["onchange"] = "";
 <span id="as_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t_jdkr_peg_grid->RowCnt * 10) ?>">
 	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->pegawai_id->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t_jdkr_peg" data-field="x_pegawai_id" data-value-separator="<?php echo $t_jdkr_peg->pegawai_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" data-table="t_jdkr_peg" data-field="x_pegawai_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t_jdkr_peg->pegawai_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->pegawai_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <input type="hidden" name="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->LookupFilterQuery(true) ?>">
 <script type="text/javascript">
-ft_jdkr_peggrid.CreateAutoSuggest({"id":"x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id","forceSelect":false});
+ft_jdkr_peggrid.CreateAutoSuggest({"id":"x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id","forceSelect":true});
 </script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t_jdkr_peg->pegawai_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" id="s_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_pegawai_id" value="<?php echo $t_jdkr_peg->pegawai_id->LookupFilterQuery(false) ?>">
 </span>
 <?php } ?>
 <?php } else { ?>
@@ -625,7 +628,7 @@ if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchang
 $t_jdkr_peg->tgl_id->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t_jdkr_peg_grid->RowCnt * 10) ?>">
-	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->EditValue ?>" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->tgl_id->EditAttributes() ?>>
+	<input type="text" name="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="sv_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->getPlaceHolder()) ?>"<?php echo $t_jdkr_peg->tgl_id->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdkr_peg" data-field="x_tgl_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t_jdkr_peg->tgl_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo ew_HtmlEncode($t_jdkr_peg->tgl_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <input type="hidden" name="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" id="q_x<?php echo $t_jdkr_peg_grid->RowIndex ?>_tgl_id" value="<?php echo $t_jdkr_peg->tgl_id->LookupFilterQuery(true) ?>">

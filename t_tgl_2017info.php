@@ -357,14 +357,7 @@ class ct_tgl_2017 extends cTable {
 	// Insert
 	function Insert(&$rs) {
 		$conn = &$this->Connection();
-		$bInsert = $conn->Execute($this->InsertSQL($rs));
-		if ($bInsert) {
-
-			// Get insert id if necessary
-			$this->tgl_id->setDbValue($conn->Insert_ID());
-			$rs['tgl_id'] = $this->tgl_id->DbValue;
-		}
-		return $bInsert;
+		return $conn->Execute($this->InsertSQL($rs));
 	}
 
 	// UPDATE statement
@@ -389,8 +382,7 @@ class ct_tgl_2017 extends cTable {
 	// Update
 	function Update(&$rs, $where = "", $rsold = NULL, $curfilter = TRUE) {
 		$conn = &$this->Connection();
-		$bUpdate = $conn->Execute($this->UpdateSQL($rs, $where, $curfilter));
-		return $bUpdate;
+		return $conn->Execute($this->UpdateSQL($rs, $where, $curfilter));
 	}
 
 	// DELETE statement
@@ -414,8 +406,7 @@ class ct_tgl_2017 extends cTable {
 	// Delete
 	function Delete(&$rs, $where = "", $curfilter = TRUE) {
 		$conn = &$this->Connection();
-		$bDelete = $conn->Execute($this->DeleteSQL($rs, $where, $curfilter));
-		return $bDelete;
+		return $conn->Execute($this->DeleteSQL($rs, $where, $curfilter));
 	}
 
 	// Key filter WHERE clause

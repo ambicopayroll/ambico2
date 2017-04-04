@@ -21,34 +21,34 @@ function Page_Unloaded() {
 
 function tgl_indo($tgl) {
 	$a_namabln = array(
-		1 => "Januari",
-		"Februari",
-		"Maret",
-		"April",
+		1 => "Jan",
+		"Feb",
+		"Mar",
+		"Apr",
 		"Mei",
-		"Juni",
-		"Juli",
-		"Agustus",
-		"September",
-		"Oktober",
-		"November",
-		"Desember"
-	);
+		"Jun",
+		"Jul",
+		"Ags",
+		"Sep",
+		"Okt",
+		"Nov",
+		"Des");
 	$a_hari = array(
-		"Minggu",
-		"Senin",
-		"Selasa",
-		"Rabu",
-		"Kamis",
-		"Jumat",
-		"Sabtu");
+		"Min",
+		"Sen",
+		"Sel",
+		"Rab",
+		"Kam",
+		"Jum",
+		"Sab");
 	$tgl_data = strtotime($tgl);
 
 	//$tgl_data = $tgl;
 	$tanggal = date("d", $tgl_data);
-	$bulan = $a_namabln[date("m", $tgl_data)];
+	$bulan = $a_namabln[intval(date("m", $tgl_data))];
 	$tahun = date("Y", $tgl_data);
-	$hari - date("w", $tgl);
-	return $a_hari.", ".$tanggal." ".$bulan." ".$tahun;
+
+	//$hari = date("w", $tgl);
+	return $a_hari[date("w", $tgl_data)].", ".$tanggal." ".$bulan." ".$tahun;
 }
 ?>
