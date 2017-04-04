@@ -7,7 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "pegawaiinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
-<?php include_once "pegawai_dgridcls.php" ?>
+<?php include_once "t_jdkr_peggridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -484,6 +484,7 @@ class cpegawai_view extends cpegawai {
 	var $StopRec;
 	var $TotalRecs = 0;
 	var $RecRange = 10;
+	var $Pager;
 	var $RecCnt;
 	var $RecKey = array();
 	var $IsModal = FALSE;
@@ -513,17 +514,46 @@ class cpegawai_view extends cpegawai {
 				$this->pegawai_id->setFormValue($_POST["pegawai_id"]);
 				$this->RecKey["pegawai_id"] = $this->pegawai_id->FormValue;
 			} else {
-				$sReturnUrl = "pegawailist.php"; // Return to list
+				$bLoadCurrentRecord = TRUE;
 			}
 
 			// Get action
 			$this->CurrentAction = "I"; // Display form
 			switch ($this->CurrentAction) {
 				case "I": // Get a record to display
-					if (!$this->LoadRow()) { // Load record based on key
+					$this->StartRec = 1; // Initialize start position
+					if ($this->Recordset = $this->LoadRecordset()) // Load records
+						$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
+					if ($this->TotalRecs <= 0) { // No record found
+						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+						$this->Page_Terminate("pegawailist.php"); // Return to list page
+					} elseif ($bLoadCurrentRecord) { // Load current record position
+						$this->SetUpStartRec(); // Set up start record position
+
+						// Point to current record
+						if (intval($this->StartRec) <= intval($this->TotalRecs)) {
+							$bMatchRecord = TRUE;
+							$this->Recordset->Move($this->StartRec-1);
+						}
+					} else { // Match key values
+						while (!$this->Recordset->EOF) {
+							if (strval($this->pegawai_id->CurrentValue) == strval($this->Recordset->fields('pegawai_id'))) {
+								$this->setStartRecordNumber($this->StartRec); // Save record position
+								$bMatchRecord = TRUE;
+								break;
+							} else {
+								$this->StartRec++;
+								$this->Recordset->MoveNext();
+							}
+						}
+					}
+					if (!$bMatchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
 						$sReturnUrl = "pegawailist.php"; // No matching record, return to list
+					} else {
+						$this->LoadRowValues($this->Recordset); // Load row values
 					}
 			}
 
@@ -598,25 +628,25 @@ class cpegawai_view extends cpegawai {
 		$DetailCopyTblVar = "";
 		$DetailEditTblVar = "";
 
-		// "detail_pegawai_d"
-		$item = &$option->Add("detail_pegawai_d");
-		$body = $Language->Phrase("ViewPageDetailLink") . $Language->TablePhrase("pegawai_d", "TblCaption");
-		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("pegawai_dlist.php?" . EW_TABLE_SHOW_MASTER . "=pegawai&fk_pegawai_id=" . urlencode(strval($this->pegawai_id->CurrentValue)) . "") . "\">" . $body . "</a>";
+		// "detail_t_jdkr_peg"
+		$item = &$option->Add("detail_t_jdkr_peg");
+		$body = $Language->Phrase("ViewPageDetailLink") . $Language->TablePhrase("t_jdkr_peg", "TblCaption");
+		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("t_jdkr_peglist.php?" . EW_TABLE_SHOW_MASTER . "=pegawai&fk_pegawai_id=" . urlencode(strval($this->pegawai_id->CurrentValue)) . "") . "\">" . $body . "</a>";
 		$links = "";
-		if ($GLOBALS["pegawai_d_grid"] && $GLOBALS["pegawai_d_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 'pegawai_d')) {
-			$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=pegawai_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
+		if ($GLOBALS["t_jdkr_peg_grid"] && $GLOBALS["t_jdkr_peg_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 't_jdkr_peg')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
 			if ($DetailViewTblVar <> "") $DetailViewTblVar .= ",";
-			$DetailViewTblVar .= "pegawai_d";
+			$DetailViewTblVar .= "t_jdkr_peg";
 		}
-		if ($GLOBALS["pegawai_d_grid"] && $GLOBALS["pegawai_d_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 'pegawai_d')) {
-			$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=pegawai_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
+		if ($GLOBALS["t_jdkr_peg_grid"] && $GLOBALS["t_jdkr_peg_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 't_jdkr_peg')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
 			if ($DetailEditTblVar <> "") $DetailEditTblVar .= ",";
-			$DetailEditTblVar .= "pegawai_d";
+			$DetailEditTblVar .= "t_jdkr_peg";
 		}
-		if ($GLOBALS["pegawai_d_grid"] && $GLOBALS["pegawai_d_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 'pegawai_d')) {
-			$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=pegawai_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
+		if ($GLOBALS["t_jdkr_peg_grid"] && $GLOBALS["t_jdkr_peg_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 't_jdkr_peg')) {
+			$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
 			if ($DetailCopyTblVar <> "") $DetailCopyTblVar .= ",";
-			$DetailCopyTblVar .= "pegawai_d";
+			$DetailCopyTblVar .= "t_jdkr_peg";
 		}
 		if ($links <> "") {
 			$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewDetail\" data-toggle=\"dropdown\"><b class=\"caret\"></b></button>";
@@ -624,10 +654,10 @@ class cpegawai_view extends cpegawai {
 		}
 		$body = "<div class=\"btn-group\">" . $body . "</div>";
 		$item->Body = $body;
-		$item->Visible = $Security->AllowList(CurrentProjectID() . 'pegawai_d');
+		$item->Visible = $Security->AllowList(CurrentProjectID() . 't_jdkr_peg');
 		if ($item->Visible) {
 			if ($DetailTableLink <> "") $DetailTableLink .= ",";
-			$DetailTableLink .= "pegawai_d";
+			$DetailTableLink .= "t_jdkr_peg";
 		}
 		if ($this->ShowMultipleDetails) $item->Visible = FALSE;
 
@@ -672,7 +702,7 @@ class cpegawai_view extends cpegawai {
 		$option = &$options["action"];
 		$option->DropDownButtonPhrase = $Language->Phrase("ButtonActions");
 		$option->UseImageAndText = TRUE;
-		$option->UseDropDownButton = FALSE;
+		$option->UseDropDownButton = TRUE;
 		$option->UseButtonGroup = TRUE;
 		$item = &$option->Add($option->GroupOptionName);
 		$item->Body = "";
@@ -909,7 +939,7 @@ class cpegawai_view extends cpegawai {
 
 		// tgl_lahir
 		$this->tgl_lahir->ViewValue = $this->tgl_lahir->CurrentValue;
-		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 0);
+		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 14);
 		$this->tgl_lahir->ViewCustomAttributes = "";
 
 		// pembagian1_id
@@ -931,7 +961,7 @@ class cpegawai_view extends cpegawai {
 
 		// tgl_resign
 		$this->tgl_resign->ViewValue = $this->tgl_resign->CurrentValue;
-		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 0);
+		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 7);
 		$this->tgl_resign->ViewCustomAttributes = "";
 
 		// gender
@@ -1197,18 +1227,18 @@ class cpegawai_view extends cpegawai {
 		$Doc->Text .= $sHeader;
 		$this->ExportDocument($Doc, $rs, $this->StartRec, $this->StopRec, "view");
 
-		// Export detail records (pegawai_d)
-		if (EW_EXPORT_DETAIL_RECORDS && in_array("pegawai_d", explode(",", $this->getCurrentDetailTable()))) {
-			global $pegawai_d;
-			if (!isset($pegawai_d)) $pegawai_d = new cpegawai_d;
-			$rsdetail = $pegawai_d->LoadRs($pegawai_d->GetDetailFilter()); // Load detail records
+		// Export detail records (t_jdkr_peg)
+		if (EW_EXPORT_DETAIL_RECORDS && in_array("t_jdkr_peg", explode(",", $this->getCurrentDetailTable()))) {
+			global $t_jdkr_peg;
+			if (!isset($t_jdkr_peg)) $t_jdkr_peg = new ct_jdkr_peg;
+			$rsdetail = $t_jdkr_peg->LoadRs($t_jdkr_peg->GetDetailFilter()); // Load detail records
 			if ($rsdetail && !$rsdetail->EOF) {
 				$ExportStyle = $Doc->Style;
 				$Doc->SetStyle("h"); // Change to horizontal
 				if ($this->Export <> "csv" || EW_EXPORT_DETAIL_RECORDS_FOR_CSV) {
 					$Doc->ExportEmptyRow();
 					$detailcnt = $rsdetail->RecordCount();
-					$pegawai_d->ExportDocument($Doc, $rsdetail, 1, $detailcnt);
+					$t_jdkr_peg->ExportDocument($Doc, $rsdetail, 1, $detailcnt);
 				}
 				$Doc->SetStyle($ExportStyle); // Restore
 				$rsdetail->Close();
@@ -1361,18 +1391,18 @@ class cpegawai_view extends cpegawai {
 		}
 		if ($sDetailTblVar <> "") {
 			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("pegawai_d", $DetailTblVar)) {
-				if (!isset($GLOBALS["pegawai_d_grid"]))
-					$GLOBALS["pegawai_d_grid"] = new cpegawai_d_grid;
-				if ($GLOBALS["pegawai_d_grid"]->DetailView) {
-					$GLOBALS["pegawai_d_grid"]->CurrentMode = "view";
+			if (in_array("t_jdkr_peg", $DetailTblVar)) {
+				if (!isset($GLOBALS["t_jdkr_peg_grid"]))
+					$GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid;
+				if ($GLOBALS["t_jdkr_peg_grid"]->DetailView) {
+					$GLOBALS["t_jdkr_peg_grid"]->CurrentMode = "view";
 
 					// Save current master table to detail table
-					$GLOBALS["pegawai_d_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["pegawai_d_grid"]->setStartRecordNumber(1);
-					$GLOBALS["pegawai_d_grid"]->pegawai_id->FldIsDetailKey = TRUE;
-					$GLOBALS["pegawai_d_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
-					$GLOBALS["pegawai_d_grid"]->pegawai_id->setSessionValue($GLOBALS["pegawai_d_grid"]->pegawai_id->CurrentValue);
+					$GLOBALS["t_jdkr_peg_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t_jdkr_peg_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
+					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdkr_peg_grid"]->pegawai_id->CurrentValue);
 				}
 			}
 		}
@@ -1565,6 +1595,53 @@ fpegawaiview.ValidateRequired = false;
 <?php
 $pegawai_view->ShowMessage();
 ?>
+<?php if (!$pegawai_view->IsModal) { ?>
+<?php if ($pegawai->Export == "") { ?>
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($pegawai_view->Pager)) $pegawai_view->Pager = new cPrevNextPager($pegawai_view->StartRec, $pegawai_view->DisplayRecs, $pegawai_view->TotalRecs) ?>
+<?php if ($pegawai_view->Pager->RecordCount > 0 && $pegawai_view->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($pegawai_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $pegawai_view->PageUrl() ?>start=<?php echo $pegawai_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($pegawai_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $pegawai_view->PageUrl() ?>start=<?php echo $pegawai_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $pegawai_view->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($pegawai_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $pegawai_view->PageUrl() ?>start=<?php echo $pegawai_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($pegawai_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $pegawai_view->PageUrl() ?>start=<?php echo $pegawai_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $pegawai_view->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
+<?php } ?>
 <form name="fpegawaiview" id="fpegawaiview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($pegawai_view->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $pegawai_view->Token ?>">
@@ -1828,13 +1905,58 @@ $pegawai_view->ShowMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php if (!$pegawai_view->IsModal) { ?>
+<?php if ($pegawai->Export == "") { ?>
+<?php if (!isset($pegawai_view->Pager)) $pegawai_view->Pager = new cPrevNextPager($pegawai_view->StartRec, $pegawai_view->DisplayRecs, $pegawai_view->TotalRecs) ?>
+<?php if ($pegawai_view->Pager->RecordCount > 0 && $pegawai_view->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($pegawai_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $pegawai_view->PageUrl() ?>start=<?php echo $pegawai_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($pegawai_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $pegawai_view->PageUrl() ?>start=<?php echo $pegawai_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $pegawai_view->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($pegawai_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $pegawai_view->PageUrl() ?>start=<?php echo $pegawai_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($pegawai_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $pegawai_view->PageUrl() ?>start=<?php echo $pegawai_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $pegawai_view->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+<?php } ?>
+<?php } ?>
 <?php
-	if (in_array("pegawai_d", explode(",", $pegawai->getCurrentDetailTable())) && $pegawai_d->DetailView) {
+	if (in_array("t_jdkr_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdkr_peg->DetailView) {
 ?>
 <?php if ($pegawai->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("pegawai_d", "TblCaption") ?></h4>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t_jdkr_peg", "TblCaption") ?></h4>
 <?php } ?>
-<?php include_once "pegawai_dgrid.php" ?>
+<?php include_once "t_jdkr_peggrid.php" ?>
 <?php } ?>
 </form>
 <?php if ($pegawai->Export == "") { ?>

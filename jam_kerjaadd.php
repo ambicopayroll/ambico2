@@ -285,7 +285,6 @@ class cjam_kerja_add extends cjam_kerja {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->jk_id->SetVisibility();
 		$this->jk_name->SetVisibility();
 		$this->jk_kode->SetVisibility();
 		$this->use_set->SetVisibility();
@@ -494,7 +493,6 @@ class cjam_kerja_add extends cjam_kerja {
 
 	// Load default values
 	function LoadDefaultValues() {
-		$this->jk_id->CurrentValue = 0;
 		$this->jk_name->CurrentValue = NULL;
 		$this->jk_name->OldValue = $this->jk_name->CurrentValue;
 		$this->jk_kode->CurrentValue = NULL;
@@ -527,9 +525,6 @@ class cjam_kerja_add extends cjam_kerja {
 
 		// Load from form
 		global $objForm;
-		if (!$this->jk_id->FldIsDetailKey) {
-			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
-		}
 		if (!$this->jk_name->FldIsDetailKey) {
 			$this->jk_name->setFormValue($objForm->GetValue("x_jk_name"));
 		}
@@ -600,6 +595,8 @@ class cjam_kerja_add extends cjam_kerja {
 		if (!$this->jk_ket->FldIsDetailKey) {
 			$this->jk_ket->setFormValue($objForm->GetValue("x_jk_ket"));
 		}
+		if (!$this->jk_id->FldIsDetailKey)
+			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
 	}
 
 	// Restore form values
@@ -873,11 +870,6 @@ class cjam_kerja_add extends cjam_kerja {
 		$this->jk_ket->ViewValue = $this->jk_ket->CurrentValue;
 		$this->jk_ket->ViewCustomAttributes = "";
 
-			// jk_id
-			$this->jk_id->LinkCustomAttributes = "";
-			$this->jk_id->HrefValue = "";
-			$this->jk_id->TooltipValue = "";
-
 			// jk_name
 			$this->jk_name->LinkCustomAttributes = "";
 			$this->jk_name->HrefValue = "";
@@ -988,12 +980,6 @@ class cjam_kerja_add extends cjam_kerja {
 			$this->jk_ket->HrefValue = "";
 			$this->jk_ket->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
-
-			// jk_id
-			$this->jk_id->EditAttrs["class"] = "form-control";
-			$this->jk_id->EditCustomAttributes = "";
-			$this->jk_id->EditValue = ew_HtmlEncode($this->jk_id->CurrentValue);
-			$this->jk_id->PlaceHolder = ew_RemoveHtml($this->jk_id->FldCaption());
 
 			// jk_name
 			$this->jk_name->EditAttrs["class"] = "form-control";
@@ -1129,12 +1115,8 @@ class cjam_kerja_add extends cjam_kerja {
 			$this->jk_ket->PlaceHolder = ew_RemoveHtml($this->jk_ket->FldCaption());
 
 			// Add refer script
-			// jk_id
-
-			$this->jk_id->LinkCustomAttributes = "";
-			$this->jk_id->HrefValue = "";
-
 			// jk_name
+
 			$this->jk_name->LinkCustomAttributes = "";
 			$this->jk_name->HrefValue = "";
 
@@ -1243,12 +1225,6 @@ class cjam_kerja_add extends cjam_kerja {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->jk_id->FldIsDetailKey && !is_null($this->jk_id->FormValue) && $this->jk_id->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->jk_id->FldCaption(), $this->jk_id->ReqErrMsg));
-		}
-		if (!ew_CheckInteger($this->jk_id->FormValue)) {
-			ew_AddMessage($gsFormError, $this->jk_id->FldErrMsg());
-		}
 		if (!$this->jk_name->FldIsDetailKey && !is_null($this->jk_name->FormValue) && $this->jk_name->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->jk_name->FldCaption(), $this->jk_name->ReqErrMsg));
 		}
@@ -1392,9 +1368,6 @@ class cjam_kerja_add extends cjam_kerja {
 			$this->LoadDbValues($rsold);
 		}
 		$rsnew = array();
-
-		// jk_id
-		$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, strval($this->jk_id->CurrentValue) == "");
 
 		// jk_name
 		$this->jk_name->SetDbValueDef($rsnew, $this->jk_name->CurrentValue, "", FALSE);
@@ -1644,12 +1617,6 @@ fjam_kerjaadd.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_jk_id");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $jam_kerja->jk_id->FldCaption(), $jam_kerja->jk_id->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_jk_id");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($jam_kerja->jk_id->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_jk_name");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $jam_kerja->jk_name->FldCaption(), $jam_kerja->jk_name->ReqErrMsg)) ?>");
@@ -1831,16 +1798,6 @@ $jam_kerja_add->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <div>
-<?php if ($jam_kerja->jk_id->Visible) { // jk_id ?>
-	<div id="r_jk_id" class="form-group">
-		<label id="elh_jam_kerja_jk_id" for="x_jk_id" class="col-sm-2 control-label ewLabel"><?php echo $jam_kerja->jk_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $jam_kerja->jk_id->CellAttributes() ?>>
-<span id="el_jam_kerja_jk_id">
-<input type="text" data-table="jam_kerja" data-field="x_jk_id" name="x_jk_id" id="x_jk_id" size="30" placeholder="<?php echo ew_HtmlEncode($jam_kerja->jk_id->getPlaceHolder()) ?>" value="<?php echo $jam_kerja->jk_id->EditValue ?>"<?php echo $jam_kerja->jk_id->EditAttributes() ?>>
-</span>
-<?php echo $jam_kerja->jk_id->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
 <?php if ($jam_kerja->jk_name->Visible) { // jk_name ?>
 	<div id="r_jk_name" class="form-group">
 		<label id="elh_jam_kerja_jk_name" for="x_jk_name" class="col-sm-2 control-label ewLabel"><?php echo $jam_kerja->jk_name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>

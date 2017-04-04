@@ -25,7 +25,7 @@ define("EW_CONFIG_FILE_FOLDER", EW_PROJECT_NAME, TRUE); // Config file name
 define("EW_PROJECT_ID", "{4B5DAB39-E4BC-48DF-9311-E295A5F18030}", TRUE); // Project ID (GUID)
 $EW_RELATED_PROJECT_ID = "";
 $EW_RELATED_LANGUAGE_FOLDER = "";
-define("EW_RANDOM_KEY", 'kFW9eWUe9w56NrW2', TRUE); // Random key for encryption
+define("EW_RANDOM_KEY", 'rcfgpBkJWhrbnij4', TRUE); // Random key for encryption
 define("EW_PROJECT_STYLESHEET_FILENAME", "phpcss/ambico2.css", TRUE); // Project stylesheet file name
 define("EW_CHARSET", "", TRUE); // Project charset
 define("EW_EMAIL_CHARSET", EW_CHARSET, TRUE); // Email charset
@@ -926,5 +926,7 @@ define("EW_MENU_ROOT_GROUP_TITLE_AS_SUBMENU", FALSE, TRUE);
 define("EW_SHOW_RIGHT_MENU", FALSE, TRUE);
 ?>
 <?php
-define("EW_PDF_STYLESHEET_FILENAME", "", TRUE); // Export PDF CSS styles
+define("EW_PDF_STYLESHEET_FILENAME", "phpcss/ewpdf.css", TRUE); // export PDF CSS styles
+define("EW_PDF_MEMORY_LIMIT", "128M", TRUE); // Memory limit
+define("EW_PDF_TIME_LIMIT", 120, TRUE); // Time limit
 ?>

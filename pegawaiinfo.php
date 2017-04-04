@@ -120,9 +120,9 @@ class cpegawai extends cTable {
 		$this->fields['tempat_lahir'] = &$this->tempat_lahir;
 
 		// tgl_lahir
-		$this->tgl_lahir = new cField('pegawai', 'pegawai', 'x_tgl_lahir', 'tgl_lahir', '`tgl_lahir`', ew_CastDateFieldForLike('`tgl_lahir`', 0, "DB"), 133, 0, FALSE, '`tgl_lahir`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->tgl_lahir = new cField('pegawai', 'pegawai', 'x_tgl_lahir', 'tgl_lahir', '`tgl_lahir`', ew_CastDateFieldForLike('`tgl_lahir`', 14, "DB"), 133, 14, FALSE, '`tgl_lahir`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->tgl_lahir->Sortable = TRUE; // Allow sort
-		$this->tgl_lahir->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
+		$this->tgl_lahir->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_SEPARATOR"], $Language->Phrase("IncorrectShortDateDMY"));
 		$this->fields['tgl_lahir'] = &$this->tgl_lahir;
 
 		// pembagian1_id
@@ -150,9 +150,9 @@ class cpegawai extends cTable {
 		$this->fields['tgl_mulai_kerja'] = &$this->tgl_mulai_kerja;
 
 		// tgl_resign
-		$this->tgl_resign = new cField('pegawai', 'pegawai', 'x_tgl_resign', 'tgl_resign', '`tgl_resign`', ew_CastDateFieldForLike('`tgl_resign`', 0, "DB"), 133, 0, FALSE, '`tgl_resign`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->tgl_resign = new cField('pegawai', 'pegawai', 'x_tgl_resign', 'tgl_resign', '`tgl_resign`', ew_CastDateFieldForLike('`tgl_resign`', 7, "DB"), 133, 7, FALSE, '`tgl_resign`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->tgl_resign->Sortable = TRUE; // Allow sort
-		$this->tgl_resign->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
+		$this->tgl_resign->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_SEPARATOR"], $Language->Phrase("IncorrectDateDMY"));
 		$this->fields['tgl_resign'] = &$this->tgl_resign;
 
 		// gender
@@ -241,8 +241,8 @@ class cpegawai extends cTable {
 
 		// Detail url
 		$sDetailUrl = "";
-		if ($this->getCurrentDetailTable() == "pegawai_d") {
-			$sDetailUrl = $GLOBALS["pegawai_d"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
+		if ($this->getCurrentDetailTable() == "t_jdkr_peg") {
+			$sDetailUrl = $GLOBALS["t_jdkr_peg"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
 			$sDetailUrl .= "&fk_pegawai_id=" . urlencode($this->pegawai_id->CurrentValue);
 		}
 		if ($sDetailUrl == "") {
@@ -504,6 +504,26 @@ class cpegawai extends cTable {
 	// Update
 	function Update(&$rs, $where = "", $rsold = NULL, $curfilter = TRUE) {
 		$conn = &$this->Connection();
+
+		// Cascade Update detail table 't_jdkr_peg'
+		$bCascadeUpdate = FALSE;
+		$rscascade = array();
+		if (!is_null($rsold) && (isset($rs['pegawai_id']) && $rsold['pegawai_id'] <> $rs['pegawai_id'])) { // Update detail field 'pegawai_id'
+			$bCascadeUpdate = TRUE;
+			$rscascade['pegawai_id'] = $rs['pegawai_id']; 
+		}
+		if ($bCascadeUpdate) {
+			if (!isset($GLOBALS["t_jdkr_peg"])) $GLOBALS["t_jdkr_peg"] = new ct_jdkr_peg();
+			$rswrk = $GLOBALS["t_jdkr_peg"]->LoadRs("`pegawai_id` = " . ew_QuotedValue($rsold['pegawai_id'], EW_DATATYPE_NUMBER, 'DB')); 
+			while ($rswrk && !$rswrk->EOF) {
+				$rskey = array();
+				$fldname = 'jdkr_id';
+				$rskey[$fldname] = $rswrk->fields[$fldname];
+				$bUpdate = $GLOBALS["t_jdkr_peg"]->Update($rscascade, $rskey, $rswrk->fields);
+				if (!$bUpdate) return FALSE;
+				$rswrk->MoveNext();
+			}
+		}
 		$bUpdate = $conn->Execute($this->UpdateSQL($rs, $where, $curfilter));
 		if ($bUpdate && $this->AuditTrailOnEdit) {
 			$rsaudit = $rs;
@@ -535,6 +555,14 @@ class cpegawai extends cTable {
 	// Delete
 	function Delete(&$rs, $where = "", $curfilter = TRUE) {
 		$conn = &$this->Connection();
+
+		// Cascade delete detail table 't_jdkr_peg'
+		if (!isset($GLOBALS["t_jdkr_peg"])) $GLOBALS["t_jdkr_peg"] = new ct_jdkr_peg();
+		$rscascade = $GLOBALS["t_jdkr_peg"]->LoadRs("`pegawai_id` = " . ew_QuotedValue($rs['pegawai_id'], EW_DATATYPE_NUMBER, "DB")); 
+		while ($rscascade && !$rscascade->EOF) {
+			$GLOBALS["t_jdkr_peg"]->Delete($rscascade->fields);
+			$rscascade->MoveNext();
+		}
 		$bDelete = $conn->Execute($this->DeleteSQL($rs, $where, $curfilter));
 		if ($bDelete && $this->AuditTrailOnDelete)
 			$this->WriteAuditTrailOnDelete($rs);
@@ -828,7 +856,7 @@ class cpegawai extends cTable {
 
 		// tgl_lahir
 		$this->tgl_lahir->ViewValue = $this->tgl_lahir->CurrentValue;
-		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 0);
+		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 14);
 		$this->tgl_lahir->ViewCustomAttributes = "";
 
 		// pembagian1_id
@@ -850,7 +878,7 @@ class cpegawai extends cTable {
 
 		// tgl_resign
 		$this->tgl_resign->ViewValue = $this->tgl_resign->CurrentValue;
-		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 0);
+		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 7);
 		$this->tgl_resign->ViewCustomAttributes = "";
 
 		// gender
@@ -1071,7 +1099,7 @@ class cpegawai extends cTable {
 		// tgl_lahir
 		$this->tgl_lahir->EditAttrs["class"] = "form-control";
 		$this->tgl_lahir->EditCustomAttributes = "";
-		$this->tgl_lahir->EditValue = ew_FormatDateTime($this->tgl_lahir->CurrentValue, 8);
+		$this->tgl_lahir->EditValue = ew_FormatDateTime($this->tgl_lahir->CurrentValue, 14);
 		$this->tgl_lahir->PlaceHolder = ew_RemoveHtml($this->tgl_lahir->FldCaption());
 
 		// pembagian1_id
@@ -1101,7 +1129,7 @@ class cpegawai extends cTable {
 		// tgl_resign
 		$this->tgl_resign->EditAttrs["class"] = "form-control";
 		$this->tgl_resign->EditCustomAttributes = "";
-		$this->tgl_resign->EditValue = ew_FormatDateTime($this->tgl_resign->CurrentValue, 8);
+		$this->tgl_resign->EditValue = ew_FormatDateTime($this->tgl_resign->CurrentValue, 7);
 		$this->tgl_resign->PlaceHolder = ew_RemoveHtml($this->tgl_resign->FldCaption());
 
 		// gender

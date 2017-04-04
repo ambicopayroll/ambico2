@@ -383,7 +383,6 @@ class cjam_kerja_view extends cjam_kerja {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->jk_id->SetVisibility();
 		$this->jk_name->SetVisibility();
 		$this->jk_kode->SetVisibility();
 		$this->use_set->SetVisibility();
@@ -483,6 +482,7 @@ class cjam_kerja_view extends cjam_kerja {
 	var $StopRec;
 	var $TotalRecs = 0;
 	var $RecRange = 10;
+	var $Pager;
 	var $RecCnt;
 	var $RecKey = array();
 	var $IsModal = FALSE;
@@ -512,17 +512,46 @@ class cjam_kerja_view extends cjam_kerja {
 				$this->jk_id->setFormValue($_POST["jk_id"]);
 				$this->RecKey["jk_id"] = $this->jk_id->FormValue;
 			} else {
-				$sReturnUrl = "jam_kerjalist.php"; // Return to list
+				$bLoadCurrentRecord = TRUE;
 			}
 
 			// Get action
 			$this->CurrentAction = "I"; // Display form
 			switch ($this->CurrentAction) {
 				case "I": // Get a record to display
-					if (!$this->LoadRow()) { // Load record based on key
+					$this->StartRec = 1; // Initialize start position
+					if ($this->Recordset = $this->LoadRecordset()) // Load records
+						$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
+					if ($this->TotalRecs <= 0) { // No record found
+						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+						$this->Page_Terminate("jam_kerjalist.php"); // Return to list page
+					} elseif ($bLoadCurrentRecord) { // Load current record position
+						$this->SetUpStartRec(); // Set up start record position
+
+						// Point to current record
+						if (intval($this->StartRec) <= intval($this->TotalRecs)) {
+							$bMatchRecord = TRUE;
+							$this->Recordset->Move($this->StartRec-1);
+						}
+					} else { // Match key values
+						while (!$this->Recordset->EOF) {
+							if (strval($this->jk_id->CurrentValue) == strval($this->Recordset->fields('jk_id'))) {
+								$this->setStartRecordNumber($this->StartRec); // Save record position
+								$bMatchRecord = TRUE;
+								break;
+							} else {
+								$this->StartRec++;
+								$this->Recordset->MoveNext();
+							}
+						}
+					}
+					if (!$bMatchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
 						$sReturnUrl = "jam_kerjalist.php"; // No matching record, return to list
+					} else {
+						$this->LoadRowValues($this->Recordset); // Load row values
 					}
 			}
 
@@ -593,7 +622,7 @@ class cjam_kerja_view extends cjam_kerja {
 		$option = &$options["action"];
 		$option->DropDownButtonPhrase = $Language->Phrase("ButtonActions");
 		$option->UseImageAndText = TRUE;
-		$option->UseDropDownButton = FALSE;
+		$option->UseDropDownButton = TRUE;
 		$option->UseButtonGroup = TRUE;
 		$item = &$option->Add($option->GroupOptionName);
 		$item->Body = "";
@@ -691,6 +720,7 @@ class cjam_kerja_view extends cjam_kerja {
 		// Call Row Selected event
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
+		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->jk_id->setDbValue($rs->fields('jk_id'));
 		$this->jk_name->setDbValue($rs->fields('jk_name'));
 		$this->jk_kode->setDbValue($rs->fields('jk_kode'));
@@ -882,11 +912,6 @@ class cjam_kerja_view extends cjam_kerja {
 		// jk_ket
 		$this->jk_ket->ViewValue = $this->jk_ket->CurrentValue;
 		$this->jk_ket->ViewCustomAttributes = "";
-
-			// jk_id
-			$this->jk_id->LinkCustomAttributes = "";
-			$this->jk_id->HrefValue = "";
-			$this->jk_id->TooltipValue = "";
 
 			// jk_name
 			$this->jk_name->LinkCustomAttributes = "";
@@ -1438,6 +1463,53 @@ fjam_kerjaview.ValidateRequired = false;
 <?php
 $jam_kerja_view->ShowMessage();
 ?>
+<?php if (!$jam_kerja_view->IsModal) { ?>
+<?php if ($jam_kerja->Export == "") { ?>
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($jam_kerja_view->Pager)) $jam_kerja_view->Pager = new cPrevNextPager($jam_kerja_view->StartRec, $jam_kerja_view->DisplayRecs, $jam_kerja_view->TotalRecs) ?>
+<?php if ($jam_kerja_view->Pager->RecordCount > 0 && $jam_kerja_view->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($jam_kerja_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $jam_kerja_view->PageUrl() ?>start=<?php echo $jam_kerja_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($jam_kerja_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $jam_kerja_view->PageUrl() ?>start=<?php echo $jam_kerja_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $jam_kerja_view->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($jam_kerja_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $jam_kerja_view->PageUrl() ?>start=<?php echo $jam_kerja_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($jam_kerja_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $jam_kerja_view->PageUrl() ?>start=<?php echo $jam_kerja_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $jam_kerja_view->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
+<?php } ?>
 <form name="fjam_kerjaview" id="fjam_kerjaview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($jam_kerja_view->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $jam_kerja_view->Token ?>">
@@ -1447,17 +1519,6 @@ $jam_kerja_view->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <table class="table table-bordered table-striped ewViewTable">
-<?php if ($jam_kerja->jk_id->Visible) { // jk_id ?>
-	<tr id="r_jk_id">
-		<td><span id="elh_jam_kerja_jk_id"><?php echo $jam_kerja->jk_id->FldCaption() ?></span></td>
-		<td data-name="jk_id"<?php echo $jam_kerja->jk_id->CellAttributes() ?>>
-<span id="el_jam_kerja_jk_id">
-<span<?php echo $jam_kerja->jk_id->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 <?php if ($jam_kerja->jk_name->Visible) { // jk_name ?>
 	<tr id="r_jk_name">
 		<td><span id="elh_jam_kerja_jk_name"><?php echo $jam_kerja->jk_name->FldCaption() ?></span></td>
@@ -1701,6 +1762,51 @@ $jam_kerja_view->ShowMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php if (!$jam_kerja_view->IsModal) { ?>
+<?php if ($jam_kerja->Export == "") { ?>
+<?php if (!isset($jam_kerja_view->Pager)) $jam_kerja_view->Pager = new cPrevNextPager($jam_kerja_view->StartRec, $jam_kerja_view->DisplayRecs, $jam_kerja_view->TotalRecs) ?>
+<?php if ($jam_kerja_view->Pager->RecordCount > 0 && $jam_kerja_view->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($jam_kerja_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $jam_kerja_view->PageUrl() ?>start=<?php echo $jam_kerja_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($jam_kerja_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $jam_kerja_view->PageUrl() ?>start=<?php echo $jam_kerja_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $jam_kerja_view->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($jam_kerja_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $jam_kerja_view->PageUrl() ?>start=<?php echo $jam_kerja_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($jam_kerja_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $jam_kerja_view->PageUrl() ?>start=<?php echo $jam_kerja_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $jam_kerja_view->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+<?php } ?>
+<?php } ?>
 </form>
 <?php if ($jam_kerja->Export == "") { ?>
 <script type="text/javascript">

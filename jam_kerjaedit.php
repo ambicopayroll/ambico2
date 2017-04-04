@@ -285,7 +285,6 @@ class cjam_kerja_edit extends cjam_kerja {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->jk_id->SetVisibility();
 		$this->jk_name->SetVisibility();
 		$this->jk_kode->SetVisibility();
 		$this->use_set->SetVisibility();
@@ -394,6 +393,15 @@ class cjam_kerja_edit extends cjam_kerja {
 	var $IsModal = FALSE;
 	var $DbMasterFilter;
 	var $DbDetailFilter;
+	var $DisplayRecs = 1;
+	var $StartRec;
+	var $StopRec;
+	var $TotalRecs = 0;
+	var $RecRange = 10;
+	var $Pager;
+	var $RecCnt;
+	var $RecKey = array();
+	var $Recordset;
 
 	// 
 	// Page main
@@ -407,9 +415,46 @@ class cjam_kerja_edit extends cjam_kerja {
 		if ($this->IsModal)
 			$gbSkipHeaderFooter = TRUE;
 
+		// Load current record
+		$bLoadCurrentRecord = FALSE;
+		$sReturnUrl = "";
+		$bMatchRecord = FALSE;
+
 		// Load key from QueryString
 		if (@$_GET["jk_id"] <> "") {
 			$this->jk_id->setQueryStringValue($_GET["jk_id"]);
+			$this->RecKey["jk_id"] = $this->jk_id->QueryStringValue;
+		} else {
+			$bLoadCurrentRecord = TRUE;
+		}
+
+		// Load recordset
+		$this->StartRec = 1; // Initialize start position
+		if ($this->Recordset = $this->LoadRecordset()) // Load records
+			$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
+		if ($this->TotalRecs <= 0) { // No record found
+			if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+			$this->Page_Terminate("jam_kerjalist.php"); // Return to list page
+		} elseif ($bLoadCurrentRecord) { // Load current record position
+			$this->SetUpStartRec(); // Set up start record position
+
+			// Point to current record
+			if (intval($this->StartRec) <= intval($this->TotalRecs)) {
+				$bMatchRecord = TRUE;
+				$this->Recordset->Move($this->StartRec-1);
+			}
+		} else { // Match key values
+			while (!$this->Recordset->EOF) {
+				if (strval($this->jk_id->CurrentValue) == strval($this->Recordset->fields('jk_id'))) {
+					$this->setStartRecordNumber($this->StartRec); // Save record position
+					$bMatchRecord = TRUE;
+					break;
+				} else {
+					$this->StartRec++;
+					$this->Recordset->MoveNext();
+				}
+			}
 		}
 
 		// Process form if post back
@@ -418,11 +463,6 @@ class cjam_kerja_edit extends cjam_kerja {
 			$this->LoadFormValues(); // Get form values
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
-		}
-
-		// Check if valid key
-		if ($this->jk_id->CurrentValue == "") {
-			$this->Page_Terminate("jam_kerjalist.php"); // Invalid key, return to list
 		}
 
 		// Validate form if post back
@@ -436,9 +476,12 @@ class cjam_kerja_edit extends cjam_kerja {
 		}
 		switch ($this->CurrentAction) {
 			case "I": // Get a record to display
-				if (!$this->LoadRow()) { // Load record based on key
-					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
-					$this->Page_Terminate("jam_kerjalist.php"); // No matching record, return to list
+				if (!$bMatchRecord) {
+					if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+						$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+					$this->Page_Terminate("jam_kerjalist.php"); // Return to list page
+				} else {
+					$this->LoadRowValues($this->Recordset); // Load row values
 				}
 				break;
 			Case "U": // Update
@@ -515,9 +558,6 @@ class cjam_kerja_edit extends cjam_kerja {
 
 		// Load from form
 		global $objForm;
-		if (!$this->jk_id->FldIsDetailKey) {
-			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
-		}
 		if (!$this->jk_name->FldIsDetailKey) {
 			$this->jk_name->setFormValue($objForm->GetValue("x_jk_name"));
 		}
@@ -588,6 +628,8 @@ class cjam_kerja_edit extends cjam_kerja {
 		if (!$this->jk_ket->FldIsDetailKey) {
 			$this->jk_ket->setFormValue($objForm->GetValue("x_jk_ket"));
 		}
+		if (!$this->jk_id->FldIsDetailKey)
+			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
 	}
 
 	// Restore form values
@@ -621,6 +663,32 @@ class cjam_kerja_edit extends cjam_kerja {
 		$this->jk_countas->CurrentValue = $this->jk_countas->FormValue;
 		$this->jk_min_countas->CurrentValue = $this->jk_min_countas->FormValue;
 		$this->jk_ket->CurrentValue = $this->jk_ket->FormValue;
+	}
+
+	// Load recordset
+	function LoadRecordset($offset = -1, $rowcnt = -1) {
+
+		// Load List page SQL
+		$sSql = $this->SelectSQL();
+		$conn = &$this->Connection();
+
+		// Load recordset
+		$dbtype = ew_GetConnectionType($this->DBID);
+		if ($this->UseSelectLimit) {
+			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
+			if ($dbtype == "MSSQL") {
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())));
+			} else {
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset);
+			}
+			$conn->raiseErrorFn = '';
+		} else {
+			$rs = ew_LoadRecordset($sSql, $conn);
+		}
+
+		// Call Recordset Selected event
+		$this->Recordset_Selected($rs);
+		return $rs;
 	}
 
 	// Load row based on key values
@@ -838,11 +906,6 @@ class cjam_kerja_edit extends cjam_kerja {
 		$this->jk_ket->ViewValue = $this->jk_ket->CurrentValue;
 		$this->jk_ket->ViewCustomAttributes = "";
 
-			// jk_id
-			$this->jk_id->LinkCustomAttributes = "";
-			$this->jk_id->HrefValue = "";
-			$this->jk_id->TooltipValue = "";
-
 			// jk_name
 			$this->jk_name->LinkCustomAttributes = "";
 			$this->jk_name->HrefValue = "";
@@ -953,12 +1016,6 @@ class cjam_kerja_edit extends cjam_kerja {
 			$this->jk_ket->HrefValue = "";
 			$this->jk_ket->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
-
-			// jk_id
-			$this->jk_id->EditAttrs["class"] = "form-control";
-			$this->jk_id->EditCustomAttributes = "";
-			$this->jk_id->EditValue = $this->jk_id->CurrentValue;
-			$this->jk_id->ViewCustomAttributes = "";
 
 			// jk_name
 			$this->jk_name->EditAttrs["class"] = "form-control";
@@ -1094,12 +1151,8 @@ class cjam_kerja_edit extends cjam_kerja {
 			$this->jk_ket->PlaceHolder = ew_RemoveHtml($this->jk_ket->FldCaption());
 
 			// Edit refer script
-			// jk_id
-
-			$this->jk_id->LinkCustomAttributes = "";
-			$this->jk_id->HrefValue = "";
-
 			// jk_name
+
 			$this->jk_name->LinkCustomAttributes = "";
 			$this->jk_name->HrefValue = "";
 
@@ -1208,12 +1261,6 @@ class cjam_kerja_edit extends cjam_kerja {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->jk_id->FldIsDetailKey && !is_null($this->jk_id->FormValue) && $this->jk_id->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->jk_id->FldCaption(), $this->jk_id->ReqErrMsg));
-		}
-		if (!ew_CheckInteger($this->jk_id->FormValue)) {
-			ew_AddMessage($gsFormError, $this->jk_id->FldErrMsg());
-		}
 		if (!$this->jk_name->FldIsDetailKey && !is_null($this->jk_name->FormValue) && $this->jk_name->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->jk_name->FldCaption(), $this->jk_name->ReqErrMsg));
 		}
@@ -1370,9 +1417,7 @@ class cjam_kerja_edit extends cjam_kerja {
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// jk_id
 			// jk_name
-
 			$this->jk_name->SetDbValueDef($rsnew, $this->jk_name->CurrentValue, "", $this->jk_name->ReadOnly);
 
 			// jk_kode
@@ -1604,12 +1649,6 @@ fjam_kerjaedit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_jk_id");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $jam_kerja->jk_id->FldCaption(), $jam_kerja->jk_id->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_jk_id");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($jam_kerja->jk_id->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_jk_name");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $jam_kerja->jk_name->FldCaption(), $jam_kerja->jk_name->ReqErrMsg)) ?>");
@@ -1781,6 +1820,51 @@ fjam_kerjaedit.ValidateRequired = false;
 <?php
 $jam_kerja_edit->ShowMessage();
 ?>
+<?php if (!$jam_kerja_edit->IsModal) { ?>
+<form name="ewPagerForm" class="form-horizontal ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($jam_kerja_edit->Pager)) $jam_kerja_edit->Pager = new cPrevNextPager($jam_kerja_edit->StartRec, $jam_kerja_edit->DisplayRecs, $jam_kerja_edit->TotalRecs) ?>
+<?php if ($jam_kerja_edit->Pager->RecordCount > 0 && $jam_kerja_edit->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($jam_kerja_edit->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $jam_kerja_edit->PageUrl() ?>start=<?php echo $jam_kerja_edit->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($jam_kerja_edit->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $jam_kerja_edit->PageUrl() ?>start=<?php echo $jam_kerja_edit->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $jam_kerja_edit->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($jam_kerja_edit->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $jam_kerja_edit->PageUrl() ?>start=<?php echo $jam_kerja_edit->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($jam_kerja_edit->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $jam_kerja_edit->PageUrl() ?>start=<?php echo $jam_kerja_edit->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $jam_kerja_edit->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
 <form name="fjam_kerjaedit" id="fjam_kerjaedit" class="<?php echo $jam_kerja_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($jam_kerja_edit->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $jam_kerja_edit->Token ?>">
@@ -1791,18 +1875,6 @@ $jam_kerja_edit->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <div>
-<?php if ($jam_kerja->jk_id->Visible) { // jk_id ?>
-	<div id="r_jk_id" class="form-group">
-		<label id="elh_jam_kerja_jk_id" for="x_jk_id" class="col-sm-2 control-label ewLabel"><?php echo $jam_kerja->jk_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $jam_kerja->jk_id->CellAttributes() ?>>
-<span id="el_jam_kerja_jk_id">
-<span<?php echo $jam_kerja->jk_id->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $jam_kerja->jk_id->EditValue ?></p></span>
-</span>
-<input type="hidden" data-table="jam_kerja" data-field="x_jk_id" name="x_jk_id" id="x_jk_id" value="<?php echo ew_HtmlEncode($jam_kerja->jk_id->CurrentValue) ?>">
-<?php echo $jam_kerja->jk_id->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
 <?php if ($jam_kerja->jk_name->Visible) { // jk_name ?>
 	<div id="r_jk_name" class="form-group">
 		<label id="elh_jam_kerja_jk_name" for="x_jk_name" class="col-sm-2 control-label ewLabel"><?php echo $jam_kerja->jk_name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
@@ -2024,6 +2096,7 @@ $jam_kerja_edit->ShowMessage();
 	</div>
 <?php } ?>
 </div>
+<input type="hidden" data-table="jam_kerja" data-field="x_jk_id" name="x_jk_id" id="x_jk_id" value="<?php echo ew_HtmlEncode($jam_kerja->jk_id->CurrentValue) ?>">
 <?php if (!$jam_kerja_edit->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">
@@ -2031,6 +2104,47 @@ $jam_kerja_edit->ShowMessage();
 <button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $jam_kerja_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 	</div>
 </div>
+<?php if (!isset($jam_kerja_edit->Pager)) $jam_kerja_edit->Pager = new cPrevNextPager($jam_kerja_edit->StartRec, $jam_kerja_edit->DisplayRecs, $jam_kerja_edit->TotalRecs) ?>
+<?php if ($jam_kerja_edit->Pager->RecordCount > 0 && $jam_kerja_edit->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($jam_kerja_edit->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $jam_kerja_edit->PageUrl() ?>start=<?php echo $jam_kerja_edit->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($jam_kerja_edit->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $jam_kerja_edit->PageUrl() ?>start=<?php echo $jam_kerja_edit->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $jam_kerja_edit->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($jam_kerja_edit->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $jam_kerja_edit->PageUrl() ?>start=<?php echo $jam_kerja_edit->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($jam_kerja_edit->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $jam_kerja_edit->PageUrl() ?>start=<?php echo $jam_kerja_edit->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $jam_kerja_edit->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
 <?php } ?>
 </form>
 <script type="text/javascript">

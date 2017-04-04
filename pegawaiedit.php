@@ -7,7 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "pegawaiinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
-<?php include_once "pegawai_dgridcls.php" ?>
+<?php include_once "t_jdkr_peggridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -326,10 +326,10 @@ class cpegawai_edit extends cpegawai {
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
 
-			// Process auto fill for detail table 'pegawai_d'
-			if (@$_POST["grid"] == "fpegawai_dgrid") {
-				if (!isset($GLOBALS["pegawai_d_grid"])) $GLOBALS["pegawai_d_grid"] = new cpegawai_d_grid;
-				$GLOBALS["pegawai_d_grid"]->Page_Init();
+			// Process auto fill for detail table 't_jdkr_peg'
+			if (@$_POST["grid"] == "ft_jdkr_peggrid") {
+				if (!isset($GLOBALS["t_jdkr_peg_grid"])) $GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid;
+				$GLOBALS["t_jdkr_peg_grid"]->Page_Init();
 				$this->Page_Terminate();
 				exit();
 			}
@@ -403,6 +403,15 @@ class cpegawai_edit extends cpegawai {
 	var $IsModal = FALSE;
 	var $DbMasterFilter;
 	var $DbDetailFilter;
+	var $DisplayRecs = 1;
+	var $StartRec;
+	var $StopRec;
+	var $TotalRecs = 0;
+	var $RecRange = 10;
+	var $Pager;
+	var $RecCnt;
+	var $RecKey = array();
+	var $Recordset;
 
 	// 
 	// Page main
@@ -416,9 +425,46 @@ class cpegawai_edit extends cpegawai {
 		if ($this->IsModal)
 			$gbSkipHeaderFooter = TRUE;
 
+		// Load current record
+		$bLoadCurrentRecord = FALSE;
+		$sReturnUrl = "";
+		$bMatchRecord = FALSE;
+
 		// Load key from QueryString
 		if (@$_GET["pegawai_id"] <> "") {
 			$this->pegawai_id->setQueryStringValue($_GET["pegawai_id"]);
+			$this->RecKey["pegawai_id"] = $this->pegawai_id->QueryStringValue;
+		} else {
+			$bLoadCurrentRecord = TRUE;
+		}
+
+		// Load recordset
+		$this->StartRec = 1; // Initialize start position
+		if ($this->Recordset = $this->LoadRecordset()) // Load records
+			$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
+		if ($this->TotalRecs <= 0) { // No record found
+			if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+			$this->Page_Terminate("pegawailist.php"); // Return to list page
+		} elseif ($bLoadCurrentRecord) { // Load current record position
+			$this->SetUpStartRec(); // Set up start record position
+
+			// Point to current record
+			if (intval($this->StartRec) <= intval($this->TotalRecs)) {
+				$bMatchRecord = TRUE;
+				$this->Recordset->Move($this->StartRec-1);
+			}
+		} else { // Match key values
+			while (!$this->Recordset->EOF) {
+				if (strval($this->pegawai_id->CurrentValue) == strval($this->Recordset->fields('pegawai_id'))) {
+					$this->setStartRecordNumber($this->StartRec); // Save record position
+					$bMatchRecord = TRUE;
+					break;
+				} else {
+					$this->StartRec++;
+					$this->Recordset->MoveNext();
+				}
+			}
 		}
 
 		// Process form if post back
@@ -432,11 +478,6 @@ class cpegawai_edit extends cpegawai {
 			$this->CurrentAction = "I"; // Default action is display
 		}
 
-		// Check if valid key
-		if ($this->pegawai_id->CurrentValue == "") {
-			$this->Page_Terminate("pegawailist.php"); // Invalid key, return to list
-		}
-
 		// Validate form if post back
 		if (@$_POST["a_edit"] <> "") {
 			if (!$this->ValidateForm()) {
@@ -448,9 +489,12 @@ class cpegawai_edit extends cpegawai {
 		}
 		switch ($this->CurrentAction) {
 			case "I": // Get a record to display
-				if (!$this->LoadRow()) { // Load record based on key
-					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
-					$this->Page_Terminate("pegawailist.php"); // No matching record, return to list
+				if (!$bMatchRecord) {
+					if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+						$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+					$this->Page_Terminate("pegawailist.php"); // Return to list page
+				} else {
+					$this->LoadRowValues($this->Recordset); // Load row values
 				}
 
 				// Set up detail parameters
@@ -568,7 +612,7 @@ class cpegawai_edit extends cpegawai {
 		}
 		if (!$this->tgl_lahir->FldIsDetailKey) {
 			$this->tgl_lahir->setFormValue($objForm->GetValue("x_tgl_lahir"));
-			$this->tgl_lahir->CurrentValue = ew_UnFormatDateTime($this->tgl_lahir->CurrentValue, 0);
+			$this->tgl_lahir->CurrentValue = ew_UnFormatDateTime($this->tgl_lahir->CurrentValue, 14);
 		}
 		if (!$this->pembagian1_id->FldIsDetailKey) {
 			$this->pembagian1_id->setFormValue($objForm->GetValue("x_pembagian1_id"));
@@ -585,7 +629,7 @@ class cpegawai_edit extends cpegawai {
 		}
 		if (!$this->tgl_resign->FldIsDetailKey) {
 			$this->tgl_resign->setFormValue($objForm->GetValue("x_tgl_resign"));
-			$this->tgl_resign->CurrentValue = ew_UnFormatDateTime($this->tgl_resign->CurrentValue, 0);
+			$this->tgl_resign->CurrentValue = ew_UnFormatDateTime($this->tgl_resign->CurrentValue, 7);
 		}
 		if (!$this->gender->FldIsDetailKey) {
 			$this->gender->setFormValue($objForm->GetValue("x_gender"));
@@ -626,14 +670,14 @@ class cpegawai_edit extends cpegawai {
 		$this->pegawai_status->CurrentValue = $this->pegawai_status->FormValue;
 		$this->tempat_lahir->CurrentValue = $this->tempat_lahir->FormValue;
 		$this->tgl_lahir->CurrentValue = $this->tgl_lahir->FormValue;
-		$this->tgl_lahir->CurrentValue = ew_UnFormatDateTime($this->tgl_lahir->CurrentValue, 0);
+		$this->tgl_lahir->CurrentValue = ew_UnFormatDateTime($this->tgl_lahir->CurrentValue, 14);
 		$this->pembagian1_id->CurrentValue = $this->pembagian1_id->FormValue;
 		$this->pembagian2_id->CurrentValue = $this->pembagian2_id->FormValue;
 		$this->pembagian3_id->CurrentValue = $this->pembagian3_id->FormValue;
 		$this->tgl_mulai_kerja->CurrentValue = $this->tgl_mulai_kerja->FormValue;
 		$this->tgl_mulai_kerja->CurrentValue = ew_UnFormatDateTime($this->tgl_mulai_kerja->CurrentValue, 0);
 		$this->tgl_resign->CurrentValue = $this->tgl_resign->FormValue;
-		$this->tgl_resign->CurrentValue = ew_UnFormatDateTime($this->tgl_resign->CurrentValue, 0);
+		$this->tgl_resign->CurrentValue = ew_UnFormatDateTime($this->tgl_resign->CurrentValue, 7);
 		$this->gender->CurrentValue = $this->gender->FormValue;
 		$this->tgl_masuk_pertama->CurrentValue = $this->tgl_masuk_pertama->FormValue;
 		$this->tgl_masuk_pertama->CurrentValue = ew_UnFormatDateTime($this->tgl_masuk_pertama->CurrentValue, 0);
@@ -642,6 +686,32 @@ class cpegawai_edit extends cpegawai {
 		$this->nama_bank->CurrentValue = $this->nama_bank->FormValue;
 		$this->nama_rek->CurrentValue = $this->nama_rek->FormValue;
 		$this->no_rek->CurrentValue = $this->no_rek->FormValue;
+	}
+
+	// Load recordset
+	function LoadRecordset($offset = -1, $rowcnt = -1) {
+
+		// Load List page SQL
+		$sSql = $this->SelectSQL();
+		$conn = &$this->Connection();
+
+		// Load recordset
+		$dbtype = ew_GetConnectionType($this->DBID);
+		if ($this->UseSelectLimit) {
+			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
+			if ($dbtype == "MSSQL") {
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())));
+			} else {
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset);
+			}
+			$conn->raiseErrorFn = '';
+		} else {
+			$rs = ew_LoadRecordset($sSql, $conn);
+		}
+
+		// Call Recordset Selected event
+		$this->Recordset_Selected($rs);
+		return $rs;
 	}
 
 	// Load row based on key values
@@ -805,7 +875,7 @@ class cpegawai_edit extends cpegawai {
 
 		// tgl_lahir
 		$this->tgl_lahir->ViewValue = $this->tgl_lahir->CurrentValue;
-		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 0);
+		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 14);
 		$this->tgl_lahir->ViewCustomAttributes = "";
 
 		// pembagian1_id
@@ -827,7 +897,7 @@ class cpegawai_edit extends cpegawai {
 
 		// tgl_resign
 		$this->tgl_resign->ViewValue = $this->tgl_resign->CurrentValue;
-		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 0);
+		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 7);
 		$this->tgl_resign->ViewCustomAttributes = "";
 
 		// gender
@@ -1038,7 +1108,7 @@ class cpegawai_edit extends cpegawai {
 			// tgl_lahir
 			$this->tgl_lahir->EditAttrs["class"] = "form-control";
 			$this->tgl_lahir->EditCustomAttributes = "";
-			$this->tgl_lahir->EditValue = ew_HtmlEncode(ew_FormatDateTime($this->tgl_lahir->CurrentValue, 8));
+			$this->tgl_lahir->EditValue = ew_HtmlEncode(ew_FormatDateTime($this->tgl_lahir->CurrentValue, 14));
 			$this->tgl_lahir->PlaceHolder = ew_RemoveHtml($this->tgl_lahir->FldCaption());
 
 			// pembagian1_id
@@ -1068,7 +1138,7 @@ class cpegawai_edit extends cpegawai {
 			// tgl_resign
 			$this->tgl_resign->EditAttrs["class"] = "form-control";
 			$this->tgl_resign->EditCustomAttributes = "";
-			$this->tgl_resign->EditValue = ew_HtmlEncode(ew_FormatDateTime($this->tgl_resign->CurrentValue, 8));
+			$this->tgl_resign->EditValue = ew_HtmlEncode(ew_FormatDateTime($this->tgl_resign->CurrentValue, 7));
 			$this->tgl_resign->PlaceHolder = ew_RemoveHtml($this->tgl_resign->FldCaption());
 
 			// gender
@@ -1255,7 +1325,7 @@ class cpegawai_edit extends cpegawai {
 		if (!ew_CheckInteger($this->pegawai_status->FormValue)) {
 			ew_AddMessage($gsFormError, $this->pegawai_status->FldErrMsg());
 		}
-		if (!ew_CheckDateDef($this->tgl_lahir->FormValue)) {
+		if (!ew_CheckShortEuroDate($this->tgl_lahir->FormValue)) {
 			ew_AddMessage($gsFormError, $this->tgl_lahir->FldErrMsg());
 		}
 		if (!ew_CheckInteger($this->pembagian1_id->FormValue)) {
@@ -1270,7 +1340,7 @@ class cpegawai_edit extends cpegawai {
 		if (!ew_CheckDateDef($this->tgl_mulai_kerja->FormValue)) {
 			ew_AddMessage($gsFormError, $this->tgl_mulai_kerja->FldErrMsg());
 		}
-		if (!ew_CheckDateDef($this->tgl_resign->FormValue)) {
+		if (!ew_CheckEuroDate($this->tgl_resign->FormValue)) {
 			ew_AddMessage($gsFormError, $this->tgl_resign->FldErrMsg());
 		}
 		if (!$this->gender->FldIsDetailKey && !is_null($this->gender->FormValue) && $this->gender->FormValue == "") {
@@ -1285,9 +1355,9 @@ class cpegawai_edit extends cpegawai {
 
 		// Validate detail grid
 		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-		if (in_array("pegawai_d", $DetailTblVar) && $GLOBALS["pegawai_d"]->DetailEdit) {
-			if (!isset($GLOBALS["pegawai_d_grid"])) $GLOBALS["pegawai_d_grid"] = new cpegawai_d_grid(); // get detail page object
-			$GLOBALS["pegawai_d_grid"]->ValidateGridForm();
+		if (in_array("t_jdkr_peg", $DetailTblVar) && $GLOBALS["t_jdkr_peg"]->DetailEdit) {
+			if (!isset($GLOBALS["t_jdkr_peg_grid"])) $GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid(); // get detail page object
+			$GLOBALS["t_jdkr_peg_grid"]->ValidateGridForm();
 		}
 
 		// Return validate result
@@ -1378,7 +1448,7 @@ class cpegawai_edit extends cpegawai {
 			$this->tempat_lahir->SetDbValueDef($rsnew, $this->tempat_lahir->CurrentValue, NULL, $this->tempat_lahir->ReadOnly);
 
 			// tgl_lahir
-			$this->tgl_lahir->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->tgl_lahir->CurrentValue, 0), NULL, $this->tgl_lahir->ReadOnly);
+			$this->tgl_lahir->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->tgl_lahir->CurrentValue, 14), NULL, $this->tgl_lahir->ReadOnly);
 
 			// pembagian1_id
 			$this->pembagian1_id->SetDbValueDef($rsnew, $this->pembagian1_id->CurrentValue, NULL, $this->pembagian1_id->ReadOnly);
@@ -1393,7 +1463,7 @@ class cpegawai_edit extends cpegawai {
 			$this->tgl_mulai_kerja->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->tgl_mulai_kerja->CurrentValue, 0), NULL, $this->tgl_mulai_kerja->ReadOnly);
 
 			// tgl_resign
-			$this->tgl_resign->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->tgl_resign->CurrentValue, 0), NULL, $this->tgl_resign->ReadOnly);
+			$this->tgl_resign->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->tgl_resign->CurrentValue, 7), NULL, $this->tgl_resign->ReadOnly);
 
 			// gender
 			$this->gender->SetDbValueDef($rsnew, $this->gender->CurrentValue, 0, $this->gender->ReadOnly);
@@ -1431,10 +1501,10 @@ class cpegawai_edit extends cpegawai {
 				// Update detail records
 				$DetailTblVar = explode(",", $this->getCurrentDetailTable());
 				if ($EditRow) {
-					if (in_array("pegawai_d", $DetailTblVar) && $GLOBALS["pegawai_d"]->DetailEdit) {
-						if (!isset($GLOBALS["pegawai_d_grid"])) $GLOBALS["pegawai_d_grid"] = new cpegawai_d_grid(); // Get detail page object
-						$Security->LoadCurrentUserLevel($this->ProjectID . "pegawai_d"); // Load user level of detail table
-						$EditRow = $GLOBALS["pegawai_d_grid"]->GridUpdate();
+					if (in_array("t_jdkr_peg", $DetailTblVar) && $GLOBALS["t_jdkr_peg"]->DetailEdit) {
+						if (!isset($GLOBALS["t_jdkr_peg_grid"])) $GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid(); // Get detail page object
+						$Security->LoadCurrentUserLevel($this->ProjectID . "t_jdkr_peg"); // Load user level of detail table
+						$EditRow = $GLOBALS["t_jdkr_peg_grid"]->GridUpdate();
 						$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
 					}
 				}
@@ -1480,19 +1550,19 @@ class cpegawai_edit extends cpegawai {
 		}
 		if ($sDetailTblVar <> "") {
 			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("pegawai_d", $DetailTblVar)) {
-				if (!isset($GLOBALS["pegawai_d_grid"]))
-					$GLOBALS["pegawai_d_grid"] = new cpegawai_d_grid;
-				if ($GLOBALS["pegawai_d_grid"]->DetailEdit) {
-					$GLOBALS["pegawai_d_grid"]->CurrentMode = "edit";
-					$GLOBALS["pegawai_d_grid"]->CurrentAction = "gridedit";
+			if (in_array("t_jdkr_peg", $DetailTblVar)) {
+				if (!isset($GLOBALS["t_jdkr_peg_grid"]))
+					$GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid;
+				if ($GLOBALS["t_jdkr_peg_grid"]->DetailEdit) {
+					$GLOBALS["t_jdkr_peg_grid"]->CurrentMode = "edit";
+					$GLOBALS["t_jdkr_peg_grid"]->CurrentAction = "gridedit";
 
 					// Save current master table to detail table
-					$GLOBALS["pegawai_d_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["pegawai_d_grid"]->setStartRecordNumber(1);
-					$GLOBALS["pegawai_d_grid"]->pegawai_id->FldIsDetailKey = TRUE;
-					$GLOBALS["pegawai_d_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
-					$GLOBALS["pegawai_d_grid"]->pegawai_id->setSessionValue($GLOBALS["pegawai_d_grid"]->pegawai_id->CurrentValue);
+					$GLOBALS["t_jdkr_peg_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t_jdkr_peg_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
+					$GLOBALS["t_jdkr_peg_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdkr_peg_grid"]->pegawai_id->CurrentValue);
 				}
 			}
 		}
@@ -1660,7 +1730,7 @@ fpegawaiedit.Validate = function() {
 			if (elm && !ew_CheckInteger(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($pegawai->pegawai_status->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_tgl_lahir");
-			if (elm && !ew_CheckDateDef(elm.value))
+			if (elm && !ew_CheckShortEuroDate(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($pegawai->tgl_lahir->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_pembagian1_id");
 			if (elm && !ew_CheckInteger(elm.value))
@@ -1675,7 +1745,7 @@ fpegawaiedit.Validate = function() {
 			if (elm && !ew_CheckDateDef(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($pegawai->tgl_mulai_kerja->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_tgl_resign");
-			if (elm && !ew_CheckDateDef(elm.value))
+			if (elm && !ew_CheckEuroDate(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($pegawai->tgl_resign->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_gender");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
@@ -1737,6 +1807,51 @@ fpegawaiedit.ValidateRequired = false;
 <?php
 $pegawai_edit->ShowMessage();
 ?>
+<?php if (!$pegawai_edit->IsModal) { ?>
+<form name="ewPagerForm" class="form-horizontal ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($pegawai_edit->Pager)) $pegawai_edit->Pager = new cPrevNextPager($pegawai_edit->StartRec, $pegawai_edit->DisplayRecs, $pegawai_edit->TotalRecs) ?>
+<?php if ($pegawai_edit->Pager->RecordCount > 0 && $pegawai_edit->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($pegawai_edit->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $pegawai_edit->PageUrl() ?>start=<?php echo $pegawai_edit->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($pegawai_edit->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $pegawai_edit->PageUrl() ?>start=<?php echo $pegawai_edit->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $pegawai_edit->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($pegawai_edit->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $pegawai_edit->PageUrl() ?>start=<?php echo $pegawai_edit->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($pegawai_edit->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $pegawai_edit->PageUrl() ?>start=<?php echo $pegawai_edit->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $pegawai_edit->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
 <form name="fpegawaiedit" id="fpegawaiedit" class="<?php echo $pegawai_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($pegawai_edit->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $pegawai_edit->Token ?>">
@@ -1854,7 +1969,12 @@ $pegawai_edit->ShowMessage();
 		<label id="elh_pegawai_tgl_lahir" for="x_tgl_lahir" class="col-sm-2 control-label ewLabel"><?php echo $pegawai->tgl_lahir->FldCaption() ?></label>
 		<div class="col-sm-10"><div<?php echo $pegawai->tgl_lahir->CellAttributes() ?>>
 <span id="el_pegawai_tgl_lahir">
-<input type="text" data-table="pegawai" data-field="x_tgl_lahir" name="x_tgl_lahir" id="x_tgl_lahir" placeholder="<?php echo ew_HtmlEncode($pegawai->tgl_lahir->getPlaceHolder()) ?>" value="<?php echo $pegawai->tgl_lahir->EditValue ?>"<?php echo $pegawai->tgl_lahir->EditAttributes() ?>>
+<input type="text" data-table="pegawai" data-field="x_tgl_lahir" data-format="14" name="x_tgl_lahir" id="x_tgl_lahir" placeholder="<?php echo ew_HtmlEncode($pegawai->tgl_lahir->getPlaceHolder()) ?>" value="<?php echo $pegawai->tgl_lahir->EditValue ?>"<?php echo $pegawai->tgl_lahir->EditAttributes() ?>>
+<?php if (!$pegawai->tgl_lahir->ReadOnly && !$pegawai->tgl_lahir->Disabled && !isset($pegawai->tgl_lahir->EditAttrs["readonly"]) && !isset($pegawai->tgl_lahir->EditAttrs["disabled"])) { ?>
+<script type="text/javascript">
+ew_CreateCalendar("fpegawaiedit", "x_tgl_lahir", 14);
+</script>
+<?php } ?>
 </span>
 <?php echo $pegawai->tgl_lahir->CustomMsg ?></div></div>
 	</div>
@@ -1904,7 +2024,12 @@ $pegawai_edit->ShowMessage();
 		<label id="elh_pegawai_tgl_resign" for="x_tgl_resign" class="col-sm-2 control-label ewLabel"><?php echo $pegawai->tgl_resign->FldCaption() ?></label>
 		<div class="col-sm-10"><div<?php echo $pegawai->tgl_resign->CellAttributes() ?>>
 <span id="el_pegawai_tgl_resign">
-<input type="text" data-table="pegawai" data-field="x_tgl_resign" name="x_tgl_resign" id="x_tgl_resign" placeholder="<?php echo ew_HtmlEncode($pegawai->tgl_resign->getPlaceHolder()) ?>" value="<?php echo $pegawai->tgl_resign->EditValue ?>"<?php echo $pegawai->tgl_resign->EditAttributes() ?>>
+<input type="text" data-table="pegawai" data-field="x_tgl_resign" data-format="7" name="x_tgl_resign" id="x_tgl_resign" placeholder="<?php echo ew_HtmlEncode($pegawai->tgl_resign->getPlaceHolder()) ?>" value="<?php echo $pegawai->tgl_resign->EditValue ?>"<?php echo $pegawai->tgl_resign->EditAttributes() ?>>
+<?php if (!$pegawai->tgl_resign->ReadOnly && !$pegawai->tgl_resign->Disabled && !isset($pegawai->tgl_resign->EditAttrs["readonly"]) && !isset($pegawai->tgl_resign->EditAttrs["disabled"])) { ?>
+<script type="text/javascript">
+ew_CreateCalendar("fpegawaiedit", "x_tgl_resign", 7);
+</script>
+<?php } ?>
 </span>
 <?php echo $pegawai->tgl_resign->CustomMsg ?></div></div>
 	</div>
@@ -1981,12 +2106,12 @@ $pegawai_edit->ShowMessage();
 <?php } ?>
 </div>
 <?php
-	if (in_array("pegawai_d", explode(",", $pegawai->getCurrentDetailTable())) && $pegawai_d->DetailEdit) {
+	if (in_array("t_jdkr_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_jdkr_peg->DetailEdit) {
 ?>
 <?php if ($pegawai->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("pegawai_d", "TblCaption") ?></h4>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t_jdkr_peg", "TblCaption") ?></h4>
 <?php } ?>
-<?php include_once "pegawai_dgrid.php" ?>
+<?php include_once "t_jdkr_peggrid.php" ?>
 <?php } ?>
 <?php if (!$pegawai_edit->IsModal) { ?>
 <div class="form-group">
@@ -1995,6 +2120,47 @@ $pegawai_edit->ShowMessage();
 <button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $pegawai_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 	</div>
 </div>
+<?php if (!isset($pegawai_edit->Pager)) $pegawai_edit->Pager = new cPrevNextPager($pegawai_edit->StartRec, $pegawai_edit->DisplayRecs, $pegawai_edit->TotalRecs) ?>
+<?php if ($pegawai_edit->Pager->RecordCount > 0 && $pegawai_edit->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($pegawai_edit->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $pegawai_edit->PageUrl() ?>start=<?php echo $pegawai_edit->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($pegawai_edit->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $pegawai_edit->PageUrl() ?>start=<?php echo $pegawai_edit->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $pegawai_edit->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($pegawai_edit->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $pegawai_edit->PageUrl() ?>start=<?php echo $pegawai_edit->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($pegawai_edit->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $pegawai_edit->PageUrl() ?>start=<?php echo $pegawai_edit->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $pegawai_edit->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
 <?php } ?>
 </form>
 <script type="text/javascript">

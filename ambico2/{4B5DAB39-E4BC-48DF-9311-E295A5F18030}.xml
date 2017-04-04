@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2017/03/23" author="e.World Technology Ltd.">
-  <project id="{4B5DAB39-E4BC-48DF-9311-E295A5F18030}" file="D:\xampp\htdocs\ambico2\ambico2.pmp" name="ambico2" product="PHPMaker" version="13.0" datetime="2017/03/23 03:25:51" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2017/04/04" author="e.World Technology Ltd.">
+  <project id="{4B5DAB39-E4BC-48DF-9311-E295A5F18030}" file="D:\xampp\htdocs\ambico2\ambico2.pmp" name="ambico2" product="PHPMaker" version="13.0" datetime="2017/04/04 12:38:08" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="att_log" name="att_log" caption="Data Finger Pegawai" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="cuti_normatif" name="cuti_normatif" caption="cuti normatif" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="dev_type" name="dev_type" caption="dev type" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -18,7 +18,7 @@
     <table id="index_ot" name="index_ot" caption="index ot" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="index_type" name="index_type" caption="index type" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="izin" name="izin" caption="izin" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="jam_kerja" name="jam_kerja" caption="jam kerja" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="jam_kerja" name="jam_kerja" caption="Jam Kerja" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="jam_kerja_extra" name="jam_kerja_extra" caption="jam kerja extra" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="jatah_cuti" name="jatah_cuti" caption="jatah cuti" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="jdw_kerja_d" name="jdw_kerja_d" caption="jdw kerja d" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -64,5 +64,14 @@
     <table id="audittrail" name="audittrail" caption="audittrail" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t_user" name="t_user" caption="t user" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="dashboard_php" name="dashboard.php" caption="Dashboard" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="view1" name="view1" caption="view 1" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="pegawai_default" name="pegawai_default" caption="pegawai default" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="rekon_master" name="rekon_master" caption="rekon master" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="rekon_php" name="rekon.php" caption="Rekonsiliasi" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="kartu_scanlog" name="kartu_scanlog" caption="kartu scanlog" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_jk" name="t_jk" caption="Jam Kerja" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_jdkr_peg" name="t_jdkr_peg" caption="Jadwal Pegawai" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_tgl_2017" name="t_tgl_2017" caption="Kalendar 2017" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_jd_krj_peg" name="t_jd_krj_peg" caption="Jadwal Kerja Pegawai II" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

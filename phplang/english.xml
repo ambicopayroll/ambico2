@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/3/23" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/4/4" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -583,8 +583,14 @@
   <project>
     <phrase id="bodytitle" value="AMBICO" />
     <phrase id="footertext" value="&amp;copy;2017 AMBICO. All rights reserved." />
+    <menu id="10074">
+      <phrase id="menutext" value="Kalendar 2017" />
+    </menu>
     <menu id="64">
       <phrase id="menutext" value="Dashboard" />
+    </menu>
+    <menu id="10071">
+      <phrase id="menutext" value="kartu scanlog" />
     </menu>
     <menu id="129">
       <phrase id="menutext" value="Absensi" />
@@ -592,14 +598,14 @@
     <menu id="1">
       <phrase id="menutext" value="Data Finger Pegawai" />
     </menu>
+    <menu id="10070">
+      <phrase id="menutext" value="Rekonsiliasi" />
+    </menu>
     <menu id="10063">
       <phrase id="menutext" value="r rekon" />
     </menu>
     <menu id="10065">
       <phrase id="menutext" value="r rekon 2" />
-    </menu>
-    <menu id="21">
-      <phrase id="menutext" value="jdw kerja d" />
     </menu>
     <menu id="128">
       <phrase id="menutext" value="Pegawai" />
@@ -607,11 +613,23 @@
     <menu id="29">
       <phrase id="menutext" value="Pegawai" />
     </menu>
+    <menu id="10073">
+      <phrase id="menutext" value="Jadwal Pegawai" />
+    </menu>
+    <menu id="10068">
+      <phrase id="menutext" value="Setup Jam Kerja" />
+    </menu>
+    <menu id="10075">
+      <phrase id="menutext" value="Jadwal Kerja Pegawai II" />
+    </menu>
     <menu id="63">
       <phrase id="menutext" value="Pengaturan" />
     </menu>
     <menu id="22">
       <phrase id="menutext" value="Jadwal Kerja" />
+    </menu>
+    <menu id="10072">
+      <phrase id="menutext" value="Jam Kerja" />
     </menu>
     <menu id="18">
       <phrase id="menutext" value="Jam Kerja" />
@@ -619,8 +637,17 @@
     <menu id="19">
       <phrase id="menutext" value="Jam Kerja Extra" />
     </menu>
+    <menu id="10069">
+      <phrase id="menutext" value="rekon master" />
+    </menu>
     <menu id="130">
       <phrase id="menutext" value="Penggajian" />
+    </menu>
+    <menu id="10066">
+      <phrase id="menutext" value="view 1" />
+    </menu>
+    <menu id="21">
+      <phrase id="menutext" value="jdw kerja d" />
     </menu>
     <menu id="2">
       <phrase id="menutext" value="cuti normatif" />
@@ -1400,15 +1427,15 @@
       </field>
     </table>
     <table id="jam_kerja">
-      <phrase id="tblcaption" value="jam kerja" />
+      <phrase id="tblcaption" value="Jam Kerja" />
       <field id="jk_id">
         <phrase id="fldcaption" value="jk id" />
       </field>
       <field id="jk_name">
-        <phrase id="fldcaption" value="jk name" />
+        <phrase id="fldcaption" value="Nama" />
       </field>
       <field id="jk_kode">
-        <phrase id="fldcaption" value="jk kode" />
+        <phrase id="fldcaption" value="Kode" />
       </field>
       <field id="use_set">
         <phrase id="fldcaption" value="use set" />
@@ -2562,6 +2589,1545 @@
     </table>
     <table id="dashboard_php">
       <phrase id="tblcaption" value="Dashboard" />
+    </table>
+    <table id="view1">
+      <phrase id="tblcaption" value="view 1" />
+      <field id="pegawai_nama">
+        <phrase id="fldcaption" value="pegawai nama" />
+      </field>
+      <field id="pegawai_nip">
+        <phrase id="fldcaption" value="pegawai nip" />
+      </field>
+      <field id="jdw_kerja_m_name">
+        <phrase id="fldcaption" value="jdw kerja m name" />
+      </field>
+      <field id="jdw_kerja_m_kode">
+        <phrase id="fldcaption" value="jdw kerja m kode" />
+      </field>
+      <field id="tgl_shift">
+        <phrase id="fldcaption" value="tgl shift" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="jdw_kerja_m_kode2">
+        <phrase id="fldcaption" value="jdw kerja m kode 2" />
+      </field>
+    </table>
+    <table id="pegawai_default">
+      <phrase id="tblcaption" value="pegawai default" />
+      <field id="pd_id">
+        <phrase id="fldcaption" value="pd id" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="dept_id">
+        <phrase id="fldcaption" value="dept id" />
+      </field>
+      <field id="f0m1">
+        <phrase id="fldcaption" value="f 0m 1" />
+      </field>
+      <field id="f0k1">
+        <phrase id="fldcaption" value="f 0k 1" />
+      </field>
+      <field id="f1m1">
+        <phrase id="fldcaption" value="f 1m 1" />
+      </field>
+      <field id="f1k1">
+        <phrase id="fldcaption" value="f 1k 1" />
+      </field>
+      <field id="f2m1">
+        <phrase id="fldcaption" value="f 2m 1" />
+      </field>
+      <field id="f2k1">
+        <phrase id="fldcaption" value="f 2k 1" />
+      </field>
+      <field id="f3m1">
+        <phrase id="fldcaption" value="f 3m 1" />
+      </field>
+      <field id="f3k1">
+        <phrase id="fldcaption" value="f 3k 1" />
+      </field>
+      <field id="f4m1">
+        <phrase id="fldcaption" value="f 4m 1" />
+      </field>
+      <field id="f4k1">
+        <phrase id="fldcaption" value="f 4k 1" />
+      </field>
+      <field id="f5m1">
+        <phrase id="fldcaption" value="f 5m 1" />
+      </field>
+      <field id="f5k1">
+        <phrase id="fldcaption" value="f 5k 1" />
+      </field>
+      <field id="f6m1">
+        <phrase id="fldcaption" value="f 6m 1" />
+      </field>
+      <field id="f6k1">
+        <phrase id="fldcaption" value="f 6k 1" />
+      </field>
+      <field id="f0m2">
+        <phrase id="fldcaption" value="f 0m 2" />
+      </field>
+      <field id="f0k2">
+        <phrase id="fldcaption" value="f 0k 2" />
+      </field>
+      <field id="f1m2">
+        <phrase id="fldcaption" value="f 1m 2" />
+      </field>
+      <field id="f1k2">
+        <phrase id="fldcaption" value="f 1k 2" />
+      </field>
+      <field id="f2m2">
+        <phrase id="fldcaption" value="f 2m 2" />
+      </field>
+      <field id="f2k2">
+        <phrase id="fldcaption" value="f 2k 2" />
+      </field>
+      <field id="f3m2">
+        <phrase id="fldcaption" value="f 3m 2" />
+      </field>
+      <field id="f3k2">
+        <phrase id="fldcaption" value="f 3k 2" />
+      </field>
+      <field id="f4m2">
+        <phrase id="fldcaption" value="f 4m 2" />
+      </field>
+      <field id="f4k2">
+        <phrase id="fldcaption" value="f 4k 2" />
+      </field>
+      <field id="f5m2">
+        <phrase id="fldcaption" value="f 5m 2" />
+      </field>
+      <field id="f5k2">
+        <phrase id="fldcaption" value="f 5k 2" />
+      </field>
+      <field id="f6m2">
+        <phrase id="fldcaption" value="f 6m 2" />
+      </field>
+      <field id="f6k2">
+        <phrase id="fldcaption" value="f 6k 2" />
+      </field>
+      <field id="f0m3">
+        <phrase id="fldcaption" value="f 0m 3" />
+      </field>
+      <field id="f0k3">
+        <phrase id="fldcaption" value="f 0k 3" />
+      </field>
+      <field id="f1m3">
+        <phrase id="fldcaption" value="f 1m 3" />
+      </field>
+      <field id="f1k3">
+        <phrase id="fldcaption" value="f 1k 3" />
+      </field>
+      <field id="f2m3">
+        <phrase id="fldcaption" value="f 2m 3" />
+      </field>
+      <field id="f2k3">
+        <phrase id="fldcaption" value="f 2k 3" />
+      </field>
+      <field id="f3m3">
+        <phrase id="fldcaption" value="f 3m 3" />
+      </field>
+      <field id="f3k3">
+        <phrase id="fldcaption" value="f 3k 3" />
+      </field>
+      <field id="f4m3">
+        <phrase id="fldcaption" value="f 4m 3" />
+      </field>
+      <field id="f4k3">
+        <phrase id="fldcaption" value="f 4k 3" />
+      </field>
+      <field id="f5m3">
+        <phrase id="fldcaption" value="f 5m 3" />
+      </field>
+      <field id="f5k3">
+        <phrase id="fldcaption" value="f 5k 3" />
+      </field>
+      <field id="f6m3">
+        <phrase id="fldcaption" value="f 6m 3" />
+      </field>
+      <field id="f6k3">
+        <phrase id="fldcaption" value="f 6k 3" />
+      </field>
+    </table>
+    <table id="rekon_master">
+      <phrase id="tblcaption" value="rekon master" />
+      <field id="rm_id">
+        <phrase id="fldcaption" value="rm id" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="f1">
+        <phrase id="fldcaption" value="f 1" />
+      </field>
+      <field id="f2">
+        <phrase id="fldcaption" value="f 2" />
+      </field>
+      <field id="f3">
+        <phrase id="fldcaption" value="f 3" />
+      </field>
+      <field id="f4">
+        <phrase id="fldcaption" value="f 4" />
+      </field>
+      <field id="f5">
+        <phrase id="fldcaption" value="f 5" />
+      </field>
+      <field id="f6">
+        <phrase id="fldcaption" value="f 6" />
+      </field>
+      <field id="f7">
+        <phrase id="fldcaption" value="f 7" />
+      </field>
+      <field id="f8">
+        <phrase id="fldcaption" value="f 8" />
+      </field>
+      <field id="f9">
+        <phrase id="fldcaption" value="f 9" />
+      </field>
+      <field id="f10">
+        <phrase id="fldcaption" value="f 10" />
+      </field>
+      <field id="f11">
+        <phrase id="fldcaption" value="f 11" />
+      </field>
+      <field id="f12">
+        <phrase id="fldcaption" value="f 12" />
+      </field>
+      <field id="f13">
+        <phrase id="fldcaption" value="f 13" />
+      </field>
+      <field id="f14">
+        <phrase id="fldcaption" value="f 14" />
+      </field>
+      <field id="f15">
+        <phrase id="fldcaption" value="f 15" />
+      </field>
+      <field id="f16">
+        <phrase id="fldcaption" value="f 16" />
+      </field>
+      <field id="f17">
+        <phrase id="fldcaption" value="f 17" />
+      </field>
+      <field id="f18">
+        <phrase id="fldcaption" value="f 18" />
+      </field>
+      <field id="f19">
+        <phrase id="fldcaption" value="f 19" />
+      </field>
+      <field id="f20">
+        <phrase id="fldcaption" value="f 20" />
+      </field>
+      <field id="f21">
+        <phrase id="fldcaption" value="f 21" />
+      </field>
+      <field id="f22">
+        <phrase id="fldcaption" value="f 22" />
+      </field>
+      <field id="f23">
+        <phrase id="fldcaption" value="f 23" />
+      </field>
+      <field id="f24">
+        <phrase id="fldcaption" value="f 24" />
+      </field>
+      <field id="f25">
+        <phrase id="fldcaption" value="f 25" />
+      </field>
+      <field id="f26">
+        <phrase id="fldcaption" value="f 26" />
+      </field>
+      <field id="f27">
+        <phrase id="fldcaption" value="f 27" />
+      </field>
+      <field id="f28">
+        <phrase id="fldcaption" value="f 28" />
+      </field>
+      <field id="f29">
+        <phrase id="fldcaption" value="f 29" />
+      </field>
+      <field id="f30">
+        <phrase id="fldcaption" value="f 30" />
+      </field>
+      <field id="f31">
+        <phrase id="fldcaption" value="f 31" />
+      </field>
+      <field id="f32">
+        <phrase id="fldcaption" value="f 32" />
+      </field>
+      <field id="f33">
+        <phrase id="fldcaption" value="f 33" />
+      </field>
+      <field id="f34">
+        <phrase id="fldcaption" value="f 34" />
+      </field>
+      <field id="f35">
+        <phrase id="fldcaption" value="f 35" />
+      </field>
+      <field id="f36">
+        <phrase id="fldcaption" value="f 36" />
+      </field>
+      <field id="f37">
+        <phrase id="fldcaption" value="f 37" />
+      </field>
+      <field id="f38">
+        <phrase id="fldcaption" value="f 38" />
+      </field>
+      <field id="f39">
+        <phrase id="fldcaption" value="f 39" />
+      </field>
+      <field id="f40">
+        <phrase id="fldcaption" value="f 40" />
+      </field>
+      <field id="f41">
+        <phrase id="fldcaption" value="f 41" />
+      </field>
+      <field id="f42">
+        <phrase id="fldcaption" value="f 42" />
+      </field>
+      <field id="f43">
+        <phrase id="fldcaption" value="f 43" />
+      </field>
+      <field id="f44">
+        <phrase id="fldcaption" value="f 44" />
+      </field>
+      <field id="f45">
+        <phrase id="fldcaption" value="f 45" />
+      </field>
+      <field id="f46">
+        <phrase id="fldcaption" value="f 46" />
+      </field>
+      <field id="f47">
+        <phrase id="fldcaption" value="f 47" />
+      </field>
+      <field id="f48">
+        <phrase id="fldcaption" value="f 48" />
+      </field>
+      <field id="f49">
+        <phrase id="fldcaption" value="f 49" />
+      </field>
+      <field id="f50">
+        <phrase id="fldcaption" value="f 50" />
+      </field>
+      <field id="f51">
+        <phrase id="fldcaption" value="f 51" />
+      </field>
+      <field id="f52">
+        <phrase id="fldcaption" value="f 52" />
+      </field>
+      <field id="f53">
+        <phrase id="fldcaption" value="f 53" />
+      </field>
+      <field id="f54">
+        <phrase id="fldcaption" value="f 54" />
+      </field>
+      <field id="f55">
+        <phrase id="fldcaption" value="f 55" />
+      </field>
+      <field id="f56">
+        <phrase id="fldcaption" value="f 56" />
+      </field>
+      <field id="f57">
+        <phrase id="fldcaption" value="f 57" />
+      </field>
+      <field id="f58">
+        <phrase id="fldcaption" value="f 58" />
+      </field>
+      <field id="f59">
+        <phrase id="fldcaption" value="f 59" />
+      </field>
+      <field id="f60">
+        <phrase id="fldcaption" value="f 60" />
+      </field>
+      <field id="f61">
+        <phrase id="fldcaption" value="f 61" />
+      </field>
+      <field id="f62">
+        <phrase id="fldcaption" value="f 62" />
+      </field>
+    </table>
+    <table id="rekon_php">
+      <phrase id="tblcaption" value="Rekonsiliasi" />
+    </table>
+    <table id="kartu_scanlog">
+      <phrase id="tblcaption" value="kartu scanlog" />
+      <field id="ks_id">
+        <phrase id="fldcaption" value="ks id" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="dow">
+        <phrase id="fldcaption" value="dow" />
+      </field>
+      <field id="scan_tgl">
+        <phrase id="fldcaption" value="scan tgl" />
+      </field>
+      <field id="scan_jam_1">
+        <phrase id="fldcaption" value="scan jam 1" />
+      </field>
+      <field id="scan_jam_2">
+        <phrase id="fldcaption" value="scan jam 2" />
+      </field>
+      <field id="scan_jam_3">
+        <phrase id="fldcaption" value="scan jam 3" />
+      </field>
+      <field id="scan_jam_4">
+        <phrase id="fldcaption" value="scan jam 4" />
+      </field>
+    </table>
+    <table id="t_jk">
+      <phrase id="tblcaption" value="Jam Kerja" />
+      <field id="jk_id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="jk_nm">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+      <field id="jk_kd">
+        <phrase id="fldcaption" value="Kode" />
+      </field>
+      <field id="jk_m">
+        <phrase id="fldcaption" value="Masuk" />
+      </field>
+      <field id="jk_k">
+        <phrase id="fldcaption" value="Keluar" />
+      </field>
+      <field id="jk_ket">
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+    </table>
+    <table id="t_jdkr_peg">
+      <phrase id="tblcaption" value="Jadwal Pegawai" />
+      <field id="jdkr_id">
+        <phrase id="fldcaption" value="jdkr id" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="tgl_id">
+        <phrase id="fldcaption" value="tgl" />
+      </field>
+      <field id="jk_id">
+        <phrase id="fldcaption" value="jk id" />
+      </field>
+    </table>
+    <table id="t_tgl_2017">
+      <phrase id="tblcaption" value="Kalendar 2017" />
+      <field id="tgl_id">
+        <phrase id="fldcaption" value="tgl id" />
+      </field>
+      <field id="tgl">
+        <phrase id="fldcaption" value="tgl" />
+      </field>
+    </table>
+    <table id="t_jd_krj_peg">
+      <phrase id="tblcaption" value="Jadwal Kerja Pegawai II" />
+      <field id="jdwkrjpeg_id">
+        <phrase id="fldcaption" value="jdwkrjpeg id" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="pegawai id" />
+      </field>
+      <field id="f20170101">
+        <phrase id="fldcaption" value="f 20170101" />
+      </field>
+      <field id="f20170102">
+        <phrase id="fldcaption" value="f 20170102" />
+      </field>
+      <field id="f20170103">
+        <phrase id="fldcaption" value="f 20170103" />
+      </field>
+      <field id="f20170104">
+        <phrase id="fldcaption" value="f 20170104" />
+      </field>
+      <field id="f20170105">
+        <phrase id="fldcaption" value="f 20170105" />
+      </field>
+      <field id="f20170106">
+        <phrase id="fldcaption" value="f 20170106" />
+      </field>
+      <field id="f20170107">
+        <phrase id="fldcaption" value="f 20170107" />
+      </field>
+      <field id="f20170108">
+        <phrase id="fldcaption" value="f 20170108" />
+      </field>
+      <field id="f20170109">
+        <phrase id="fldcaption" value="f 20170109" />
+      </field>
+      <field id="f20170110">
+        <phrase id="fldcaption" value="f 20170110" />
+      </field>
+      <field id="f20170111">
+        <phrase id="fldcaption" value="f 20170111" />
+      </field>
+      <field id="f20170112">
+        <phrase id="fldcaption" value="f 20170112" />
+      </field>
+      <field id="f20170113">
+        <phrase id="fldcaption" value="f 20170113" />
+      </field>
+      <field id="f20170114">
+        <phrase id="fldcaption" value="f 20170114" />
+      </field>
+      <field id="f20170115">
+        <phrase id="fldcaption" value="f 20170115" />
+      </field>
+      <field id="f20170116">
+        <phrase id="fldcaption" value="f 20170116" />
+      </field>
+      <field id="f20170117">
+        <phrase id="fldcaption" value="f 20170117" />
+      </field>
+      <field id="f20170118">
+        <phrase id="fldcaption" value="f 20170118" />
+      </field>
+      <field id="f20170119">
+        <phrase id="fldcaption" value="f 20170119" />
+      </field>
+      <field id="f20170120">
+        <phrase id="fldcaption" value="f 20170120" />
+      </field>
+      <field id="f20170121">
+        <phrase id="fldcaption" value="f 20170121" />
+      </field>
+      <field id="f20170122">
+        <phrase id="fldcaption" value="f 20170122" />
+      </field>
+      <field id="f20170123">
+        <phrase id="fldcaption" value="f 20170123" />
+      </field>
+      <field id="f20170124">
+        <phrase id="fldcaption" value="f 20170124" />
+      </field>
+      <field id="f20170125">
+        <phrase id="fldcaption" value="f 20170125" />
+      </field>
+      <field id="f20170126">
+        <phrase id="fldcaption" value="f 20170126" />
+      </field>
+      <field id="f20170127">
+        <phrase id="fldcaption" value="f 20170127" />
+      </field>
+      <field id="f20170128">
+        <phrase id="fldcaption" value="f 20170128" />
+      </field>
+      <field id="f20170129">
+        <phrase id="fldcaption" value="f 20170129" />
+      </field>
+      <field id="f20170130">
+        <phrase id="fldcaption" value="f 20170130" />
+      </field>
+      <field id="f20170131">
+        <phrase id="fldcaption" value="f 20170131" />
+      </field>
+      <field id="f20170201">
+        <phrase id="fldcaption" value="f 20170201" />
+      </field>
+      <field id="f20170202">
+        <phrase id="fldcaption" value="f 20170202" />
+      </field>
+      <field id="f20170203">
+        <phrase id="fldcaption" value="f 20170203" />
+      </field>
+      <field id="f20170204">
+        <phrase id="fldcaption" value="f 20170204" />
+      </field>
+      <field id="f20170205">
+        <phrase id="fldcaption" value="f 20170205" />
+      </field>
+      <field id="f20170206">
+        <phrase id="fldcaption" value="f 20170206" />
+      </field>
+      <field id="f20170207">
+        <phrase id="fldcaption" value="f 20170207" />
+      </field>
+      <field id="f20170208">
+        <phrase id="fldcaption" value="f 20170208" />
+      </field>
+      <field id="f20170209">
+        <phrase id="fldcaption" value="f 20170209" />
+      </field>
+      <field id="f20170210">
+        <phrase id="fldcaption" value="f 20170210" />
+      </field>
+      <field id="f20170211">
+        <phrase id="fldcaption" value="f 20170211" />
+      </field>
+      <field id="f20170212">
+        <phrase id="fldcaption" value="f 20170212" />
+      </field>
+      <field id="f20170213">
+        <phrase id="fldcaption" value="f 20170213" />
+      </field>
+      <field id="f20170214">
+        <phrase id="fldcaption" value="f 20170214" />
+      </field>
+      <field id="f20170215">
+        <phrase id="fldcaption" value="f 20170215" />
+      </field>
+      <field id="f20170216">
+        <phrase id="fldcaption" value="f 20170216" />
+      </field>
+      <field id="f20170217">
+        <phrase id="fldcaption" value="f 20170217" />
+      </field>
+      <field id="f20170218">
+        <phrase id="fldcaption" value="f 20170218" />
+      </field>
+      <field id="f20170219">
+        <phrase id="fldcaption" value="f 20170219" />
+      </field>
+      <field id="f20170220">
+        <phrase id="fldcaption" value="f 20170220" />
+      </field>
+      <field id="f20170221">
+        <phrase id="fldcaption" value="f 20170221" />
+      </field>
+      <field id="f20170222">
+        <phrase id="fldcaption" value="f 20170222" />
+      </field>
+      <field id="f20170223">
+        <phrase id="fldcaption" value="f 20170223" />
+      </field>
+      <field id="f20170224">
+        <phrase id="fldcaption" value="f 20170224" />
+      </field>
+      <field id="f20170225">
+        <phrase id="fldcaption" value="f 20170225" />
+      </field>
+      <field id="f20170226">
+        <phrase id="fldcaption" value="f 20170226" />
+      </field>
+      <field id="f20170227">
+        <phrase id="fldcaption" value="f 20170227" />
+      </field>
+      <field id="f20170228">
+        <phrase id="fldcaption" value="f 20170228" />
+      </field>
+      <field id="f20170229">
+        <phrase id="fldcaption" value="f 20170229" />
+      </field>
+      <field id="f20170301">
+        <phrase id="fldcaption" value="f 20170301" />
+      </field>
+      <field id="f20170302">
+        <phrase id="fldcaption" value="f 20170302" />
+      </field>
+      <field id="f20170303">
+        <phrase id="fldcaption" value="f 20170303" />
+      </field>
+      <field id="f20170304">
+        <phrase id="fldcaption" value="f 20170304" />
+      </field>
+      <field id="f20170305">
+        <phrase id="fldcaption" value="f 20170305" />
+      </field>
+      <field id="f20170306">
+        <phrase id="fldcaption" value="f 20170306" />
+      </field>
+      <field id="f20170307">
+        <phrase id="fldcaption" value="f 20170307" />
+      </field>
+      <field id="f20170308">
+        <phrase id="fldcaption" value="f 20170308" />
+      </field>
+      <field id="f20170309">
+        <phrase id="fldcaption" value="f 20170309" />
+      </field>
+      <field id="f20170310">
+        <phrase id="fldcaption" value="f 20170310" />
+      </field>
+      <field id="f20170311">
+        <phrase id="fldcaption" value="f 20170311" />
+      </field>
+      <field id="f20170312">
+        <phrase id="fldcaption" value="f 20170312" />
+      </field>
+      <field id="f20170313">
+        <phrase id="fldcaption" value="f 20170313" />
+      </field>
+      <field id="f20170314">
+        <phrase id="fldcaption" value="f 20170314" />
+      </field>
+      <field id="f20170315">
+        <phrase id="fldcaption" value="f 20170315" />
+      </field>
+      <field id="f20170316">
+        <phrase id="fldcaption" value="f 20170316" />
+      </field>
+      <field id="f20170317">
+        <phrase id="fldcaption" value="f 20170317" />
+      </field>
+      <field id="f20170318">
+        <phrase id="fldcaption" value="f 20170318" />
+      </field>
+      <field id="f20170319">
+        <phrase id="fldcaption" value="f 20170319" />
+      </field>
+      <field id="f20170320">
+        <phrase id="fldcaption" value="f 20170320" />
+      </field>
+      <field id="f20170321">
+        <phrase id="fldcaption" value="f 20170321" />
+      </field>
+      <field id="f20170322">
+        <phrase id="fldcaption" value="f 20170322" />
+      </field>
+      <field id="f20170323">
+        <phrase id="fldcaption" value="f 20170323" />
+      </field>
+      <field id="f20170324">
+        <phrase id="fldcaption" value="f 20170324" />
+      </field>
+      <field id="f20170325">
+        <phrase id="fldcaption" value="f 20170325" />
+      </field>
+      <field id="f20170326">
+        <phrase id="fldcaption" value="f 20170326" />
+      </field>
+      <field id="f20170327">
+        <phrase id="fldcaption" value="f 20170327" />
+      </field>
+      <field id="f20170328">
+        <phrase id="fldcaption" value="f 20170328" />
+      </field>
+      <field id="f20170329">
+        <phrase id="fldcaption" value="f 20170329" />
+      </field>
+      <field id="f20170330">
+        <phrase id="fldcaption" value="f 20170330" />
+      </field>
+      <field id="f20170331">
+        <phrase id="fldcaption" value="f 20170331" />
+      </field>
+      <field id="f20170401">
+        <phrase id="fldcaption" value="f 20170401" />
+      </field>
+      <field id="f20170402">
+        <phrase id="fldcaption" value="f 20170402" />
+      </field>
+      <field id="f20170403">
+        <phrase id="fldcaption" value="f 20170403" />
+      </field>
+      <field id="f20170404">
+        <phrase id="fldcaption" value="f 20170404" />
+      </field>
+      <field id="f20170405">
+        <phrase id="fldcaption" value="f 20170405" />
+      </field>
+      <field id="f20170406">
+        <phrase id="fldcaption" value="f 20170406" />
+      </field>
+      <field id="f20170407">
+        <phrase id="fldcaption" value="f 20170407" />
+      </field>
+      <field id="f20170408">
+        <phrase id="fldcaption" value="f 20170408" />
+      </field>
+      <field id="f20170409">
+        <phrase id="fldcaption" value="f 20170409" />
+      </field>
+      <field id="f20170410">
+        <phrase id="fldcaption" value="f 20170410" />
+      </field>
+      <field id="f20170411">
+        <phrase id="fldcaption" value="f 20170411" />
+      </field>
+      <field id="f20170412">
+        <phrase id="fldcaption" value="f 20170412" />
+      </field>
+      <field id="f20170413">
+        <phrase id="fldcaption" value="f 20170413" />
+      </field>
+      <field id="f20170414">
+        <phrase id="fldcaption" value="f 20170414" />
+      </field>
+      <field id="f20170415">
+        <phrase id="fldcaption" value="f 20170415" />
+      </field>
+      <field id="f20170416">
+        <phrase id="fldcaption" value="f 20170416" />
+      </field>
+      <field id="f20170417">
+        <phrase id="fldcaption" value="f 20170417" />
+      </field>
+      <field id="f20170418">
+        <phrase id="fldcaption" value="f 20170418" />
+      </field>
+      <field id="f20170419">
+        <phrase id="fldcaption" value="f 20170419" />
+      </field>
+      <field id="f20170420">
+        <phrase id="fldcaption" value="f 20170420" />
+      </field>
+      <field id="f20170421">
+        <phrase id="fldcaption" value="f 20170421" />
+      </field>
+      <field id="f20170422">
+        <phrase id="fldcaption" value="f 20170422" />
+      </field>
+      <field id="f20170423">
+        <phrase id="fldcaption" value="f 20170423" />
+      </field>
+      <field id="f20170424">
+        <phrase id="fldcaption" value="f 20170424" />
+      </field>
+      <field id="f20170425">
+        <phrase id="fldcaption" value="f 20170425" />
+      </field>
+      <field id="f20170426">
+        <phrase id="fldcaption" value="f 20170426" />
+      </field>
+      <field id="f20170427">
+        <phrase id="fldcaption" value="f 20170427" />
+      </field>
+      <field id="f20170428">
+        <phrase id="fldcaption" value="f 20170428" />
+      </field>
+      <field id="f20170429">
+        <phrase id="fldcaption" value="f 20170429" />
+      </field>
+      <field id="f20170430">
+        <phrase id="fldcaption" value="f 20170430" />
+      </field>
+      <field id="f20170501">
+        <phrase id="fldcaption" value="f 20170501" />
+      </field>
+      <field id="f20170502">
+        <phrase id="fldcaption" value="f 20170502" />
+      </field>
+      <field id="f20170503">
+        <phrase id="fldcaption" value="f 20170503" />
+      </field>
+      <field id="f20170504">
+        <phrase id="fldcaption" value="f 20170504" />
+      </field>
+      <field id="f20170505">
+        <phrase id="fldcaption" value="f 20170505" />
+      </field>
+      <field id="f20170506">
+        <phrase id="fldcaption" value="f 20170506" />
+      </field>
+      <field id="f20170507">
+        <phrase id="fldcaption" value="f 20170507" />
+      </field>
+      <field id="f20170508">
+        <phrase id="fldcaption" value="f 20170508" />
+      </field>
+      <field id="f20170509">
+        <phrase id="fldcaption" value="f 20170509" />
+      </field>
+      <field id="f20170510">
+        <phrase id="fldcaption" value="f 20170510" />
+      </field>
+      <field id="f20170511">
+        <phrase id="fldcaption" value="f 20170511" />
+      </field>
+      <field id="f20170512">
+        <phrase id="fldcaption" value="f 20170512" />
+      </field>
+      <field id="f20170513">
+        <phrase id="fldcaption" value="f 20170513" />
+      </field>
+      <field id="f20170514">
+        <phrase id="fldcaption" value="f 20170514" />
+      </field>
+      <field id="f20170515">
+        <phrase id="fldcaption" value="f 20170515" />
+      </field>
+      <field id="f20170516">
+        <phrase id="fldcaption" value="f 20170516" />
+      </field>
+      <field id="f20170517">
+        <phrase id="fldcaption" value="f 20170517" />
+      </field>
+      <field id="f20170518">
+        <phrase id="fldcaption" value="f 20170518" />
+      </field>
+      <field id="f20170519">
+        <phrase id="fldcaption" value="f 20170519" />
+      </field>
+      <field id="f20170520">
+        <phrase id="fldcaption" value="f 20170520" />
+      </field>
+      <field id="f20170521">
+        <phrase id="fldcaption" value="f 20170521" />
+      </field>
+      <field id="f20170522">
+        <phrase id="fldcaption" value="f 20170522" />
+      </field>
+      <field id="f20170523">
+        <phrase id="fldcaption" value="f 20170523" />
+      </field>
+      <field id="f20170524">
+        <phrase id="fldcaption" value="f 20170524" />
+      </field>
+      <field id="f20170525">
+        <phrase id="fldcaption" value="f 20170525" />
+      </field>
+      <field id="f20170526">
+        <phrase id="fldcaption" value="f 20170526" />
+      </field>
+      <field id="f20170527">
+        <phrase id="fldcaption" value="f 20170527" />
+      </field>
+      <field id="f20170528">
+        <phrase id="fldcaption" value="f 20170528" />
+      </field>
+      <field id="f20170529">
+        <phrase id="fldcaption" value="f 20170529" />
+      </field>
+      <field id="f20170530">
+        <phrase id="fldcaption" value="f 20170530" />
+      </field>
+      <field id="f20170531">
+        <phrase id="fldcaption" value="f 20170531" />
+      </field>
+      <field id="f20170601">
+        <phrase id="fldcaption" value="f 20170601" />
+      </field>
+      <field id="f20170602">
+        <phrase id="fldcaption" value="f 20170602" />
+      </field>
+      <field id="f20170603">
+        <phrase id="fldcaption" value="f 20170603" />
+      </field>
+      <field id="f20170604">
+        <phrase id="fldcaption" value="f 20170604" />
+      </field>
+      <field id="f20170605">
+        <phrase id="fldcaption" value="f 20170605" />
+      </field>
+      <field id="f20170606">
+        <phrase id="fldcaption" value="f 20170606" />
+      </field>
+      <field id="f20170607">
+        <phrase id="fldcaption" value="f 20170607" />
+      </field>
+      <field id="f20170608">
+        <phrase id="fldcaption" value="f 20170608" />
+      </field>
+      <field id="f20170609">
+        <phrase id="fldcaption" value="f 20170609" />
+      </field>
+      <field id="f20170610">
+        <phrase id="fldcaption" value="f 20170610" />
+      </field>
+      <field id="f20170611">
+        <phrase id="fldcaption" value="f 20170611" />
+      </field>
+      <field id="f20170612">
+        <phrase id="fldcaption" value="f 20170612" />
+      </field>
+      <field id="f20170613">
+        <phrase id="fldcaption" value="f 20170613" />
+      </field>
+      <field id="f20170614">
+        <phrase id="fldcaption" value="f 20170614" />
+      </field>
+      <field id="f20170615">
+        <phrase id="fldcaption" value="f 20170615" />
+      </field>
+      <field id="f20170616">
+        <phrase id="fldcaption" value="f 20170616" />
+      </field>
+      <field id="f20170617">
+        <phrase id="fldcaption" value="f 20170617" />
+      </field>
+      <field id="f20170618">
+        <phrase id="fldcaption" value="f 20170618" />
+      </field>
+      <field id="f20170619">
+        <phrase id="fldcaption" value="f 20170619" />
+      </field>
+      <field id="f20170620">
+        <phrase id="fldcaption" value="f 20170620" />
+      </field>
+      <field id="f20170621">
+        <phrase id="fldcaption" value="f 20170621" />
+      </field>
+      <field id="f20170622">
+        <phrase id="fldcaption" value="f 20170622" />
+      </field>
+      <field id="f20170623">
+        <phrase id="fldcaption" value="f 20170623" />
+      </field>
+      <field id="f20170624">
+        <phrase id="fldcaption" value="f 20170624" />
+      </field>
+      <field id="f20170625">
+        <phrase id="fldcaption" value="f 20170625" />
+      </field>
+      <field id="f20170626">
+        <phrase id="fldcaption" value="f 20170626" />
+      </field>
+      <field id="f20170627">
+        <phrase id="fldcaption" value="f 20170627" />
+      </field>
+      <field id="f20170628">
+        <phrase id="fldcaption" value="f 20170628" />
+      </field>
+      <field id="f20170629">
+        <phrase id="fldcaption" value="f 20170629" />
+      </field>
+      <field id="f20170630">
+        <phrase id="fldcaption" value="f 20170630" />
+      </field>
+      <field id="f20170701">
+        <phrase id="fldcaption" value="f 20170701" />
+      </field>
+      <field id="f20170702">
+        <phrase id="fldcaption" value="f 20170702" />
+      </field>
+      <field id="f20170703">
+        <phrase id="fldcaption" value="f 20170703" />
+      </field>
+      <field id="f20170704">
+        <phrase id="fldcaption" value="f 20170704" />
+      </field>
+      <field id="f20170705">
+        <phrase id="fldcaption" value="f 20170705" />
+      </field>
+      <field id="f20170706">
+        <phrase id="fldcaption" value="f 20170706" />
+      </field>
+      <field id="f20170707">
+        <phrase id="fldcaption" value="f 20170707" />
+      </field>
+      <field id="f20170708">
+        <phrase id="fldcaption" value="f 20170708" />
+      </field>
+      <field id="f20170709">
+        <phrase id="fldcaption" value="f 20170709" />
+      </field>
+      <field id="f20170710">
+        <phrase id="fldcaption" value="f 20170710" />
+      </field>
+      <field id="f20170711">
+        <phrase id="fldcaption" value="f 20170711" />
+      </field>
+      <field id="f20170712">
+        <phrase id="fldcaption" value="f 20170712" />
+      </field>
+      <field id="f20170713">
+        <phrase id="fldcaption" value="f 20170713" />
+      </field>
+      <field id="f20170714">
+        <phrase id="fldcaption" value="f 20170714" />
+      </field>
+      <field id="f20170715">
+        <phrase id="fldcaption" value="f 20170715" />
+      </field>
+      <field id="f20170716">
+        <phrase id="fldcaption" value="f 20170716" />
+      </field>
+      <field id="f20170717">
+        <phrase id="fldcaption" value="f 20170717" />
+      </field>
+      <field id="f20170718">
+        <phrase id="fldcaption" value="f 20170718" />
+      </field>
+      <field id="f20170719">
+        <phrase id="fldcaption" value="f 20170719" />
+      </field>
+      <field id="f20170720">
+        <phrase id="fldcaption" value="f 20170720" />
+      </field>
+      <field id="f20170721">
+        <phrase id="fldcaption" value="f 20170721" />
+      </field>
+      <field id="f20170722">
+        <phrase id="fldcaption" value="f 20170722" />
+      </field>
+      <field id="f20170723">
+        <phrase id="fldcaption" value="f 20170723" />
+      </field>
+      <field id="f20170724">
+        <phrase id="fldcaption" value="f 20170724" />
+      </field>
+      <field id="f20170725">
+        <phrase id="fldcaption" value="f 20170725" />
+      </field>
+      <field id="f20170726">
+        <phrase id="fldcaption" value="f 20170726" />
+      </field>
+      <field id="f20170727">
+        <phrase id="fldcaption" value="f 20170727" />
+      </field>
+      <field id="f20170728">
+        <phrase id="fldcaption" value="f 20170728" />
+      </field>
+      <field id="f20170729">
+        <phrase id="fldcaption" value="f 20170729" />
+      </field>
+      <field id="f20170730">
+        <phrase id="fldcaption" value="f 20170730" />
+      </field>
+      <field id="f20170731">
+        <phrase id="fldcaption" value="f 20170731" />
+      </field>
+      <field id="f20170801">
+        <phrase id="fldcaption" value="f 20170801" />
+      </field>
+      <field id="f20170802">
+        <phrase id="fldcaption" value="f 20170802" />
+      </field>
+      <field id="f20170803">
+        <phrase id="fldcaption" value="f 20170803" />
+      </field>
+      <field id="f20170804">
+        <phrase id="fldcaption" value="f 20170804" />
+      </field>
+      <field id="f20170805">
+        <phrase id="fldcaption" value="f 20170805" />
+      </field>
+      <field id="f20170806">
+        <phrase id="fldcaption" value="f 20170806" />
+      </field>
+      <field id="f20170807">
+        <phrase id="fldcaption" value="f 20170807" />
+      </field>
+      <field id="f20170808">
+        <phrase id="fldcaption" value="f 20170808" />
+      </field>
+      <field id="f20170809">
+        <phrase id="fldcaption" value="f 20170809" />
+      </field>
+      <field id="f20170810">
+        <phrase id="fldcaption" value="f 20170810" />
+      </field>
+      <field id="f20170811">
+        <phrase id="fldcaption" value="f 20170811" />
+      </field>
+      <field id="f20170812">
+        <phrase id="fldcaption" value="f 20170812" />
+      </field>
+      <field id="f20170813">
+        <phrase id="fldcaption" value="f 20170813" />
+      </field>
+      <field id="f20170814">
+        <phrase id="fldcaption" value="f 20170814" />
+      </field>
+      <field id="f20170815">
+        <phrase id="fldcaption" value="f 20170815" />
+      </field>
+      <field id="f20170816">
+        <phrase id="fldcaption" value="f 20170816" />
+      </field>
+      <field id="f20170817">
+        <phrase id="fldcaption" value="f 20170817" />
+      </field>
+      <field id="f20170818">
+        <phrase id="fldcaption" value="f 20170818" />
+      </field>
+      <field id="f20170819">
+        <phrase id="fldcaption" value="f 20170819" />
+      </field>
+      <field id="f20170820">
+        <phrase id="fldcaption" value="f 20170820" />
+      </field>
+      <field id="f20170821">
+        <phrase id="fldcaption" value="f 20170821" />
+      </field>
+      <field id="f20170822">
+        <phrase id="fldcaption" value="f 20170822" />
+      </field>
+      <field id="f20170823">
+        <phrase id="fldcaption" value="f 20170823" />
+      </field>
+      <field id="f20170824">
+        <phrase id="fldcaption" value="f 20170824" />
+      </field>
+      <field id="f20170825">
+        <phrase id="fldcaption" value="f 20170825" />
+      </field>
+      <field id="f20170826">
+        <phrase id="fldcaption" value="f 20170826" />
+      </field>
+      <field id="f20170827">
+        <phrase id="fldcaption" value="f 20170827" />
+      </field>
+      <field id="f20170828">
+        <phrase id="fldcaption" value="f 20170828" />
+      </field>
+      <field id="f20170829">
+        <phrase id="fldcaption" value="f 20170829" />
+      </field>
+      <field id="f20170830">
+        <phrase id="fldcaption" value="f 20170830" />
+      </field>
+      <field id="f20170831">
+        <phrase id="fldcaption" value="f 20170831" />
+      </field>
+      <field id="f20170901">
+        <phrase id="fldcaption" value="f 20170901" />
+      </field>
+      <field id="f20170902">
+        <phrase id="fldcaption" value="f 20170902" />
+      </field>
+      <field id="f20170903">
+        <phrase id="fldcaption" value="f 20170903" />
+      </field>
+      <field id="f20170904">
+        <phrase id="fldcaption" value="f 20170904" />
+      </field>
+      <field id="f20170905">
+        <phrase id="fldcaption" value="f 20170905" />
+      </field>
+      <field id="f20170906">
+        <phrase id="fldcaption" value="f 20170906" />
+      </field>
+      <field id="f20170907">
+        <phrase id="fldcaption" value="f 20170907" />
+      </field>
+      <field id="f20170908">
+        <phrase id="fldcaption" value="f 20170908" />
+      </field>
+      <field id="f20170909">
+        <phrase id="fldcaption" value="f 20170909" />
+      </field>
+      <field id="f20170910">
+        <phrase id="fldcaption" value="f 20170910" />
+      </field>
+      <field id="f20170911">
+        <phrase id="fldcaption" value="f 20170911" />
+      </field>
+      <field id="f20170912">
+        <phrase id="fldcaption" value="f 20170912" />
+      </field>
+      <field id="f20170913">
+        <phrase id="fldcaption" value="f 20170913" />
+      </field>
+      <field id="f20170914">
+        <phrase id="fldcaption" value="f 20170914" />
+      </field>
+      <field id="f20170915">
+        <phrase id="fldcaption" value="f 20170915" />
+      </field>
+      <field id="f20170916">
+        <phrase id="fldcaption" value="f 20170916" />
+      </field>
+      <field id="f20170917">
+        <phrase id="fldcaption" value="f 20170917" />
+      </field>
+      <field id="f20170918">
+        <phrase id="fldcaption" value="f 20170918" />
+      </field>
+      <field id="f20170919">
+        <phrase id="fldcaption" value="f 20170919" />
+      </field>
+      <field id="f20170920">
+        <phrase id="fldcaption" value="f 20170920" />
+      </field>
+      <field id="f20170921">
+        <phrase id="fldcaption" value="f 20170921" />
+      </field>
+      <field id="f20170922">
+        <phrase id="fldcaption" value="f 20170922" />
+      </field>
+      <field id="f20170923">
+        <phrase id="fldcaption" value="f 20170923" />
+      </field>
+      <field id="f20170924">
+        <phrase id="fldcaption" value="f 20170924" />
+      </field>
+      <field id="f20170925">
+        <phrase id="fldcaption" value="f 20170925" />
+      </field>
+      <field id="f20170926">
+        <phrase id="fldcaption" value="f 20170926" />
+      </field>
+      <field id="f20170927">
+        <phrase id="fldcaption" value="f 20170927" />
+      </field>
+      <field id="f20170928">
+        <phrase id="fldcaption" value="f 20170928" />
+      </field>
+      <field id="f20170929">
+        <phrase id="fldcaption" value="f 20170929" />
+      </field>
+      <field id="f20170930">
+        <phrase id="fldcaption" value="f 20170930" />
+      </field>
+      <field id="f20171001">
+        <phrase id="fldcaption" value="f 20171001" />
+      </field>
+      <field id="f20171002">
+        <phrase id="fldcaption" value="f 20171002" />
+      </field>
+      <field id="f20171003">
+        <phrase id="fldcaption" value="f 20171003" />
+      </field>
+      <field id="f20171004">
+        <phrase id="fldcaption" value="f 20171004" />
+      </field>
+      <field id="f20171005">
+        <phrase id="fldcaption" value="f 20171005" />
+      </field>
+      <field id="f20171006">
+        <phrase id="fldcaption" value="f 20171006" />
+      </field>
+      <field id="f20171007">
+        <phrase id="fldcaption" value="f 20171007" />
+      </field>
+      <field id="f20171008">
+        <phrase id="fldcaption" value="f 20171008" />
+      </field>
+      <field id="f20171009">
+        <phrase id="fldcaption" value="f 20171009" />
+      </field>
+      <field id="f20171010">
+        <phrase id="fldcaption" value="f 20171010" />
+      </field>
+      <field id="f20171011">
+        <phrase id="fldcaption" value="f 20171011" />
+      </field>
+      <field id="f20171012">
+        <phrase id="fldcaption" value="f 20171012" />
+      </field>
+      <field id="f20171013">
+        <phrase id="fldcaption" value="f 20171013" />
+      </field>
+      <field id="f20171014">
+        <phrase id="fldcaption" value="f 20171014" />
+      </field>
+      <field id="f20171015">
+        <phrase id="fldcaption" value="f 20171015" />
+      </field>
+      <field id="f20171016">
+        <phrase id="fldcaption" value="f 20171016" />
+      </field>
+      <field id="f20171017">
+        <phrase id="fldcaption" value="f 20171017" />
+      </field>
+      <field id="f20171018">
+        <phrase id="fldcaption" value="f 20171018" />
+      </field>
+      <field id="f20171019">
+        <phrase id="fldcaption" value="f 20171019" />
+      </field>
+      <field id="f20171020">
+        <phrase id="fldcaption" value="f 20171020" />
+      </field>
+      <field id="f20171021">
+        <phrase id="fldcaption" value="f 20171021" />
+      </field>
+      <field id="f20171022">
+        <phrase id="fldcaption" value="f 20171022" />
+      </field>
+      <field id="f20171023">
+        <phrase id="fldcaption" value="f 20171023" />
+      </field>
+      <field id="f20171024">
+        <phrase id="fldcaption" value="f 20171024" />
+      </field>
+      <field id="f20171025">
+        <phrase id="fldcaption" value="f 20171025" />
+      </field>
+      <field id="f20171026">
+        <phrase id="fldcaption" value="f 20171026" />
+      </field>
+      <field id="f20171027">
+        <phrase id="fldcaption" value="f 20171027" />
+      </field>
+      <field id="f20171028">
+        <phrase id="fldcaption" value="f 20171028" />
+      </field>
+      <field id="f20171029">
+        <phrase id="fldcaption" value="f 20171029" />
+      </field>
+      <field id="f20171030">
+        <phrase id="fldcaption" value="f 20171030" />
+      </field>
+      <field id="f20171031">
+        <phrase id="fldcaption" value="f 20171031" />
+      </field>
+      <field id="f20171101">
+        <phrase id="fldcaption" value="f 20171101" />
+      </field>
+      <field id="f20171102">
+        <phrase id="fldcaption" value="f 20171102" />
+      </field>
+      <field id="f20171103">
+        <phrase id="fldcaption" value="f 20171103" />
+      </field>
+      <field id="f20171104">
+        <phrase id="fldcaption" value="f 20171104" />
+      </field>
+      <field id="f20171105">
+        <phrase id="fldcaption" value="f 20171105" />
+      </field>
+      <field id="f20171106">
+        <phrase id="fldcaption" value="f 20171106" />
+      </field>
+      <field id="f20171107">
+        <phrase id="fldcaption" value="f 20171107" />
+      </field>
+      <field id="f20171108">
+        <phrase id="fldcaption" value="f 20171108" />
+      </field>
+      <field id="f20171109">
+        <phrase id="fldcaption" value="f 20171109" />
+      </field>
+      <field id="f20171110">
+        <phrase id="fldcaption" value="f 20171110" />
+      </field>
+      <field id="f20171111">
+        <phrase id="fldcaption" value="f 20171111" />
+      </field>
+      <field id="f20171112">
+        <phrase id="fldcaption" value="f 20171112" />
+      </field>
+      <field id="f20171113">
+        <phrase id="fldcaption" value="f 20171113" />
+      </field>
+      <field id="f20171114">
+        <phrase id="fldcaption" value="f 20171114" />
+      </field>
+      <field id="f20171115">
+        <phrase id="fldcaption" value="f 20171115" />
+      </field>
+      <field id="f20171116">
+        <phrase id="fldcaption" value="f 20171116" />
+      </field>
+      <field id="f20171117">
+        <phrase id="fldcaption" value="f 20171117" />
+      </field>
+      <field id="f20171118">
+        <phrase id="fldcaption" value="f 20171118" />
+      </field>
+      <field id="f20171119">
+        <phrase id="fldcaption" value="f 20171119" />
+      </field>
+      <field id="f20171120">
+        <phrase id="fldcaption" value="f 20171120" />
+      </field>
+      <field id="f20171121">
+        <phrase id="fldcaption" value="f 20171121" />
+      </field>
+      <field id="f20171122">
+        <phrase id="fldcaption" value="f 20171122" />
+      </field>
+      <field id="f20171123">
+        <phrase id="fldcaption" value="f 20171123" />
+      </field>
+      <field id="f20171124">
+        <phrase id="fldcaption" value="f 20171124" />
+      </field>
+      <field id="f20171125">
+        <phrase id="fldcaption" value="f 20171125" />
+      </field>
+      <field id="f20171126">
+        <phrase id="fldcaption" value="f 20171126" />
+      </field>
+      <field id="f20171127">
+        <phrase id="fldcaption" value="f 20171127" />
+      </field>
+      <field id="f20171128">
+        <phrase id="fldcaption" value="f 20171128" />
+      </field>
+      <field id="f20171129">
+        <phrase id="fldcaption" value="f 20171129" />
+      </field>
+      <field id="f20171130">
+        <phrase id="fldcaption" value="f 20171130" />
+      </field>
+      <field id="f20171201">
+        <phrase id="fldcaption" value="f 20171201" />
+      </field>
+      <field id="f20171202">
+        <phrase id="fldcaption" value="f 20171202" />
+      </field>
+      <field id="f20171203">
+        <phrase id="fldcaption" value="f 20171203" />
+      </field>
+      <field id="f20171204">
+        <phrase id="fldcaption" value="f 20171204" />
+      </field>
+      <field id="f20171205">
+        <phrase id="fldcaption" value="f 20171205" />
+      </field>
+      <field id="f20171206">
+        <phrase id="fldcaption" value="f 20171206" />
+      </field>
+      <field id="f20171207">
+        <phrase id="fldcaption" value="f 20171207" />
+      </field>
+      <field id="f20171208">
+        <phrase id="fldcaption" value="f 20171208" />
+      </field>
+      <field id="f20171209">
+        <phrase id="fldcaption" value="f 20171209" />
+      </field>
+      <field id="f20171210">
+        <phrase id="fldcaption" value="f 20171210" />
+      </field>
+      <field id="f20171211">
+        <phrase id="fldcaption" value="f 20171211" />
+      </field>
+      <field id="f20171212">
+        <phrase id="fldcaption" value="f 20171212" />
+      </field>
+      <field id="f20171213">
+        <phrase id="fldcaption" value="f 20171213" />
+      </field>
+      <field id="f20171214">
+        <phrase id="fldcaption" value="f 20171214" />
+      </field>
+      <field id="f20171215">
+        <phrase id="fldcaption" value="f 20171215" />
+      </field>
+      <field id="f20171216">
+        <phrase id="fldcaption" value="f 20171216" />
+      </field>
+      <field id="f20171217">
+        <phrase id="fldcaption" value="f 20171217" />
+      </field>
+      <field id="f20171218">
+        <phrase id="fldcaption" value="f 20171218" />
+      </field>
+      <field id="f20171219">
+        <phrase id="fldcaption" value="f 20171219" />
+      </field>
+      <field id="f20171220">
+        <phrase id="fldcaption" value="f 20171220" />
+      </field>
+      <field id="f20171221">
+        <phrase id="fldcaption" value="f 20171221" />
+      </field>
+      <field id="f20171222">
+        <phrase id="fldcaption" value="f 20171222" />
+      </field>
+      <field id="f20171223">
+        <phrase id="fldcaption" value="f 20171223" />
+      </field>
+      <field id="f20171224">
+        <phrase id="fldcaption" value="f 20171224" />
+      </field>
+      <field id="f20171225">
+        <phrase id="fldcaption" value="f 20171225" />
+      </field>
+      <field id="f20171226">
+        <phrase id="fldcaption" value="f 20171226" />
+      </field>
+      <field id="f20171227">
+        <phrase id="fldcaption" value="f 20171227" />
+      </field>
+      <field id="f20171228">
+        <phrase id="fldcaption" value="f 20171228" />
+      </field>
+      <field id="f20171229">
+        <phrase id="fldcaption" value="f 20171229" />
+      </field>
+      <field id="f20171230">
+        <phrase id="fldcaption" value="f 20171230" />
+      </field>
+      <field id="f20171231">
+        <phrase id="fldcaption" value="f 20171231" />
+      </field>
     </table>
   </project>
 </ew-language>

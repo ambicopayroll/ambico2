@@ -610,7 +610,7 @@ class cpegawai_delete extends cpegawai {
 
 		// tgl_lahir
 		$this->tgl_lahir->ViewValue = $this->tgl_lahir->CurrentValue;
-		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 0);
+		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 14);
 		$this->tgl_lahir->ViewCustomAttributes = "";
 
 		// pembagian1_id
@@ -632,7 +632,7 @@ class cpegawai_delete extends cpegawai {
 
 		// tgl_resign
 		$this->tgl_resign->ViewValue = $this->tgl_resign->CurrentValue;
-		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 0);
+		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 7);
 		$this->tgl_resign->ViewCustomAttributes = "";
 
 		// gender

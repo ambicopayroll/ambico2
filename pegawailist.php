@@ -7,7 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn13.php" ?>
 <?php include_once "pegawaiinfo.php" ?>
 <?php include_once "t_userinfo.php" ?>
-<?php include_once "pegawai_dgridcls.php" ?>
+<?php include_once "t_jdkr_peggridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -450,10 +450,10 @@ class cpegawai_list extends cpegawai {
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
 
-			// Process auto fill for detail table 'pegawai_d'
-			if (@$_POST["grid"] == "fpegawai_dgrid") {
-				if (!isset($GLOBALS["pegawai_d_grid"])) $GLOBALS["pegawai_d_grid"] = new cpegawai_d_grid;
-				$GLOBALS["pegawai_d_grid"]->Page_Init();
+			// Process auto fill for detail table 't_jdkr_peg'
+			if (@$_POST["grid"] == "ft_jdkr_peggrid") {
+				if (!isset($GLOBALS["t_jdkr_peg_grid"])) $GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid;
+				$GLOBALS["t_jdkr_peg_grid"]->Page_Init();
 				$this->Page_Terminate();
 				exit();
 			}
@@ -1295,68 +1295,63 @@ class cpegawai_list extends cpegawai {
 		// Add group option item
 		$item = &$this->ListOptions->Add($this->ListOptions->GroupOptionName);
 		$item->Body = "";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
 		// "view"
 		$item = &$this->ListOptions->Add("view");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanView();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "edit"
 		$item = &$this->ListOptions->Add("edit");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanEdit();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "copy"
 		$item = &$this->ListOptions->Add("copy");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanAdd();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
-		// "delete"
-		$item = &$this->ListOptions->Add("delete");
+		// "detail_t_jdkr_peg"
+		$item = &$this->ListOptions->Add("detail_t_jdkr_peg");
 		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanDelete();
-		$item->OnLeft = FALSE;
-
-		// "detail_pegawai_d"
-		$item = &$this->ListOptions->Add("detail_pegawai_d");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->AllowList(CurrentProjectID() . 'pegawai_d') && !$this->ShowMultipleDetails;
-		$item->OnLeft = FALSE;
+		$item->Visible = $Security->AllowList(CurrentProjectID() . 't_jdkr_peg') && !$this->ShowMultipleDetails;
+		$item->OnLeft = TRUE;
 		$item->ShowInButtonGroup = FALSE;
-		if (!isset($GLOBALS["pegawai_d_grid"])) $GLOBALS["pegawai_d_grid"] = new cpegawai_d_grid;
+		if (!isset($GLOBALS["t_jdkr_peg_grid"])) $GLOBALS["t_jdkr_peg_grid"] = new ct_jdkr_peg_grid;
 
 		// Multiple details
 		if ($this->ShowMultipleDetails) {
 			$item = &$this->ListOptions->Add("details");
 			$item->CssStyle = "white-space: nowrap;";
 			$item->Visible = $this->ShowMultipleDetails;
-			$item->OnLeft = FALSE;
+			$item->OnLeft = TRUE;
 			$item->ShowInButtonGroup = FALSE;
 		}
 
 		// Set up detail pages
 		$pages = new cSubPages();
-		$pages->Add("pegawai_d");
+		$pages->Add("t_jdkr_peg");
 		$this->DetailPages = $pages;
 
 		// List actions
 		$item = &$this->ListOptions->Add("listactions");
 		$item->CssStyle = "white-space: nowrap;";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 		$item->ShowInDropDown = FALSE;
 
 		// "checkbox"
 		$item = &$this->ListOptions->Add("checkbox");
-		$item->Visible = FALSE;
-		$item->OnLeft = FALSE;
+		$item->Visible = $Security->CanDelete();
+		$item->OnLeft = TRUE;
 		$item->Header = "<input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew_SelectAllKey(this);\">";
+		$item->MoveTo(0);
 		$item->ShowInDropDown = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 
@@ -1370,7 +1365,7 @@ class cpegawai_list extends cpegawai {
 
 		// Drop down button for ListOptions
 		$this->ListOptions->UseImageAndText = TRUE;
-		$this->ListOptions->UseDropDownButton = FALSE;
+		$this->ListOptions->UseDropDownButton = TRUE;
 		$this->ListOptions->DropDownButtonPhrase = $Language->Phrase("ButtonListOptions");
 		$this->ListOptions->UseButtonGroup = FALSE;
 		if ($this->ListOptions->UseButtonGroup && ew_IsMobile())
@@ -1420,13 +1415,6 @@ class cpegawai_list extends cpegawai {
 			$oListOpt->Body = "";
 		}
 
-		// "delete"
-		$oListOpt = &$this->ListOptions->Items["delete"];
-		if ($Security->CanDelete())
-			$oListOpt->Body = "<a class=\"ewRowLink ewDelete\"" . "" . " title=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("DeleteLink") . "</a>";
-		else
-			$oListOpt->Body = "";
-
 		// Set up list action buttons
 		$oListOpt = &$this->ListOptions->GetItem("listactions");
 		if ($oListOpt && $this->Export == "" && $this->CurrentAction == "") {
@@ -1459,26 +1447,26 @@ class cpegawai_list extends cpegawai {
 		$DetailCopyTblVar = "";
 		$DetailEditTblVar = "";
 
-		// "detail_pegawai_d"
-		$oListOpt = &$this->ListOptions->Items["detail_pegawai_d"];
-		if ($Security->AllowList(CurrentProjectID() . 'pegawai_d')) {
-			$body = $Language->Phrase("DetailLink") . $Language->TablePhrase("pegawai_d", "TblCaption");
-			$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("pegawai_dlist.php?" . EW_TABLE_SHOW_MASTER . "=pegawai&fk_pegawai_id=" . urlencode(strval($this->pegawai_id->CurrentValue)) . "") . "\">" . $body . "</a>";
+		// "detail_t_jdkr_peg"
+		$oListOpt = &$this->ListOptions->Items["detail_t_jdkr_peg"];
+		if ($Security->AllowList(CurrentProjectID() . 't_jdkr_peg')) {
+			$body = $Language->Phrase("DetailLink") . $Language->TablePhrase("t_jdkr_peg", "TblCaption");
+			$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("t_jdkr_peglist.php?" . EW_TABLE_SHOW_MASTER . "=pegawai&fk_pegawai_id=" . urlencode(strval($this->pegawai_id->CurrentValue)) . "") . "\">" . $body . "</a>";
 			$links = "";
-			if ($GLOBALS["pegawai_d_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 'pegawai_d')) {
-				$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=pegawai_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
+			if ($GLOBALS["t_jdkr_peg_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 't_jdkr_peg')) {
+				$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
 				if ($DetailViewTblVar <> "") $DetailViewTblVar .= ",";
-				$DetailViewTblVar .= "pegawai_d";
+				$DetailViewTblVar .= "t_jdkr_peg";
 			}
-			if ($GLOBALS["pegawai_d_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 'pegawai_d')) {
-				$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=pegawai_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
+			if ($GLOBALS["t_jdkr_peg_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 't_jdkr_peg')) {
+				$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
 				if ($DetailEditTblVar <> "") $DetailEditTblVar .= ",";
-				$DetailEditTblVar .= "pegawai_d";
+				$DetailEditTblVar .= "t_jdkr_peg";
 			}
-			if ($GLOBALS["pegawai_d_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 'pegawai_d')) {
-				$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=pegawai_d")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
+			if ($GLOBALS["t_jdkr_peg_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 't_jdkr_peg')) {
+				$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
 				if ($DetailCopyTblVar <> "") $DetailCopyTblVar .= ",";
-				$DetailCopyTblVar .= "pegawai_d";
+				$DetailCopyTblVar .= "t_jdkr_peg";
 			}
 			if ($links <> "") {
 				$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewDetail\" data-toggle=\"dropdown\"><b class=\"caret\"></b></button>";
@@ -1534,14 +1522,14 @@ class cpegawai_list extends cpegawai {
 		$item->Visible = ($this->AddUrl <> "" && $Security->CanAdd());
 		$option = $options["detail"];
 		$DetailTableLink = "";
-		$item = &$option->Add("detailadd_pegawai_d");
-		$url = $this->GetAddUrl(EW_TABLE_SHOW_DETAIL . "=pegawai_d");
-		$caption = $Language->Phrase("Add") . "&nbsp;" . $this->TableCaption() . "/" . $GLOBALS["pegawai_d"]->TableCaption();
+		$item = &$option->Add("detailadd_t_jdkr_peg");
+		$url = $this->GetAddUrl(EW_TABLE_SHOW_DETAIL . "=t_jdkr_peg");
+		$caption = $Language->Phrase("Add") . "&nbsp;" . $this->TableCaption() . "/" . $GLOBALS["t_jdkr_peg"]->TableCaption();
 		$item->Body = "<a class=\"ewDetailAddGroup ewDetailAdd\" title=\"" . ew_HtmlTitle($caption) . "\" data-caption=\"" . ew_HtmlTitle($caption) . "\" href=\"" . ew_HtmlEncode($url) . "\">" . $caption . "</a>";
-		$item->Visible = ($GLOBALS["pegawai_d"]->DetailAdd && $Security->AllowAdd(CurrentProjectID() . 'pegawai_d') && $Security->CanAdd());
+		$item->Visible = ($GLOBALS["t_jdkr_peg"]->DetailAdd && $Security->AllowAdd(CurrentProjectID() . 't_jdkr_peg') && $Security->CanAdd());
 		if ($item->Visible) {
 			if ($DetailTableLink <> "") $DetailTableLink .= ",";
-			$DetailTableLink .= "pegawai_d";
+			$DetailTableLink .= "t_jdkr_peg";
 		}
 
 		// Add multiple details
@@ -1561,10 +1549,15 @@ class cpegawai_list extends cpegawai {
 		}
 		$option = $options["action"];
 
+		// Add multi delete
+		$item = &$option->Add("multidelete");
+		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.fpegawailist,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Visible = ($Security->CanDelete());
+
 		// Set up options default
 		foreach ($options as &$option) {
 			$option->UseImageAndText = TRUE;
-			$option->UseDropDownButton = FALSE;
+			$option->UseDropDownButton = TRUE;
 			$option->UseButtonGroup = TRUE;
 			$option->ButtonClass = "btn-sm"; // Class for button group
 			$item = &$option->Add($option->GroupOptionName);
@@ -2004,7 +1997,7 @@ class cpegawai_list extends cpegawai {
 
 		// tgl_lahir
 		$this->tgl_lahir->ViewValue = $this->tgl_lahir->CurrentValue;
-		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 0);
+		$this->tgl_lahir->ViewValue = ew_FormatDateTime($this->tgl_lahir->ViewValue, 14);
 		$this->tgl_lahir->ViewCustomAttributes = "";
 
 		// pembagian1_id
@@ -2026,7 +2019,7 @@ class cpegawai_list extends cpegawai {
 
 		// tgl_resign
 		$this->tgl_resign->ViewValue = $this->tgl_resign->CurrentValue;
-		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 0);
+		$this->tgl_resign->ViewValue = ew_FormatDateTime($this->tgl_resign->ViewValue, 7);
 		$this->tgl_resign->ViewCustomAttributes = "";
 
 		// gender
@@ -2207,7 +2200,7 @@ class cpegawai_list extends cpegawai {
 		// Export to Pdf
 		$item = &$this->ExportOptions->Add("pdf");
 		$item->Body = "<a href=\"" . $this->ExportPdfUrl . "\" class=\"ewExportLink ewPdf\" title=\"" . ew_HtmlEncode($Language->Phrase("ExportToPDFText")) . "\" data-caption=\"" . ew_HtmlEncode($Language->Phrase("ExportToPDFText")) . "\">" . $Language->Phrase("ExportToPDF") . "</a>";
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
@@ -2731,6 +2724,64 @@ $pegawai_list->ShowMessage();
 ?>
 <?php if ($pegawai_list->TotalRecs > 0 || $pegawai->CurrentAction <> "") { ?>
 <div class="panel panel-default ewGrid pegawai">
+<?php if ($pegawai->Export == "") { ?>
+<div class="panel-heading ewGridUpperPanel">
+<?php if ($pegawai->CurrentAction <> "gridadd" && $pegawai->CurrentAction <> "gridedit") { ?>
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($pegawai_list->Pager)) $pegawai_list->Pager = new cPrevNextPager($pegawai_list->StartRec, $pegawai_list->DisplayRecs, $pegawai_list->TotalRecs) ?>
+<?php if ($pegawai_list->Pager->RecordCount > 0 && $pegawai_list->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($pegawai_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $pegawai_list->PageUrl() ?>start=<?php echo $pegawai_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($pegawai_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $pegawai_list->PageUrl() ?>start=<?php echo $pegawai_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $pegawai_list->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($pegawai_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $pegawai_list->PageUrl() ?>start=<?php echo $pegawai_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($pegawai_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $pegawai_list->PageUrl() ?>start=<?php echo $pegawai_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $pegawai_list->Pager->PageCount ?></span>
+</div>
+<div class="ewPager ewRec">
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $pegawai_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $pegawai_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $pegawai_list->Pager->RecordCount ?></span>
+</div>
+<?php } ?>
+</form>
+<?php } ?>
+<div class="ewListOtherOptions">
+<?php
+	foreach ($pegawai_list->OtherOptions as &$option)
+		$option->Render("body");
+?>
+</div>
+<div class="clearfix"></div>
+</div>
+<?php } ?>
 <form name="fpegawailist" id="fpegawailist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($pegawai_list->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $pegawai_list->Token ?>">

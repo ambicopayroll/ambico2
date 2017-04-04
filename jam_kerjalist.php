@@ -410,28 +410,12 @@ class cjam_kerja_list extends cjam_kerja {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->jk_id->SetVisibility();
 		$this->jk_name->SetVisibility();
 		$this->jk_kode->SetVisibility();
-		$this->use_set->SetVisibility();
 		$this->jk_bcin->SetVisibility();
 		$this->jk_cin->SetVisibility();
-		$this->jk_ecin->SetVisibility();
-		$this->jk_tol_late->SetVisibility();
-		$this->jk_use_ist->SetVisibility();
-		$this->jk_ist1->SetVisibility();
-		$this->jk_ist2->SetVisibility();
-		$this->jk_tol_early->SetVisibility();
-		$this->jk_bcout->SetVisibility();
 		$this->jk_cout->SetVisibility();
 		$this->jk_ecout->SetVisibility();
-		$this->use_eot->SetVisibility();
-		$this->min_eot->SetVisibility();
-		$this->max_eot->SetVisibility();
-		$this->reduce_eot->SetVisibility();
-		$this->jk_durasi->SetVisibility();
-		$this->jk_countas->SetVisibility();
-		$this->jk_min_countas->SetVisibility();
 		$this->jk_ket->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
@@ -1186,28 +1170,12 @@ class cjam_kerja_list extends cjam_kerja {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->jk_id, $bCtrl); // jk_id
 			$this->UpdateSort($this->jk_name, $bCtrl); // jk_name
 			$this->UpdateSort($this->jk_kode, $bCtrl); // jk_kode
-			$this->UpdateSort($this->use_set, $bCtrl); // use_set
 			$this->UpdateSort($this->jk_bcin, $bCtrl); // jk_bcin
 			$this->UpdateSort($this->jk_cin, $bCtrl); // jk_cin
-			$this->UpdateSort($this->jk_ecin, $bCtrl); // jk_ecin
-			$this->UpdateSort($this->jk_tol_late, $bCtrl); // jk_tol_late
-			$this->UpdateSort($this->jk_use_ist, $bCtrl); // jk_use_ist
-			$this->UpdateSort($this->jk_ist1, $bCtrl); // jk_ist1
-			$this->UpdateSort($this->jk_ist2, $bCtrl); // jk_ist2
-			$this->UpdateSort($this->jk_tol_early, $bCtrl); // jk_tol_early
-			$this->UpdateSort($this->jk_bcout, $bCtrl); // jk_bcout
 			$this->UpdateSort($this->jk_cout, $bCtrl); // jk_cout
 			$this->UpdateSort($this->jk_ecout, $bCtrl); // jk_ecout
-			$this->UpdateSort($this->use_eot, $bCtrl); // use_eot
-			$this->UpdateSort($this->min_eot, $bCtrl); // min_eot
-			$this->UpdateSort($this->max_eot, $bCtrl); // max_eot
-			$this->UpdateSort($this->reduce_eot, $bCtrl); // reduce_eot
-			$this->UpdateSort($this->jk_durasi, $bCtrl); // jk_durasi
-			$this->UpdateSort($this->jk_countas, $bCtrl); // jk_countas
-			$this->UpdateSort($this->jk_min_countas, $bCtrl); // jk_min_countas
 			$this->UpdateSort($this->jk_ket, $bCtrl); // jk_ket
 			$this->setStartRecordNumber(1); // Reset start position
 		}
@@ -1241,28 +1209,12 @@ class cjam_kerja_list extends cjam_kerja {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->jk_id->setSort("");
 				$this->jk_name->setSort("");
 				$this->jk_kode->setSort("");
-				$this->use_set->setSort("");
 				$this->jk_bcin->setSort("");
 				$this->jk_cin->setSort("");
-				$this->jk_ecin->setSort("");
-				$this->jk_tol_late->setSort("");
-				$this->jk_use_ist->setSort("");
-				$this->jk_ist1->setSort("");
-				$this->jk_ist2->setSort("");
-				$this->jk_tol_early->setSort("");
-				$this->jk_bcout->setSort("");
 				$this->jk_cout->setSort("");
 				$this->jk_ecout->setSort("");
-				$this->use_eot->setSort("");
-				$this->min_eot->setSort("");
-				$this->max_eot->setSort("");
-				$this->reduce_eot->setSort("");
-				$this->jk_durasi->setSort("");
-				$this->jk_countas->setSort("");
-				$this->jk_min_countas->setSort("");
 				$this->jk_ket->setSort("");
 			}
 
@@ -1279,52 +1231,55 @@ class cjam_kerja_list extends cjam_kerja {
 		// Add group option item
 		$item = &$this->ListOptions->Add($this->ListOptions->GroupOptionName);
 		$item->Body = "";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
 		// "view"
 		$item = &$this->ListOptions->Add("view");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanView();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "edit"
 		$item = &$this->ListOptions->Add("edit");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanEdit();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "copy"
 		$item = &$this->ListOptions->Add("copy");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanAdd();
-		$item->OnLeft = FALSE;
-
-		// "delete"
-		$item = &$this->ListOptions->Add("delete");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanDelete();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// List actions
 		$item = &$this->ListOptions->Add("listactions");
 		$item->CssStyle = "white-space: nowrap;";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 		$item->ShowInDropDown = FALSE;
 
 		// "checkbox"
 		$item = &$this->ListOptions->Add("checkbox");
-		$item->Visible = FALSE;
-		$item->OnLeft = FALSE;
+		$item->Visible = $Security->CanDelete();
+		$item->OnLeft = TRUE;
 		$item->Header = "<input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew_SelectAllKey(this);\">";
+		$item->MoveTo(0);
+		$item->ShowInDropDown = FALSE;
+		$item->ShowInButtonGroup = FALSE;
+
+		// "sequence"
+		$item = &$this->ListOptions->Add("sequence");
+		$item->CssStyle = "white-space: nowrap;";
+		$item->Visible = TRUE;
+		$item->OnLeft = TRUE; // Always on left
 		$item->ShowInDropDown = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 
 		// Drop down button for ListOptions
 		$this->ListOptions->UseImageAndText = TRUE;
-		$this->ListOptions->UseDropDownButton = FALSE;
+		$this->ListOptions->UseDropDownButton = TRUE;
 		$this->ListOptions->DropDownButtonPhrase = $Language->Phrase("ButtonListOptions");
 		$this->ListOptions->UseButtonGroup = FALSE;
 		if ($this->ListOptions->UseButtonGroup && ew_IsMobile())
@@ -1342,6 +1297,10 @@ class cjam_kerja_list extends cjam_kerja {
 	function RenderListOptions() {
 		global $Security, $Language, $objForm;
 		$this->ListOptions->LoadDefault();
+
+		// "sequence"
+		$oListOpt = &$this->ListOptions->Items["sequence"];
+		$oListOpt->Body = ew_FormatSeqNo($this->RecCnt);
 
 		// "view"
 		$oListOpt = &$this->ListOptions->Items["view"];
@@ -1369,13 +1328,6 @@ class cjam_kerja_list extends cjam_kerja {
 		} else {
 			$oListOpt->Body = "";
 		}
-
-		// "delete"
-		$oListOpt = &$this->ListOptions->Items["delete"];
-		if ($Security->CanDelete())
-			$oListOpt->Body = "<a class=\"ewRowLink ewDelete\"" . "" . " title=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("DeleteLink") . "</a>";
-		else
-			$oListOpt->Body = "";
 
 		// Set up list action buttons
 		$oListOpt = &$this->ListOptions->GetItem("listactions");
@@ -1428,10 +1380,15 @@ class cjam_kerja_list extends cjam_kerja {
 		$item->Visible = ($this->AddUrl <> "" && $Security->CanAdd());
 		$option = $options["action"];
 
+		// Add multi delete
+		$item = &$option->Add("multidelete");
+		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.fjam_kerjalist,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Visible = ($Security->CanDelete());
+
 		// Set up options default
 		foreach ($options as &$option) {
 			$option->UseImageAndText = TRUE;
-			$option->UseDropDownButton = FALSE;
+			$option->UseDropDownButton = TRUE;
 			$option->UseButtonGroup = TRUE;
 			$option->ButtonClass = "btn-sm"; // Class for button group
 			$item = &$option->Add($option->GroupOptionName);
@@ -1799,10 +1756,6 @@ class cjam_kerja_list extends cjam_kerja {
 		$this->InlineCopyUrl = $this->GetInlineCopyUrl();
 		$this->DeleteUrl = $this->GetDeleteUrl();
 
-		// Convert decimal values if posted back
-		if ($this->jk_countas->FormValue == $this->jk_countas->CurrentValue && is_numeric(ew_StrToFloat($this->jk_countas->CurrentValue)))
-			$this->jk_countas->CurrentValue = ew_StrToFloat($this->jk_countas->CurrentValue);
-
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
@@ -1925,11 +1878,6 @@ class cjam_kerja_list extends cjam_kerja {
 		$this->jk_ket->ViewValue = $this->jk_ket->CurrentValue;
 		$this->jk_ket->ViewCustomAttributes = "";
 
-			// jk_id
-			$this->jk_id->LinkCustomAttributes = "";
-			$this->jk_id->HrefValue = "";
-			$this->jk_id->TooltipValue = "";
-
 			// jk_name
 			$this->jk_name->LinkCustomAttributes = "";
 			$this->jk_name->HrefValue = "";
@@ -1939,11 +1887,6 @@ class cjam_kerja_list extends cjam_kerja {
 			$this->jk_kode->LinkCustomAttributes = "";
 			$this->jk_kode->HrefValue = "";
 			$this->jk_kode->TooltipValue = "";
-
-			// use_set
-			$this->use_set->LinkCustomAttributes = "";
-			$this->use_set->HrefValue = "";
-			$this->use_set->TooltipValue = "";
 
 			// jk_bcin
 			$this->jk_bcin->LinkCustomAttributes = "";
@@ -1955,41 +1898,6 @@ class cjam_kerja_list extends cjam_kerja {
 			$this->jk_cin->HrefValue = "";
 			$this->jk_cin->TooltipValue = "";
 
-			// jk_ecin
-			$this->jk_ecin->LinkCustomAttributes = "";
-			$this->jk_ecin->HrefValue = "";
-			$this->jk_ecin->TooltipValue = "";
-
-			// jk_tol_late
-			$this->jk_tol_late->LinkCustomAttributes = "";
-			$this->jk_tol_late->HrefValue = "";
-			$this->jk_tol_late->TooltipValue = "";
-
-			// jk_use_ist
-			$this->jk_use_ist->LinkCustomAttributes = "";
-			$this->jk_use_ist->HrefValue = "";
-			$this->jk_use_ist->TooltipValue = "";
-
-			// jk_ist1
-			$this->jk_ist1->LinkCustomAttributes = "";
-			$this->jk_ist1->HrefValue = "";
-			$this->jk_ist1->TooltipValue = "";
-
-			// jk_ist2
-			$this->jk_ist2->LinkCustomAttributes = "";
-			$this->jk_ist2->HrefValue = "";
-			$this->jk_ist2->TooltipValue = "";
-
-			// jk_tol_early
-			$this->jk_tol_early->LinkCustomAttributes = "";
-			$this->jk_tol_early->HrefValue = "";
-			$this->jk_tol_early->TooltipValue = "";
-
-			// jk_bcout
-			$this->jk_bcout->LinkCustomAttributes = "";
-			$this->jk_bcout->HrefValue = "";
-			$this->jk_bcout->TooltipValue = "";
-
 			// jk_cout
 			$this->jk_cout->LinkCustomAttributes = "";
 			$this->jk_cout->HrefValue = "";
@@ -1999,41 +1907,6 @@ class cjam_kerja_list extends cjam_kerja {
 			$this->jk_ecout->LinkCustomAttributes = "";
 			$this->jk_ecout->HrefValue = "";
 			$this->jk_ecout->TooltipValue = "";
-
-			// use_eot
-			$this->use_eot->LinkCustomAttributes = "";
-			$this->use_eot->HrefValue = "";
-			$this->use_eot->TooltipValue = "";
-
-			// min_eot
-			$this->min_eot->LinkCustomAttributes = "";
-			$this->min_eot->HrefValue = "";
-			$this->min_eot->TooltipValue = "";
-
-			// max_eot
-			$this->max_eot->LinkCustomAttributes = "";
-			$this->max_eot->HrefValue = "";
-			$this->max_eot->TooltipValue = "";
-
-			// reduce_eot
-			$this->reduce_eot->LinkCustomAttributes = "";
-			$this->reduce_eot->HrefValue = "";
-			$this->reduce_eot->TooltipValue = "";
-
-			// jk_durasi
-			$this->jk_durasi->LinkCustomAttributes = "";
-			$this->jk_durasi->HrefValue = "";
-			$this->jk_durasi->TooltipValue = "";
-
-			// jk_countas
-			$this->jk_countas->LinkCustomAttributes = "";
-			$this->jk_countas->HrefValue = "";
-			$this->jk_countas->TooltipValue = "";
-
-			// jk_min_countas
-			$this->jk_min_countas->LinkCustomAttributes = "";
-			$this->jk_min_countas->HrefValue = "";
-			$this->jk_min_countas->TooltipValue = "";
 
 			// jk_ket
 			$this->jk_ket->LinkCustomAttributes = "";
@@ -2083,7 +1956,7 @@ class cjam_kerja_list extends cjam_kerja {
 		// Export to Pdf
 		$item = &$this->ExportOptions->Add("pdf");
 		$item->Body = "<a href=\"" . $this->ExportPdfUrl . "\" class=\"ewExportLink ewPdf\" title=\"" . ew_HtmlEncode($Language->Phrase("ExportToPDFText")) . "\" data-caption=\"" . ew_HtmlEncode($Language->Phrase("ExportToPDFText")) . "\">" . $Language->Phrase("ExportToPDF") . "</a>";
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
@@ -2563,6 +2436,13 @@ var CurrentSearchForm = fjam_kerjalistsrch = new ew_Form("fjam_kerjalistsrch");
 		else
 			$jam_kerja_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
+
+	// Audit trail on search
+	if ($jam_kerja_list->AuditTrailOnSearch && $jam_kerja_list->Command == "search" && !$jam_kerja_list->RestoreSearch) {
+		$searchparm = ew_ServerVar("QUERY_STRING");
+		$searchsql = $jam_kerja_list->getSessionWhere();
+		$jam_kerja_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
+	}
 $jam_kerja_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
@@ -2600,6 +2480,64 @@ $jam_kerja_list->ShowMessage();
 ?>
 <?php if ($jam_kerja_list->TotalRecs > 0 || $jam_kerja->CurrentAction <> "") { ?>
 <div class="panel panel-default ewGrid jam_kerja">
+<?php if ($jam_kerja->Export == "") { ?>
+<div class="panel-heading ewGridUpperPanel">
+<?php if ($jam_kerja->CurrentAction <> "gridadd" && $jam_kerja->CurrentAction <> "gridedit") { ?>
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($jam_kerja_list->Pager)) $jam_kerja_list->Pager = new cPrevNextPager($jam_kerja_list->StartRec, $jam_kerja_list->DisplayRecs, $jam_kerja_list->TotalRecs) ?>
+<?php if ($jam_kerja_list->Pager->RecordCount > 0 && $jam_kerja_list->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($jam_kerja_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $jam_kerja_list->PageUrl() ?>start=<?php echo $jam_kerja_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($jam_kerja_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $jam_kerja_list->PageUrl() ?>start=<?php echo $jam_kerja_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $jam_kerja_list->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($jam_kerja_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $jam_kerja_list->PageUrl() ?>start=<?php echo $jam_kerja_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($jam_kerja_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $jam_kerja_list->PageUrl() ?>start=<?php echo $jam_kerja_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $jam_kerja_list->Pager->PageCount ?></span>
+</div>
+<div class="ewPager ewRec">
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $jam_kerja_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $jam_kerja_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $jam_kerja_list->Pager->RecordCount ?></span>
+</div>
+<?php } ?>
+</form>
+<?php } ?>
+<div class="ewListOtherOptions">
+<?php
+	foreach ($jam_kerja_list->OtherOptions as &$option)
+		$option->Render("body");
+?>
+</div>
+<div class="clearfix"></div>
+</div>
+<?php } ?>
 <form name="fjam_kerjalist" id="fjam_kerjalist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($jam_kerja_list->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $jam_kerja_list->Token ?>">
@@ -2622,15 +2560,6 @@ $jam_kerja_list->RenderListOptions();
 // Render list options (header, left)
 $jam_kerja_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($jam_kerja->jk_id->Visible) { // jk_id ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_id) == "") { ?>
-		<th data-name="jk_id"><div id="elh_jam_kerja_jk_id" class="jam_kerja_jk_id"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_id) ?>',2);"><div id="elh_jam_kerja_jk_id" class="jam_kerja_jk_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
 <?php if ($jam_kerja->jk_name->Visible) { // jk_name ?>
 	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_name) == "") { ?>
 		<th data-name="jk_name"><div id="elh_jam_kerja_jk_name" class="jam_kerja_jk_name"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_name->FldCaption() ?></div></div></th>
@@ -2646,15 +2575,6 @@ $jam_kerja_list->ListOptions->Render("header", "left");
 	<?php } else { ?>
 		<th data-name="jk_kode"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_kode) ?>',2);"><div id="elh_jam_kerja_jk_kode" class="jam_kerja_jk_kode">
 			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_kode->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_kode->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_kode->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->use_set->Visible) { // use_set ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->use_set) == "") { ?>
-		<th data-name="use_set"><div id="elh_jam_kerja_use_set" class="jam_kerja_use_set"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->use_set->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="use_set"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->use_set) ?>',2);"><div id="elh_jam_kerja_use_set" class="jam_kerja_use_set">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->use_set->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->use_set->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->use_set->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
@@ -2676,69 +2596,6 @@ $jam_kerja_list->ListOptions->Render("header", "left");
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($jam_kerja->jk_ecin->Visible) { // jk_ecin ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_ecin) == "") { ?>
-		<th data-name="jk_ecin"><div id="elh_jam_kerja_jk_ecin" class="jam_kerja_jk_ecin"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_ecin->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_ecin"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_ecin) ?>',2);"><div id="elh_jam_kerja_jk_ecin" class="jam_kerja_jk_ecin">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_ecin->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_ecin->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_ecin->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_tol_late->Visible) { // jk_tol_late ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_tol_late) == "") { ?>
-		<th data-name="jk_tol_late"><div id="elh_jam_kerja_jk_tol_late" class="jam_kerja_jk_tol_late"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_tol_late->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_tol_late"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_tol_late) ?>',2);"><div id="elh_jam_kerja_jk_tol_late" class="jam_kerja_jk_tol_late">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_tol_late->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_tol_late->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_tol_late->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_use_ist->Visible) { // jk_use_ist ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_use_ist) == "") { ?>
-		<th data-name="jk_use_ist"><div id="elh_jam_kerja_jk_use_ist" class="jam_kerja_jk_use_ist"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_use_ist->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_use_ist"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_use_ist) ?>',2);"><div id="elh_jam_kerja_jk_use_ist" class="jam_kerja_jk_use_ist">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_use_ist->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_use_ist->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_use_ist->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_ist1->Visible) { // jk_ist1 ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_ist1) == "") { ?>
-		<th data-name="jk_ist1"><div id="elh_jam_kerja_jk_ist1" class="jam_kerja_jk_ist1"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_ist1->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_ist1"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_ist1) ?>',2);"><div id="elh_jam_kerja_jk_ist1" class="jam_kerja_jk_ist1">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_ist1->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_ist1->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_ist1->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_ist2->Visible) { // jk_ist2 ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_ist2) == "") { ?>
-		<th data-name="jk_ist2"><div id="elh_jam_kerja_jk_ist2" class="jam_kerja_jk_ist2"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_ist2->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_ist2"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_ist2) ?>',2);"><div id="elh_jam_kerja_jk_ist2" class="jam_kerja_jk_ist2">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_ist2->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_ist2->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_ist2->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_tol_early->Visible) { // jk_tol_early ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_tol_early) == "") { ?>
-		<th data-name="jk_tol_early"><div id="elh_jam_kerja_jk_tol_early" class="jam_kerja_jk_tol_early"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_tol_early->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_tol_early"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_tol_early) ?>',2);"><div id="elh_jam_kerja_jk_tol_early" class="jam_kerja_jk_tol_early">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_tol_early->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_tol_early->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_tol_early->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_bcout->Visible) { // jk_bcout ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_bcout) == "") { ?>
-		<th data-name="jk_bcout"><div id="elh_jam_kerja_jk_bcout" class="jam_kerja_jk_bcout"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_bcout->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_bcout"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_bcout) ?>',2);"><div id="elh_jam_kerja_jk_bcout" class="jam_kerja_jk_bcout">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_bcout->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_bcout->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_bcout->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
 <?php if ($jam_kerja->jk_cout->Visible) { // jk_cout ?>
 	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_cout) == "") { ?>
 		<th data-name="jk_cout"><div id="elh_jam_kerja_jk_cout" class="jam_kerja_jk_cout"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_cout->FldCaption() ?></div></div></th>
@@ -2754,69 +2611,6 @@ $jam_kerja_list->ListOptions->Render("header", "left");
 	<?php } else { ?>
 		<th data-name="jk_ecout"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_ecout) ?>',2);"><div id="elh_jam_kerja_jk_ecout" class="jam_kerja_jk_ecout">
 			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_ecout->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_ecout->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_ecout->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->use_eot->Visible) { // use_eot ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->use_eot) == "") { ?>
-		<th data-name="use_eot"><div id="elh_jam_kerja_use_eot" class="jam_kerja_use_eot"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->use_eot->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="use_eot"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->use_eot) ?>',2);"><div id="elh_jam_kerja_use_eot" class="jam_kerja_use_eot">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->use_eot->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->use_eot->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->use_eot->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->min_eot->Visible) { // min_eot ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->min_eot) == "") { ?>
-		<th data-name="min_eot"><div id="elh_jam_kerja_min_eot" class="jam_kerja_min_eot"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->min_eot->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="min_eot"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->min_eot) ?>',2);"><div id="elh_jam_kerja_min_eot" class="jam_kerja_min_eot">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->min_eot->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->min_eot->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->min_eot->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->max_eot->Visible) { // max_eot ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->max_eot) == "") { ?>
-		<th data-name="max_eot"><div id="elh_jam_kerja_max_eot" class="jam_kerja_max_eot"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->max_eot->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="max_eot"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->max_eot) ?>',2);"><div id="elh_jam_kerja_max_eot" class="jam_kerja_max_eot">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->max_eot->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->max_eot->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->max_eot->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->reduce_eot->Visible) { // reduce_eot ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->reduce_eot) == "") { ?>
-		<th data-name="reduce_eot"><div id="elh_jam_kerja_reduce_eot" class="jam_kerja_reduce_eot"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->reduce_eot->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="reduce_eot"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->reduce_eot) ?>',2);"><div id="elh_jam_kerja_reduce_eot" class="jam_kerja_reduce_eot">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->reduce_eot->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->reduce_eot->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->reduce_eot->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_durasi->Visible) { // jk_durasi ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_durasi) == "") { ?>
-		<th data-name="jk_durasi"><div id="elh_jam_kerja_jk_durasi" class="jam_kerja_jk_durasi"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_durasi->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_durasi"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_durasi) ?>',2);"><div id="elh_jam_kerja_jk_durasi" class="jam_kerja_jk_durasi">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_durasi->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_durasi->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_durasi->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_countas->Visible) { // jk_countas ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_countas) == "") { ?>
-		<th data-name="jk_countas"><div id="elh_jam_kerja_jk_countas" class="jam_kerja_jk_countas"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_countas->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_countas"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_countas) ?>',2);"><div id="elh_jam_kerja_jk_countas" class="jam_kerja_jk_countas">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_countas->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_countas->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_countas->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($jam_kerja->jk_min_countas->Visible) { // jk_min_countas ?>
-	<?php if ($jam_kerja->SortUrl($jam_kerja->jk_min_countas) == "") { ?>
-		<th data-name="jk_min_countas"><div id="elh_jam_kerja_jk_min_countas" class="jam_kerja_jk_min_countas"><div class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_min_countas->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jk_min_countas"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $jam_kerja->SortUrl($jam_kerja->jk_min_countas) ?>',2);"><div id="elh_jam_kerja_jk_min_countas" class="jam_kerja_jk_min_countas">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $jam_kerja->jk_min_countas->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($jam_kerja->jk_min_countas->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($jam_kerja->jk_min_countas->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
@@ -2894,35 +2688,19 @@ while ($jam_kerja_list->RecCnt < $jam_kerja_list->StopRec) {
 // Render list options (body, left)
 $jam_kerja_list->ListOptions->Render("body", "left", $jam_kerja_list->RowCnt);
 ?>
-	<?php if ($jam_kerja->jk_id->Visible) { // jk_id ?>
-		<td data-name="jk_id"<?php echo $jam_kerja->jk_id->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_id" class="jam_kerja_jk_id">
-<span<?php echo $jam_kerja->jk_id->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_id->ListViewValue() ?></span>
-</span>
-<a id="<?php echo $jam_kerja_list->PageObjName . "_row_" . $jam_kerja_list->RowCnt ?>"></a></td>
-	<?php } ?>
 	<?php if ($jam_kerja->jk_name->Visible) { // jk_name ?>
 		<td data-name="jk_name"<?php echo $jam_kerja->jk_name->CellAttributes() ?>>
 <span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_name" class="jam_kerja_jk_name">
 <span<?php echo $jam_kerja->jk_name->ViewAttributes() ?>>
 <?php echo $jam_kerja->jk_name->ListViewValue() ?></span>
 </span>
-</td>
+<a id="<?php echo $jam_kerja_list->PageObjName . "_row_" . $jam_kerja_list->RowCnt ?>"></a></td>
 	<?php } ?>
 	<?php if ($jam_kerja->jk_kode->Visible) { // jk_kode ?>
 		<td data-name="jk_kode"<?php echo $jam_kerja->jk_kode->CellAttributes() ?>>
 <span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_kode" class="jam_kerja_jk_kode">
 <span<?php echo $jam_kerja->jk_kode->ViewAttributes() ?>>
 <?php echo $jam_kerja->jk_kode->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->use_set->Visible) { // use_set ?>
-		<td data-name="use_set"<?php echo $jam_kerja->use_set->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_use_set" class="jam_kerja_use_set">
-<span<?php echo $jam_kerja->use_set->ViewAttributes() ?>>
-<?php echo $jam_kerja->use_set->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
@@ -2942,62 +2720,6 @@ $jam_kerja_list->ListOptions->Render("body", "left", $jam_kerja_list->RowCnt);
 </span>
 </td>
 	<?php } ?>
-	<?php if ($jam_kerja->jk_ecin->Visible) { // jk_ecin ?>
-		<td data-name="jk_ecin"<?php echo $jam_kerja->jk_ecin->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_ecin" class="jam_kerja_jk_ecin">
-<span<?php echo $jam_kerja->jk_ecin->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_ecin->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_tol_late->Visible) { // jk_tol_late ?>
-		<td data-name="jk_tol_late"<?php echo $jam_kerja->jk_tol_late->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_tol_late" class="jam_kerja_jk_tol_late">
-<span<?php echo $jam_kerja->jk_tol_late->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_tol_late->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_use_ist->Visible) { // jk_use_ist ?>
-		<td data-name="jk_use_ist"<?php echo $jam_kerja->jk_use_ist->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_use_ist" class="jam_kerja_jk_use_ist">
-<span<?php echo $jam_kerja->jk_use_ist->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_use_ist->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_ist1->Visible) { // jk_ist1 ?>
-		<td data-name="jk_ist1"<?php echo $jam_kerja->jk_ist1->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_ist1" class="jam_kerja_jk_ist1">
-<span<?php echo $jam_kerja->jk_ist1->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_ist1->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_ist2->Visible) { // jk_ist2 ?>
-		<td data-name="jk_ist2"<?php echo $jam_kerja->jk_ist2->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_ist2" class="jam_kerja_jk_ist2">
-<span<?php echo $jam_kerja->jk_ist2->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_ist2->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_tol_early->Visible) { // jk_tol_early ?>
-		<td data-name="jk_tol_early"<?php echo $jam_kerja->jk_tol_early->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_tol_early" class="jam_kerja_jk_tol_early">
-<span<?php echo $jam_kerja->jk_tol_early->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_tol_early->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_bcout->Visible) { // jk_bcout ?>
-		<td data-name="jk_bcout"<?php echo $jam_kerja->jk_bcout->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_bcout" class="jam_kerja_jk_bcout">
-<span<?php echo $jam_kerja->jk_bcout->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_bcout->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
 	<?php if ($jam_kerja->jk_cout->Visible) { // jk_cout ?>
 		<td data-name="jk_cout"<?php echo $jam_kerja->jk_cout->CellAttributes() ?>>
 <span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_cout" class="jam_kerja_jk_cout">
@@ -3011,62 +2733,6 @@ $jam_kerja_list->ListOptions->Render("body", "left", $jam_kerja_list->RowCnt);
 <span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_ecout" class="jam_kerja_jk_ecout">
 <span<?php echo $jam_kerja->jk_ecout->ViewAttributes() ?>>
 <?php echo $jam_kerja->jk_ecout->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->use_eot->Visible) { // use_eot ?>
-		<td data-name="use_eot"<?php echo $jam_kerja->use_eot->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_use_eot" class="jam_kerja_use_eot">
-<span<?php echo $jam_kerja->use_eot->ViewAttributes() ?>>
-<?php echo $jam_kerja->use_eot->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->min_eot->Visible) { // min_eot ?>
-		<td data-name="min_eot"<?php echo $jam_kerja->min_eot->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_min_eot" class="jam_kerja_min_eot">
-<span<?php echo $jam_kerja->min_eot->ViewAttributes() ?>>
-<?php echo $jam_kerja->min_eot->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->max_eot->Visible) { // max_eot ?>
-		<td data-name="max_eot"<?php echo $jam_kerja->max_eot->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_max_eot" class="jam_kerja_max_eot">
-<span<?php echo $jam_kerja->max_eot->ViewAttributes() ?>>
-<?php echo $jam_kerja->max_eot->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->reduce_eot->Visible) { // reduce_eot ?>
-		<td data-name="reduce_eot"<?php echo $jam_kerja->reduce_eot->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_reduce_eot" class="jam_kerja_reduce_eot">
-<span<?php echo $jam_kerja->reduce_eot->ViewAttributes() ?>>
-<?php echo $jam_kerja->reduce_eot->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_durasi->Visible) { // jk_durasi ?>
-		<td data-name="jk_durasi"<?php echo $jam_kerja->jk_durasi->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_durasi" class="jam_kerja_jk_durasi">
-<span<?php echo $jam_kerja->jk_durasi->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_durasi->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_countas->Visible) { // jk_countas ?>
-		<td data-name="jk_countas"<?php echo $jam_kerja->jk_countas->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_countas" class="jam_kerja_jk_countas">
-<span<?php echo $jam_kerja->jk_countas->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_countas->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($jam_kerja->jk_min_countas->Visible) { // jk_min_countas ?>
-		<td data-name="jk_min_countas"<?php echo $jam_kerja->jk_min_countas->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_list->RowCnt ?>_jam_kerja_jk_min_countas" class="jam_kerja_jk_min_countas">
-<span<?php echo $jam_kerja->jk_min_countas->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_min_countas->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

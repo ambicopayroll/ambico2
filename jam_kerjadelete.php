@@ -282,28 +282,12 @@ class cjam_kerja_delete extends cjam_kerja {
 			$Security->UserID_Loaded();
 		}
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->jk_id->SetVisibility();
 		$this->jk_name->SetVisibility();
 		$this->jk_kode->SetVisibility();
-		$this->use_set->SetVisibility();
 		$this->jk_bcin->SetVisibility();
 		$this->jk_cin->SetVisibility();
-		$this->jk_ecin->SetVisibility();
-		$this->jk_tol_late->SetVisibility();
-		$this->jk_use_ist->SetVisibility();
-		$this->jk_ist1->SetVisibility();
-		$this->jk_ist2->SetVisibility();
-		$this->jk_tol_early->SetVisibility();
-		$this->jk_bcout->SetVisibility();
 		$this->jk_cout->SetVisibility();
 		$this->jk_ecout->SetVisibility();
-		$this->use_eot->SetVisibility();
-		$this->min_eot->SetVisibility();
-		$this->max_eot->SetVisibility();
-		$this->reduce_eot->SetVisibility();
-		$this->jk_durasi->SetVisibility();
-		$this->jk_countas->SetVisibility();
-		$this->jk_min_countas->SetVisibility();
 		$this->jk_ket->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
@@ -538,12 +522,8 @@ class cjam_kerja_delete extends cjam_kerja {
 		global $Security, $Language, $gsLanguage;
 
 		// Initialize URLs
-		// Convert decimal values if posted back
-
-		if ($this->jk_countas->FormValue == $this->jk_countas->CurrentValue && is_numeric(ew_StrToFloat($this->jk_countas->CurrentValue)))
-			$this->jk_countas->CurrentValue = ew_StrToFloat($this->jk_countas->CurrentValue);
-
 		// Call Row_Rendering event
+
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
@@ -665,11 +645,6 @@ class cjam_kerja_delete extends cjam_kerja {
 		$this->jk_ket->ViewValue = $this->jk_ket->CurrentValue;
 		$this->jk_ket->ViewCustomAttributes = "";
 
-			// jk_id
-			$this->jk_id->LinkCustomAttributes = "";
-			$this->jk_id->HrefValue = "";
-			$this->jk_id->TooltipValue = "";
-
 			// jk_name
 			$this->jk_name->LinkCustomAttributes = "";
 			$this->jk_name->HrefValue = "";
@@ -679,11 +654,6 @@ class cjam_kerja_delete extends cjam_kerja {
 			$this->jk_kode->LinkCustomAttributes = "";
 			$this->jk_kode->HrefValue = "";
 			$this->jk_kode->TooltipValue = "";
-
-			// use_set
-			$this->use_set->LinkCustomAttributes = "";
-			$this->use_set->HrefValue = "";
-			$this->use_set->TooltipValue = "";
 
 			// jk_bcin
 			$this->jk_bcin->LinkCustomAttributes = "";
@@ -695,41 +665,6 @@ class cjam_kerja_delete extends cjam_kerja {
 			$this->jk_cin->HrefValue = "";
 			$this->jk_cin->TooltipValue = "";
 
-			// jk_ecin
-			$this->jk_ecin->LinkCustomAttributes = "";
-			$this->jk_ecin->HrefValue = "";
-			$this->jk_ecin->TooltipValue = "";
-
-			// jk_tol_late
-			$this->jk_tol_late->LinkCustomAttributes = "";
-			$this->jk_tol_late->HrefValue = "";
-			$this->jk_tol_late->TooltipValue = "";
-
-			// jk_use_ist
-			$this->jk_use_ist->LinkCustomAttributes = "";
-			$this->jk_use_ist->HrefValue = "";
-			$this->jk_use_ist->TooltipValue = "";
-
-			// jk_ist1
-			$this->jk_ist1->LinkCustomAttributes = "";
-			$this->jk_ist1->HrefValue = "";
-			$this->jk_ist1->TooltipValue = "";
-
-			// jk_ist2
-			$this->jk_ist2->LinkCustomAttributes = "";
-			$this->jk_ist2->HrefValue = "";
-			$this->jk_ist2->TooltipValue = "";
-
-			// jk_tol_early
-			$this->jk_tol_early->LinkCustomAttributes = "";
-			$this->jk_tol_early->HrefValue = "";
-			$this->jk_tol_early->TooltipValue = "";
-
-			// jk_bcout
-			$this->jk_bcout->LinkCustomAttributes = "";
-			$this->jk_bcout->HrefValue = "";
-			$this->jk_bcout->TooltipValue = "";
-
 			// jk_cout
 			$this->jk_cout->LinkCustomAttributes = "";
 			$this->jk_cout->HrefValue = "";
@@ -739,41 +674,6 @@ class cjam_kerja_delete extends cjam_kerja {
 			$this->jk_ecout->LinkCustomAttributes = "";
 			$this->jk_ecout->HrefValue = "";
 			$this->jk_ecout->TooltipValue = "";
-
-			// use_eot
-			$this->use_eot->LinkCustomAttributes = "";
-			$this->use_eot->HrefValue = "";
-			$this->use_eot->TooltipValue = "";
-
-			// min_eot
-			$this->min_eot->LinkCustomAttributes = "";
-			$this->min_eot->HrefValue = "";
-			$this->min_eot->TooltipValue = "";
-
-			// max_eot
-			$this->max_eot->LinkCustomAttributes = "";
-			$this->max_eot->HrefValue = "";
-			$this->max_eot->TooltipValue = "";
-
-			// reduce_eot
-			$this->reduce_eot->LinkCustomAttributes = "";
-			$this->reduce_eot->HrefValue = "";
-			$this->reduce_eot->TooltipValue = "";
-
-			// jk_durasi
-			$this->jk_durasi->LinkCustomAttributes = "";
-			$this->jk_durasi->HrefValue = "";
-			$this->jk_durasi->TooltipValue = "";
-
-			// jk_countas
-			$this->jk_countas->LinkCustomAttributes = "";
-			$this->jk_countas->HrefValue = "";
-			$this->jk_countas->TooltipValue = "";
-
-			// jk_min_countas
-			$this->jk_min_countas->LinkCustomAttributes = "";
-			$this->jk_min_countas->HrefValue = "";
-			$this->jk_min_countas->TooltipValue = "";
 
 			// jk_ket
 			$this->jk_ket->LinkCustomAttributes = "";
@@ -814,6 +714,7 @@ class cjam_kerja_delete extends cjam_kerja {
 		}
 		$rows = ($rs) ? $rs->GetRows() : array();
 		$conn->BeginTrans();
+		if ($this->AuditTrailOnDelete) $this->WriteAuditTrailDummy($Language->Phrase("BatchDeleteBegin")); // Batch delete begin
 
 		// Clone old rows
 		$rsold = $rows;
@@ -856,8 +757,10 @@ class cjam_kerja_delete extends cjam_kerja {
 		}
 		if ($DeleteRows) {
 			$conn->CommitTrans(); // Commit the changes
+			if ($this->AuditTrailOnDelete) $this->WriteAuditTrailDummy($Language->Phrase("BatchDeleteSuccess")); // Batch delete success
 		} else {
 			$conn->RollbackTrans(); // Rollback changes
+			if ($this->AuditTrailOnDelete) $this->WriteAuditTrailDummy($Language->Phrase("BatchDeleteRollback")); // Batch delete rollback
 		}
 
 		// Call Row Deleted event
@@ -1029,17 +932,11 @@ $jam_kerja_delete->ShowMessage();
 <?php echo $jam_kerja->TableCustomInnerHtml ?>
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($jam_kerja->jk_id->Visible) { // jk_id ?>
-		<th><span id="elh_jam_kerja_jk_id" class="jam_kerja_jk_id"><?php echo $jam_kerja->jk_id->FldCaption() ?></span></th>
-<?php } ?>
 <?php if ($jam_kerja->jk_name->Visible) { // jk_name ?>
 		<th><span id="elh_jam_kerja_jk_name" class="jam_kerja_jk_name"><?php echo $jam_kerja->jk_name->FldCaption() ?></span></th>
 <?php } ?>
 <?php if ($jam_kerja->jk_kode->Visible) { // jk_kode ?>
 		<th><span id="elh_jam_kerja_jk_kode" class="jam_kerja_jk_kode"><?php echo $jam_kerja->jk_kode->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->use_set->Visible) { // use_set ?>
-		<th><span id="elh_jam_kerja_use_set" class="jam_kerja_use_set"><?php echo $jam_kerja->use_set->FldCaption() ?></span></th>
 <?php } ?>
 <?php if ($jam_kerja->jk_bcin->Visible) { // jk_bcin ?>
 		<th><span id="elh_jam_kerja_jk_bcin" class="jam_kerja_jk_bcin"><?php echo $jam_kerja->jk_bcin->FldCaption() ?></span></th>
@@ -1047,53 +944,11 @@ $jam_kerja_delete->ShowMessage();
 <?php if ($jam_kerja->jk_cin->Visible) { // jk_cin ?>
 		<th><span id="elh_jam_kerja_jk_cin" class="jam_kerja_jk_cin"><?php echo $jam_kerja->jk_cin->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($jam_kerja->jk_ecin->Visible) { // jk_ecin ?>
-		<th><span id="elh_jam_kerja_jk_ecin" class="jam_kerja_jk_ecin"><?php echo $jam_kerja->jk_ecin->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_tol_late->Visible) { // jk_tol_late ?>
-		<th><span id="elh_jam_kerja_jk_tol_late" class="jam_kerja_jk_tol_late"><?php echo $jam_kerja->jk_tol_late->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_use_ist->Visible) { // jk_use_ist ?>
-		<th><span id="elh_jam_kerja_jk_use_ist" class="jam_kerja_jk_use_ist"><?php echo $jam_kerja->jk_use_ist->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_ist1->Visible) { // jk_ist1 ?>
-		<th><span id="elh_jam_kerja_jk_ist1" class="jam_kerja_jk_ist1"><?php echo $jam_kerja->jk_ist1->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_ist2->Visible) { // jk_ist2 ?>
-		<th><span id="elh_jam_kerja_jk_ist2" class="jam_kerja_jk_ist2"><?php echo $jam_kerja->jk_ist2->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_tol_early->Visible) { // jk_tol_early ?>
-		<th><span id="elh_jam_kerja_jk_tol_early" class="jam_kerja_jk_tol_early"><?php echo $jam_kerja->jk_tol_early->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_bcout->Visible) { // jk_bcout ?>
-		<th><span id="elh_jam_kerja_jk_bcout" class="jam_kerja_jk_bcout"><?php echo $jam_kerja->jk_bcout->FldCaption() ?></span></th>
-<?php } ?>
 <?php if ($jam_kerja->jk_cout->Visible) { // jk_cout ?>
 		<th><span id="elh_jam_kerja_jk_cout" class="jam_kerja_jk_cout"><?php echo $jam_kerja->jk_cout->FldCaption() ?></span></th>
 <?php } ?>
 <?php if ($jam_kerja->jk_ecout->Visible) { // jk_ecout ?>
 		<th><span id="elh_jam_kerja_jk_ecout" class="jam_kerja_jk_ecout"><?php echo $jam_kerja->jk_ecout->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->use_eot->Visible) { // use_eot ?>
-		<th><span id="elh_jam_kerja_use_eot" class="jam_kerja_use_eot"><?php echo $jam_kerja->use_eot->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->min_eot->Visible) { // min_eot ?>
-		<th><span id="elh_jam_kerja_min_eot" class="jam_kerja_min_eot"><?php echo $jam_kerja->min_eot->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->max_eot->Visible) { // max_eot ?>
-		<th><span id="elh_jam_kerja_max_eot" class="jam_kerja_max_eot"><?php echo $jam_kerja->max_eot->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->reduce_eot->Visible) { // reduce_eot ?>
-		<th><span id="elh_jam_kerja_reduce_eot" class="jam_kerja_reduce_eot"><?php echo $jam_kerja->reduce_eot->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_durasi->Visible) { // jk_durasi ?>
-		<th><span id="elh_jam_kerja_jk_durasi" class="jam_kerja_jk_durasi"><?php echo $jam_kerja->jk_durasi->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_countas->Visible) { // jk_countas ?>
-		<th><span id="elh_jam_kerja_jk_countas" class="jam_kerja_jk_countas"><?php echo $jam_kerja->jk_countas->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($jam_kerja->jk_min_countas->Visible) { // jk_min_countas ?>
-		<th><span id="elh_jam_kerja_jk_min_countas" class="jam_kerja_jk_min_countas"><?php echo $jam_kerja->jk_min_countas->FldCaption() ?></span></th>
 <?php } ?>
 <?php if ($jam_kerja->jk_ket->Visible) { // jk_ket ?>
 		<th><span id="elh_jam_kerja_jk_ket" class="jam_kerja_jk_ket"><?php echo $jam_kerja->jk_ket->FldCaption() ?></span></th>
@@ -1119,14 +974,6 @@ while (!$jam_kerja_delete->Recordset->EOF) {
 	$jam_kerja_delete->RenderRow();
 ?>
 	<tr<?php echo $jam_kerja->RowAttributes() ?>>
-<?php if ($jam_kerja->jk_id->Visible) { // jk_id ?>
-		<td<?php echo $jam_kerja->jk_id->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_id" class="jam_kerja_jk_id">
-<span<?php echo $jam_kerja->jk_id->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($jam_kerja->jk_name->Visible) { // jk_name ?>
 		<td<?php echo $jam_kerja->jk_name->CellAttributes() ?>>
 <span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_name" class="jam_kerja_jk_name">
@@ -1140,14 +987,6 @@ while (!$jam_kerja_delete->Recordset->EOF) {
 <span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_kode" class="jam_kerja_jk_kode">
 <span<?php echo $jam_kerja->jk_kode->ViewAttributes() ?>>
 <?php echo $jam_kerja->jk_kode->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->use_set->Visible) { // use_set ?>
-		<td<?php echo $jam_kerja->use_set->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_use_set" class="jam_kerja_use_set">
-<span<?php echo $jam_kerja->use_set->ViewAttributes() ?>>
-<?php echo $jam_kerja->use_set->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -1167,62 +1006,6 @@ while (!$jam_kerja_delete->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($jam_kerja->jk_ecin->Visible) { // jk_ecin ?>
-		<td<?php echo $jam_kerja->jk_ecin->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_ecin" class="jam_kerja_jk_ecin">
-<span<?php echo $jam_kerja->jk_ecin->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_ecin->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_tol_late->Visible) { // jk_tol_late ?>
-		<td<?php echo $jam_kerja->jk_tol_late->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_tol_late" class="jam_kerja_jk_tol_late">
-<span<?php echo $jam_kerja->jk_tol_late->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_tol_late->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_use_ist->Visible) { // jk_use_ist ?>
-		<td<?php echo $jam_kerja->jk_use_ist->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_use_ist" class="jam_kerja_jk_use_ist">
-<span<?php echo $jam_kerja->jk_use_ist->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_use_ist->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_ist1->Visible) { // jk_ist1 ?>
-		<td<?php echo $jam_kerja->jk_ist1->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_ist1" class="jam_kerja_jk_ist1">
-<span<?php echo $jam_kerja->jk_ist1->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_ist1->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_ist2->Visible) { // jk_ist2 ?>
-		<td<?php echo $jam_kerja->jk_ist2->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_ist2" class="jam_kerja_jk_ist2">
-<span<?php echo $jam_kerja->jk_ist2->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_ist2->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_tol_early->Visible) { // jk_tol_early ?>
-		<td<?php echo $jam_kerja->jk_tol_early->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_tol_early" class="jam_kerja_jk_tol_early">
-<span<?php echo $jam_kerja->jk_tol_early->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_tol_early->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_bcout->Visible) { // jk_bcout ?>
-		<td<?php echo $jam_kerja->jk_bcout->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_bcout" class="jam_kerja_jk_bcout">
-<span<?php echo $jam_kerja->jk_bcout->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_bcout->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($jam_kerja->jk_cout->Visible) { // jk_cout ?>
 		<td<?php echo $jam_kerja->jk_cout->CellAttributes() ?>>
 <span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_cout" class="jam_kerja_jk_cout">
@@ -1236,62 +1019,6 @@ while (!$jam_kerja_delete->Recordset->EOF) {
 <span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_ecout" class="jam_kerja_jk_ecout">
 <span<?php echo $jam_kerja->jk_ecout->ViewAttributes() ?>>
 <?php echo $jam_kerja->jk_ecout->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->use_eot->Visible) { // use_eot ?>
-		<td<?php echo $jam_kerja->use_eot->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_use_eot" class="jam_kerja_use_eot">
-<span<?php echo $jam_kerja->use_eot->ViewAttributes() ?>>
-<?php echo $jam_kerja->use_eot->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->min_eot->Visible) { // min_eot ?>
-		<td<?php echo $jam_kerja->min_eot->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_min_eot" class="jam_kerja_min_eot">
-<span<?php echo $jam_kerja->min_eot->ViewAttributes() ?>>
-<?php echo $jam_kerja->min_eot->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->max_eot->Visible) { // max_eot ?>
-		<td<?php echo $jam_kerja->max_eot->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_max_eot" class="jam_kerja_max_eot">
-<span<?php echo $jam_kerja->max_eot->ViewAttributes() ?>>
-<?php echo $jam_kerja->max_eot->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->reduce_eot->Visible) { // reduce_eot ?>
-		<td<?php echo $jam_kerja->reduce_eot->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_reduce_eot" class="jam_kerja_reduce_eot">
-<span<?php echo $jam_kerja->reduce_eot->ViewAttributes() ?>>
-<?php echo $jam_kerja->reduce_eot->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_durasi->Visible) { // jk_durasi ?>
-		<td<?php echo $jam_kerja->jk_durasi->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_durasi" class="jam_kerja_jk_durasi">
-<span<?php echo $jam_kerja->jk_durasi->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_durasi->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_countas->Visible) { // jk_countas ?>
-		<td<?php echo $jam_kerja->jk_countas->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_countas" class="jam_kerja_jk_countas">
-<span<?php echo $jam_kerja->jk_countas->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_countas->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($jam_kerja->jk_min_countas->Visible) { // jk_min_countas ?>
-		<td<?php echo $jam_kerja->jk_min_countas->CellAttributes() ?>>
-<span id="el<?php echo $jam_kerja_delete->RowCnt ?>_jam_kerja_jk_min_countas" class="jam_kerja_jk_min_countas">
-<span<?php echo $jam_kerja->jk_min_countas->ViewAttributes() ?>>
-<?php echo $jam_kerja->jk_min_countas->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
