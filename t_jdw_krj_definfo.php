@@ -17,6 +17,8 @@ class ct_jdw_krj_def extends cTable {
 	var $pegawai_id;
 	var $tgl;
 	var $jk_id;
+	var $scan_masuk;
+	var $scan_keluar;
 
 	//
 	// Table class constructor
@@ -73,6 +75,18 @@ class ct_jdw_krj_def extends cTable {
 		$this->jk_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->jk_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['jk_id'] = &$this->jk_id;
+
+		// scan_masuk
+		$this->scan_masuk = new cField('t_jdw_krj_def', 't_jdw_krj_def', 'x_scan_masuk', 'scan_masuk', '`scan_masuk`', ew_CastDateFieldForLike('`scan_masuk`', 0, "DB"), 135, 0, FALSE, '`scan_masuk`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->scan_masuk->Sortable = TRUE; // Allow sort
+		$this->scan_masuk->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
+		$this->fields['scan_masuk'] = &$this->scan_masuk;
+
+		// scan_keluar
+		$this->scan_keluar = new cField('t_jdw_krj_def', 't_jdw_krj_def', 'x_scan_keluar', 'scan_keluar', '`scan_keluar`', ew_CastDateFieldForLike('`scan_keluar`', 0, "DB"), 135, 0, FALSE, '`scan_keluar`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->scan_keluar->Sortable = TRUE; // Allow sort
+		$this->scan_keluar->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
+		$this->fields['scan_keluar'] = &$this->scan_keluar;
 	}
 
 	// Set Field Visibility
@@ -708,6 +722,8 @@ class ct_jdw_krj_def extends cTable {
 		$this->pegawai_id->setDbValue($rs->fields('pegawai_id'));
 		$this->tgl->setDbValue($rs->fields('tgl'));
 		$this->jk_id->setDbValue($rs->fields('jk_id'));
+		$this->scan_masuk->setDbValue($rs->fields('scan_masuk'));
+		$this->scan_keluar->setDbValue($rs->fields('scan_keluar'));
 	}
 
 	// Render list row values
@@ -722,6 +738,8 @@ class ct_jdw_krj_def extends cTable {
 		// pegawai_id
 		// tgl
 		// jk_id
+		// scan_masuk
+		// scan_keluar
 		// jdw_id
 
 		$this->jdw_id->ViewValue = $this->jdw_id->CurrentValue;
@@ -787,6 +805,16 @@ class ct_jdw_krj_def extends cTable {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
+		// scan_masuk
+		$this->scan_masuk->ViewValue = $this->scan_masuk->CurrentValue;
+		$this->scan_masuk->ViewValue = ew_FormatDateTime($this->scan_masuk->ViewValue, 0);
+		$this->scan_masuk->ViewCustomAttributes = "";
+
+		// scan_keluar
+		$this->scan_keluar->ViewValue = $this->scan_keluar->CurrentValue;
+		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 0);
+		$this->scan_keluar->ViewCustomAttributes = "";
+
 		// jdw_id
 		$this->jdw_id->LinkCustomAttributes = "";
 		$this->jdw_id->HrefValue = "";
@@ -806,6 +834,16 @@ class ct_jdw_krj_def extends cTable {
 		$this->jk_id->LinkCustomAttributes = "";
 		$this->jk_id->HrefValue = "";
 		$this->jk_id->TooltipValue = "";
+
+		// scan_masuk
+		$this->scan_masuk->LinkCustomAttributes = "";
+		$this->scan_masuk->HrefValue = "";
+		$this->scan_masuk->TooltipValue = "";
+
+		// scan_keluar
+		$this->scan_keluar->LinkCustomAttributes = "";
+		$this->scan_keluar->HrefValue = "";
+		$this->scan_keluar->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -870,6 +908,18 @@ class ct_jdw_krj_def extends cTable {
 		$this->jk_id->EditAttrs["class"] = "form-control";
 		$this->jk_id->EditCustomAttributes = "";
 
+		// scan_masuk
+		$this->scan_masuk->EditAttrs["class"] = "form-control";
+		$this->scan_masuk->EditCustomAttributes = "";
+		$this->scan_masuk->EditValue = ew_FormatDateTime($this->scan_masuk->CurrentValue, 8);
+		$this->scan_masuk->PlaceHolder = ew_RemoveHtml($this->scan_masuk->FldCaption());
+
+		// scan_keluar
+		$this->scan_keluar->EditAttrs["class"] = "form-control";
+		$this->scan_keluar->EditCustomAttributes = "";
+		$this->scan_keluar->EditValue = ew_FormatDateTime($this->scan_keluar->CurrentValue, 8);
+		$this->scan_keluar->PlaceHolder = ew_RemoveHtml($this->scan_keluar->FldCaption());
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -901,11 +951,15 @@ class ct_jdw_krj_def extends cTable {
 					if ($this->pegawai_id->Exportable) $Doc->ExportCaption($this->pegawai_id);
 					if ($this->tgl->Exportable) $Doc->ExportCaption($this->tgl);
 					if ($this->jk_id->Exportable) $Doc->ExportCaption($this->jk_id);
+					if ($this->scan_masuk->Exportable) $Doc->ExportCaption($this->scan_masuk);
+					if ($this->scan_keluar->Exportable) $Doc->ExportCaption($this->scan_keluar);
 				} else {
 					if ($this->jdw_id->Exportable) $Doc->ExportCaption($this->jdw_id);
 					if ($this->pegawai_id->Exportable) $Doc->ExportCaption($this->pegawai_id);
 					if ($this->tgl->Exportable) $Doc->ExportCaption($this->tgl);
 					if ($this->jk_id->Exportable) $Doc->ExportCaption($this->jk_id);
+					if ($this->scan_masuk->Exportable) $Doc->ExportCaption($this->scan_masuk);
+					if ($this->scan_keluar->Exportable) $Doc->ExportCaption($this->scan_keluar);
 				}
 				$Doc->EndExportRow();
 			}
@@ -941,11 +995,15 @@ class ct_jdw_krj_def extends cTable {
 						if ($this->pegawai_id->Exportable) $Doc->ExportField($this->pegawai_id);
 						if ($this->tgl->Exportable) $Doc->ExportField($this->tgl);
 						if ($this->jk_id->Exportable) $Doc->ExportField($this->jk_id);
+						if ($this->scan_masuk->Exportable) $Doc->ExportField($this->scan_masuk);
+						if ($this->scan_keluar->Exportable) $Doc->ExportField($this->scan_keluar);
 					} else {
 						if ($this->jdw_id->Exportable) $Doc->ExportField($this->jdw_id);
 						if ($this->pegawai_id->Exportable) $Doc->ExportField($this->pegawai_id);
 						if ($this->tgl->Exportable) $Doc->ExportField($this->tgl);
 						if ($this->jk_id->Exportable) $Doc->ExportField($this->jk_id);
+						if ($this->scan_masuk->Exportable) $Doc->ExportField($this->scan_masuk);
+						if ($this->scan_keluar->Exportable) $Doc->ExportField($this->scan_keluar);
 					}
 					$Doc->EndExportRow();
 				}

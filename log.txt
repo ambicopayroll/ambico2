@@ -1,3 +1,10 @@
 6:30 PM 4/4/2017
 yang perlu ditanyakan ::
 1. saat pergantian shift :: di mana saja ada hari libur ?
+
+
+2:40 PM 4/5/2017
+- lengkapi tabel t_jdw_krj_def dengan data scan_log
+- create crosstab di phpreportmaker, yang diambil adalah tabel t_jdw_krj_def
+- tabel t_jdw_krj_def ditambahi field scan_masuk dan scan_keluar
+

@@ -392,6 +392,8 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		$this->pegawai_id->SetVisibility();
 		$this->tgl->SetVisibility();
 		$this->jk_id->SetVisibility();
+		$this->scan_masuk->SetVisibility();
+		$this->scan_keluar->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -725,6 +727,8 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		} else {
 			$this->jk_id->VirtualValue = ""; // Clear value
 		}
+		$this->scan_masuk->setDbValue($rs->fields('scan_masuk'));
+		$this->scan_keluar->setDbValue($rs->fields('scan_keluar'));
 	}
 
 	// Load DbValue from recordset
@@ -735,6 +739,8 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		$this->pegawai_id->DbValue = $row['pegawai_id'];
 		$this->tgl->DbValue = $row['tgl'];
 		$this->jk_id->DbValue = $row['jk_id'];
+		$this->scan_masuk->DbValue = $row['scan_masuk'];
+		$this->scan_keluar->DbValue = $row['scan_keluar'];
 	}
 
 	// Render row values based on field settings
@@ -757,6 +763,8 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		// pegawai_id
 		// tgl
 		// jk_id
+		// scan_masuk
+		// scan_keluar
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -824,6 +832,16 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
+		// scan_masuk
+		$this->scan_masuk->ViewValue = $this->scan_masuk->CurrentValue;
+		$this->scan_masuk->ViewValue = ew_FormatDateTime($this->scan_masuk->ViewValue, 0);
+		$this->scan_masuk->ViewCustomAttributes = "";
+
+		// scan_keluar
+		$this->scan_keluar->ViewValue = $this->scan_keluar->CurrentValue;
+		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 0);
+		$this->scan_keluar->ViewCustomAttributes = "";
+
 			// jdw_id
 			$this->jdw_id->LinkCustomAttributes = "";
 			$this->jdw_id->HrefValue = "";
@@ -843,6 +861,16 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
 			$this->jk_id->TooltipValue = "";
+
+			// scan_masuk
+			$this->scan_masuk->LinkCustomAttributes = "";
+			$this->scan_masuk->HrefValue = "";
+			$this->scan_masuk->TooltipValue = "";
+
+			// scan_keluar
+			$this->scan_keluar->LinkCustomAttributes = "";
+			$this->scan_keluar->HrefValue = "";
+			$this->scan_keluar->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1443,6 +1471,28 @@ $t_jdw_krj_def_view->ShowMessage();
 <span id="el_t_jdw_krj_def_jk_id">
 <span<?php echo $t_jdw_krj_def->jk_id->ViewAttributes() ?>>
 <?php echo $t_jdw_krj_def->jk_id->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t_jdw_krj_def->scan_masuk->Visible) { // scan_masuk ?>
+	<tr id="r_scan_masuk">
+		<td><span id="elh_t_jdw_krj_def_scan_masuk"><?php echo $t_jdw_krj_def->scan_masuk->FldCaption() ?></span></td>
+		<td data-name="scan_masuk"<?php echo $t_jdw_krj_def->scan_masuk->CellAttributes() ?>>
+<span id="el_t_jdw_krj_def_scan_masuk">
+<span<?php echo $t_jdw_krj_def->scan_masuk->ViewAttributes() ?>>
+<?php echo $t_jdw_krj_def->scan_masuk->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t_jdw_krj_def->scan_keluar->Visible) { // scan_keluar ?>
+	<tr id="r_scan_keluar">
+		<td><span id="elh_t_jdw_krj_def_scan_keluar"><?php echo $t_jdw_krj_def->scan_keluar->FldCaption() ?></span></td>
+		<td data-name="scan_keluar"<?php echo $t_jdw_krj_def->scan_keluar->CellAttributes() ?>>
+<span id="el_t_jdw_krj_def_scan_keluar">
+<span<?php echo $t_jdw_krj_def->scan_keluar->ViewAttributes() ?>>
+<?php echo $t_jdw_krj_def->scan_keluar->ViewValue ?></span>
 </span>
 </td>
 	</tr>
