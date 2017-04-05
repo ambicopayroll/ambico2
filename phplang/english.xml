@@ -592,6 +592,9 @@
     <menu id="1">
       <phrase id="menutext" value="Data Finger Pegawai" />
     </menu>
+    <menu id="10073">
+      <phrase id="menutext" value="Scan Log" />
+    </menu>
     <menu id="10080">
       <phrase id="menutext" value="Generate Rekonsiliasi Absensi" />
     </menu>
@@ -805,6 +808,9 @@
     <menu id="10064">
       <phrase id="menutext" value="view 1" />
     </menu>
+    <menu id="10070">
+      <phrase id="menutext" value="Rekonsiliasi Absensi" />
+    </menu>
     <menu id="10066">
       <phrase id="menutext" value="kartu scanlog" />
     </menu>
@@ -816,9 +822,6 @@
     </menu>
     <menu id="10069">
       <phrase id="menutext" value="t jk" />
-    </menu>
-    <menu id="10070">
-      <phrase id="menutext" value="Rekonsiliasi Absensi" />
     </menu>
     <menu id="10071">
       <phrase id="menutext" value="v rekon" />

@@ -6,25 +6,25 @@ ob_start();
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "phprptinc/ewmysql.php") ?>
 <?php include_once "phprptinc/ewrfn10.php" ?>
 <?php include_once "phprptinc/ewrusrfn10.php" ?>
-<?php include_once "r_rekon2ctbinfo.php" ?>
+<?php include_once "r_scan_logsmryinfo.php" ?>
 <?php
 
 //
 // Page class
 //
 
-$r_rekon2_crosstab = NULL; // Initialize page object first
+$r_scan_log_summary = NULL; // Initialize page object first
 
-class crr_rekon2_crosstab extends crr_rekon2 {
+class crr_scan_log_summary extends crr_scan_log {
 
 	// Page ID
-	var $PageID = 'crosstab';
+	var $PageID = 'summary';
 
 	// Project ID
 	var $ProjectID = "{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}";
 
 	// Page object name
-	var $PageObjName = 'r_rekon2_crosstab';
+	var $PageObjName = 'r_scan_log_summary';
 
 	// Page name
 	function PageName() {
@@ -203,10 +203,10 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (r_rekon2)
-		if (!isset($GLOBALS["r_rekon2"])) {
-			$GLOBALS["r_rekon2"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["r_rekon2"];
+		// Table object (r_scan_log)
+		if (!isset($GLOBALS["r_scan_log"])) {
+			$GLOBALS["r_scan_log"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["r_scan_log"];
 		}
 
 		// Initialize URLs
@@ -217,11 +217,11 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 		// Page ID
 		if (!defined("EWR_PAGE_ID"))
-			define("EWR_PAGE_ID", 'crosstab', TRUE);
+			define("EWR_PAGE_ID", 'summary', TRUE);
 
 		// Table name (for backward compatibility)
 		if (!defined("EWR_TABLE_NAME"))
-			define("EWR_TABLE_NAME", 'r_rekon2', TRUE);
+			define("EWR_TABLE_NAME", 'r_scan_log', TRUE);
 
 		// Start timer
 		$GLOBALS["gsTimer"] = new crTimer();
@@ -248,7 +248,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Filter options
 		$this->FilterOptions = new crListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption fr_rekon2crosstab";
+		$this->FilterOptions->TagClassName = "ewFilterOption fr_scan_logsummary";
 
 		// Generate report options
 		$this->GenerateOptions = new crListOptions();
@@ -267,7 +267,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		$Security = new crAdvancedSecurity();
 		if (!$Security->IsLoggedIn()) $Security->AutoLogin(); // Auto login
 		$Security->TablePermission_Loading();
-		$Security->LoadCurrentUserLevel($this->ProjectID . 'r_rekon2');
+		$Security->LoadCurrentUserLevel($this->ProjectID . 'r_scan_log');
 		$Security->TablePermission_Loaded();
 		if (!$Security->CanList()) {
 			$Security->SaveLastUrl();
@@ -293,8 +293,8 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		$gsEmailContentType = @$_POST["contenttype"]; // Get email content type
 
 		// Setup placeholder
-		$this->pegawai_nama->PlaceHolder = $this->pegawai_nama->FldCaption();
-		$this->tgl->PlaceHolder = $this->tgl->FldCaption();
+		$this->scan_date->PlaceHolder = $this->scan_date->FldCaption();
+		$this->pin->PlaceHolder = $this->pin->FldCaption();
 
 		// Setup export options
 		$this->SetupExportOptions();
@@ -355,7 +355,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = $this->PageUrl() . "export=email";
-		$item->Body = "<a title=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" data-caption=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" id=\"emf_r_rekon2\" href=\"javascript:void(0);\" onclick=\"ewr_EmailDialogShow({lnk:'emf_r_rekon2',hdr:ewLanguage.Phrase('ExportToEmail'),url:'$url',exportid:'$exportid',el:this});\">" . $ReportLanguage->Phrase("ExportToEmail") . "</a>";
+		$item->Body = "<a title=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" data-caption=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" id=\"emf_r_scan_log\" href=\"javascript:void(0);\" onclick=\"ewr_EmailDialogShow({lnk:'emf_r_scan_log',hdr:ewLanguage.Phrase('ExportToEmail'),url:'$url',exportid:'$exportid',el:this});\">" . $ReportLanguage->Phrase("ExportToEmail") . "</a>";
 		$item->Visible = TRUE;
 		$ReportTypes["email"] = $item->Visible ? $ReportLanguage->Phrase("ReportFormEmail") : "";
 		$ReportOptions["ReportTypes"] = $ReportTypes;
@@ -373,10 +373,10 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fr_rekon2crosstab\" href=\"#\">" . $ReportLanguage->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fr_scan_logsummary\" href=\"#\">" . $ReportLanguage->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fr_rekon2crosstab\" href=\"#\">" . $ReportLanguage->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fr_scan_logsummary\" href=\"#\">" . $ReportLanguage->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton; // v8
@@ -410,7 +410,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Filter panel button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = $this->FilterApplied ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-caption=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-toggle=\"button\" data-form=\"fr_rekon2crosstab\">" . $ReportLanguage->Phrase("SearchBtn") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-caption=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-toggle=\"button\" data-form=\"fr_scan_logsummary\">" . $ReportLanguage->Phrase("SearchBtn") . "</button>";
 		$item->Visible = TRUE;
 
 		// Reset filter
@@ -491,7 +491,6 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 	var $ExportOptions; // Export options
 	var $SearchOptions; // Search options
 	var $FilterOptions; // Filter options
-	var $GenerateOptions; // Generate report options
 
 	// Paging variables
 	var $RecIndex = 0; // Record index
@@ -500,6 +499,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 	var $StopGrp = 0; // Stop group
 	var $TotalGrps = 0; // Total groups
 	var $GrpCount = 0; // Group count
+	var $GrpCounter = array(); // Group counter
 	var $DisplayGrps = 50; // Groups per page
 	var $GrpRange = 10;
 	var $Sort = "";
@@ -518,8 +518,13 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 	var $SearchCommand = FALSE;
 	var $ShowHeader;
 	var $GrpColumnCount = 0;
-	var $ColSpan;
+	var $SubGrpColumnCount = 0;
+	var $DtlColumnCount = 0;
+	var $Cnt, $Col, $Val, $Smry, $Mn, $Mx, $GrandCnt, $GrandSmry, $GrandMn, $GrandMx;
+	var $TotCount;
+	var $GrandSummarySetup = FALSE;
 	var $GrpIdx;
+	var $DetailRows = array();
 
 	//
 	// Page main
@@ -533,20 +538,35 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		global $ReportBreadcrumb;
 		global $ReportLanguage;
 
+		// Set field visibility for detail fields
+		$this->scan_date->SetVisibility();
+		$this->pin->SetVisibility();
+
+		// Aggregate variables
+		// 1st dimension = no of groups (level 0 used for grand total)
+		// 2nd dimension = no of fields
+
+		$nDtls = 3;
+		$nGrps = 1;
+		$this->Val = &ewr_InitArray($nDtls, 0);
+		$this->Cnt = &ewr_Init2DArray($nGrps, $nDtls, 0);
+		$this->Smry = &ewr_Init2DArray($nGrps, $nDtls, 0);
+		$this->Mn = &ewr_Init2DArray($nGrps, $nDtls, NULL);
+		$this->Mx = &ewr_Init2DArray($nGrps, $nDtls, NULL);
+		$this->GrandCnt = &ewr_InitArray($nDtls, 0);
+		$this->GrandSmry = &ewr_InitArray($nDtls, 0);
+		$this->GrandMn = &ewr_InitArray($nDtls, NULL);
+		$this->GrandMx = &ewr_InitArray($nDtls, NULL);
+
+		// Set up array if accumulation required: array(Accum, SkipNullOrZero)
+		$this->Col = array(array(FALSE, FALSE), array(FALSE,FALSE), array(FALSE,FALSE));
+
 		// Set up groups per page dynamically
 		$this->SetUpDisplayGrps();
 
 		// Set up Breadcrumb
 		if ($this->Export == "")
 			$this->SetupBreadcrumb();
-
-		// Get sort
-		$this->Sort = $this->GetSort($this->GenOptions);
-
-		// Popup values and selections
-		$this->tgl->SelectionList = "";
-		$this->tgl->DefaultSelectionList = "";
-		$this->tgl->ValueList = "";
 
 		// Check if search command
 		$this->SearchCommand = (@$_GET["cmd"] == "search");
@@ -560,21 +580,21 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Set up popup filter
 		$this->SetupPopup();
 
+		// Load group db values if necessary
+		$this->LoadGroupDbValues();
+
 		// Handle Ajax popup
 		$this->ProcessAjaxPopup();
-
-		// Restore filter list
-		$this->RestoreFilterList();
 
 		// Extended filter
 		$sExtendedFilter = "";
 
+		// Restore filter list
+		$this->RestoreFilterList();
+
 		// Build extended filter
 		$sExtendedFilter = $this->GetExtendedFilter();
 		ewr_AddFilter($this->Filter, $sExtendedFilter);
-
-		// Load columns to array
-		$this->GetColumns();
 
 		// Build popup filter
 		$sPopupFilter = $this->GetPopupFilter();
@@ -591,10 +611,12 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Search options
 		$this->SetupSearchOptions();
 
-		// Get total group count
-		$sGrpSort = ewr_UpdateSortFields($this->getSqlOrderByGroup(), $this->Sort, 2); // Get grouping field only
-		$sSql = ewr_BuildReportSql($this->getSqlSelectGroup(), $this->getSqlWhere(), $this->getSqlGroupBy(), "", $this->getSqlOrderByGroup(), $this->Filter, $sGrpSort);
-		$this->TotalGrps = $this->GetGrpCnt($sSql);
+		// Get sort
+		$this->Sort = $this->GetSort($this->GenOptions);
+
+		// Get total count
+		$sSql = ewr_BuildReportSql($this->getSqlSelect(), $this->getSqlWhere(), $this->getSqlGroupBy(), $this->getSqlHaving(), $this->getSqlOrderBy(), $this->Filter, $this->Sort);
+		$this->TotalGrps = $this->GetCnt($sSql);
 		if ($this->DisplayGrps <= 0 || $this->DrillDown) // Display all groups
 			$this->DisplayGrps = $this->TotalGrps;
 		$this->StartGrp = 1;
@@ -632,81 +654,115 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 			$this->GenerateOptions->HideAllOptions();
 		}
 
-		// Get total groups
-		$rsgrp = $this->GetGrpRs($sSql, $this->StartGrp, $this->DisplayGrps);
-
-		// Init detail recordset
-		$rs = NULL;
-
-		// Set up column attributes
-		$this->tgl->ViewAttrs["style"] = "";
-		$this->tgl->CellAttrs["style"] = "vertical-align: top;";
+		// Get current page records
+		$rs = $this->GetRs($sSql, $this->StartGrp, $this->DisplayGrps);
 		$this->SetupFieldCount();
 	}
 
-	// Get column values
-	function GetColumns() {
-		global $ReportLanguage;
-		$this->LoadColumnValues($this->Filter);
-
-		// Reset summary values
-		$this->ResetLevelSummary(0);
-
-		// Get active columns
-		if (!is_array($this->tgl->SelectionList)) {
-			$this->ColSpan = $this->ColCount;
-		} else {
-			$this->ColSpan = 0;
-			for ($i = 1; $i <= $this->ColCount; $i++) {
-				$bSelected = FALSE;
-				$cntsel = count($this->tgl->SelectionList);
-				for ($j = 0; $j < $cntsel; $j++) {
-					if (ewr_CompareValue($this->tgl->SelectionList[$j], $this->Col[$i]->Value, $this->tgl->FldType)) {
-						$this->ColSpan++;
-						$bSelected = TRUE;
-						break;
+	// Accummulate summary
+	function AccumulateSummary() {
+		$cntx = count($this->Smry);
+		for ($ix = 0; $ix < $cntx; $ix++) {
+			$cnty = count($this->Smry[$ix]);
+			for ($iy = 1; $iy < $cnty; $iy++) {
+				if ($this->Col[$iy][0]) { // Accumulate required
+					$valwrk = $this->Val[$iy];
+					if (is_null($valwrk)) {
+						if (!$this->Col[$iy][1])
+							$this->Cnt[$ix][$iy]++;
+					} else {
+						$accum = (!$this->Col[$iy][1] || !is_numeric($valwrk) || $valwrk <> 0);
+						if ($accum) {
+							$this->Cnt[$ix][$iy]++;
+							if (is_numeric($valwrk)) {
+								$this->Smry[$ix][$iy] += $valwrk;
+								if (is_null($this->Mn[$ix][$iy])) {
+									$this->Mn[$ix][$iy] = $valwrk;
+									$this->Mx[$ix][$iy] = $valwrk;
+								} else {
+									if ($this->Mn[$ix][$iy] > $valwrk) $this->Mn[$ix][$iy] = $valwrk;
+									if ($this->Mx[$ix][$iy] < $valwrk) $this->Mx[$ix][$iy] = $valwrk;
+								}
+							}
+						}
 					}
 				}
-				$this->Col[$i]->Visible = $bSelected;
+			}
+		}
+		$cntx = count($this->Smry);
+		for ($ix = 0; $ix < $cntx; $ix++) {
+			$this->Cnt[$ix][0]++;
+		}
+	}
+
+	// Reset level summary
+	function ResetLevelSummary($lvl) {
+
+		// Clear summary values
+		$cntx = count($this->Smry);
+		for ($ix = $lvl; $ix < $cntx; $ix++) {
+			$cnty = count($this->Smry[$ix]);
+			for ($iy = 1; $iy < $cnty; $iy++) {
+				$this->Cnt[$ix][$iy] = 0;
+				if ($this->Col[$iy][0]) {
+					$this->Smry[$ix][$iy] = 0;
+					$this->Mn[$ix][$iy] = NULL;
+					$this->Mx[$ix][$iy] = NULL;
+				}
+			}
+		}
+		$cntx = count($this->Smry);
+		for ($ix = $lvl; $ix < $cntx; $ix++) {
+			$this->Cnt[$ix][0] = 0;
+		}
+
+		// Reset record count
+		$this->RecCount = 0;
+	}
+
+	// Accummulate grand summary
+	function AccumulateGrandSummary() {
+		$this->TotCount++;
+		$cntgs = count($this->GrandSmry);
+		for ($iy = 1; $iy < $cntgs; $iy++) {
+			if ($this->Col[$iy][0]) {
+				$valwrk = $this->Val[$iy];
+				if (is_null($valwrk) || !is_numeric($valwrk)) {
+					if (!$this->Col[$iy][1])
+						$this->GrandCnt[$iy]++;
+				} else {
+					if (!$this->Col[$iy][1] || $valwrk <> 0) {
+						$this->GrandCnt[$iy]++;
+						$this->GrandSmry[$iy] += $valwrk;
+						if (is_null($this->GrandMn[$iy])) {
+							$this->GrandMn[$iy] = $valwrk;
+							$this->GrandMx[$iy] = $valwrk;
+						} else {
+							if ($this->GrandMn[$iy] > $valwrk) $this->GrandMn[$iy] = $valwrk;
+							if ($this->GrandMx[$iy] < $valwrk) $this->GrandMx[$iy] = $valwrk;
+						}
+					}
+				}
 			}
 		}
 	}
 
-	// Get group count
-	function GetGrpCnt($sql) {
+	// Get count
+	function GetCnt($sql) {
 		$conn = &$this->Connection();
-		$rsgrpcnt = $conn->Execute($sql);
-		$grpcnt = ($rsgrpcnt) ? $rsgrpcnt->RecordCount() : 0;
-		if ($rsgrpcnt) $rsgrpcnt->Close();
-		return $grpcnt;
+		$rscnt = $conn->Execute($sql);
+		$cnt = ($rscnt) ? $rscnt->RecordCount() : 0;
+		if ($rscnt) $rscnt->Close();
+		return $cnt;
 	}
 
-	// Get group recordset
-	function GetGrpRs($wrksql, $start = -1, $grps = -1) {
+	// Get recordset
+	function GetRs($wrksql, $start, $grps) {
 		$conn = &$this->Connection();
 		$conn->raiseErrorFn = $GLOBALS["EWR_ERROR_FN"];
 		$rswrk = $conn->SelectLimit($wrksql, $grps, $start - 1);
 		$conn->raiseErrorFn = '';
 		return $rswrk;
-	}
-
-	// Get group row values
-	function GetGrpRow($opt) {
-		global $rsgrp;
-		if (!$rsgrp)
-			return;
-		if ($opt == 1) { // Get first group
-
-	//		$rsgrp->MoveFirst(); // NOTE: no need to move position
-			$this->pegawai_nama->setDbValue(""); // Init first value
-		} else { // Get next group
-			$rsgrp->MoveNext();
-		}
-		if (!$rsgrp->EOF) {
-			$this->pegawai_nama->setDbValue($rsgrp->fields[0]);
-		} else {
-			$this->pegawai_nama->setDbValue("");
-		}
 	}
 
 	// Get row values
@@ -715,87 +771,40 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		if (!$rs)
 			return;
 		if ($opt == 1) { // Get first row
-
-	//		$rs->MoveFirst(); // NOTE: no need to move position
+			$rs->MoveFirst(); // Move first
+				$this->FirstRowData = array();
+				$this->FirstRowData['sn'] = ewr_Conv($rs->fields('sn'), 200);
+				$this->FirstRowData['scan_date'] = ewr_Conv($rs->fields('scan_date'), 135);
+				$this->FirstRowData['pin'] = ewr_Conv($rs->fields('pin'), 200);
+				$this->FirstRowData['verifymode'] = ewr_Conv($rs->fields('verifymode'), 3);
+				$this->FirstRowData['inoutmode'] = ewr_Conv($rs->fields('inoutmode'), 3);
+				$this->FirstRowData['reserved'] = ewr_Conv($rs->fields('reserved'), 3);
+				$this->FirstRowData['work_code'] = ewr_Conv($rs->fields('work_code'), 3);
+				$this->FirstRowData['att_id'] = ewr_Conv($rs->fields('att_id'), 200);
 		} else { // Get next row
 			$rs->MoveNext();
 		}
 		if (!$rs->EOF) {
-			if ($opt <> 1)
-				$this->pegawai_nama->setDbValue($rs->fields('pegawai_nama'));
-			$cntbase = 1;
-			$cnt = count($this->SummaryFields);
-			for ($is = 0; $is < $cnt; $is++) {
-				$smry = &$this->SummaryFields[$is];
-				$cntval = count($smry->SummaryVal);
-				for ($ix = 1; $ix < $cntval; $ix++) {
-					if ($smry->SummaryType == "AVG") {
-						$smry->SummaryVal[$ix] = $rs->fields[$ix*2+$cntbase-2];
-						$smry->SummaryValCnt[$ix] = $rs->fields[$ix*2+$cntbase-1];
-					} else {
-						$smry->SummaryVal[$ix] = $rs->fields[$ix+$cntbase-1];
-					}
-				}
-				$cntbase += ($smry->SummaryType == "AVG") ? 2*($cntval-1) : ($cntval-1);
-			}
+			$this->sn->setDbValue($rs->fields('sn'));
+			$this->scan_date->setDbValue($rs->fields('scan_date'));
+			$this->pin->setDbValue($rs->fields('pin'));
+			$this->verifymode->setDbValue($rs->fields('verifymode'));
+			$this->inoutmode->setDbValue($rs->fields('inoutmode'));
+			$this->reserved->setDbValue($rs->fields('reserved'));
+			$this->work_code->setDbValue($rs->fields('work_code'));
+			$this->att_id->setDbValue($rs->fields('att_id'));
+			$this->Val[1] = $this->scan_date->CurrentValue;
+			$this->Val[2] = $this->pin->CurrentValue;
 		} else {
-			$this->pegawai_nama->setDbValue("");
+			$this->sn->setDbValue("");
+			$this->scan_date->setDbValue("");
+			$this->pin->setDbValue("");
+			$this->verifymode->setDbValue("");
+			$this->inoutmode->setDbValue("");
+			$this->reserved->setDbValue("");
+			$this->work_code->setDbValue("");
+			$this->att_id->setDbValue("");
 		}
-	}
-
-	// Check level break
-	function ChkLvlBreak($lvl) {
-		switch ($lvl) {
-			case 1:
-				return (is_null($this->pegawai_nama->CurrentValue) && !is_null($this->pegawai_nama->OldValue)) ||
-					(!is_null($this->pegawai_nama->CurrentValue) && is_null($this->pegawai_nama->OldValue)) ||
-					($this->pegawai_nama->GroupValue() <> $this->pegawai_nama->GroupOldValue());
-		}
-	}
-
-	// Accummulate summary
-	function AccumulateSummary() {
-		$cnt = count($this->SummaryFields);
-		for ($is = 0; $is < $cnt; $is++) {
-			$smry = &$this->SummaryFields[$is];
-			$cntx = count($smry->SummarySmry);
-			for ($ix = 1; $ix < $cntx; $ix++) {
-				$cnty = count($smry->SummarySmry[$ix]);
-				for ($iy = 0; $iy < $cnty; $iy++) {
-					$valwrk = $smry->SummaryVal[$ix];
-					$smry->SummaryCnt[$ix][$iy]++;
-					$smry->SummarySmry[$ix][$iy] = ewr_SummaryValue($smry->SummarySmry[$ix][$iy], $valwrk, $smry->SummaryType);
-					if ($smry->SummaryType == "AVG") {
-						$cntwrk = $smry->SummaryValCnt[$ix];
-						$smry->SummarySmryCnt[$ix][$iy] += $cntwrk;
-					}
-				}
-			}
-		}
-	}
-
-	// Reset level summary
-	function ResetLevelSummary($lvl) {
-
-		// Clear summary values
-		$cnt = count($this->SummaryFields);
-		for ($is = 0; $is < $cnt; $is++) {
-			$smry = &$this->SummaryFields[$is];
-			$cntx = count($smry->SummarySmry);
-			for ($ix = 1; $ix < $cntx; $ix++) {
-				$cnty = count($smry->SummarySmry[$ix]);
-				for ($iy = $lvl; $iy < $cnty; $iy++) {
-					$smry->SummaryCnt[$ix][$iy] = 0;
-					$smry->SummarySmry[$ix][$iy] = $smry->SummaryInitValue;
-					if ($smry->SummaryType == "AVG") {
-						$smry->SummarySmryCnt[$ix][$iy] = 0;
-					}
-				}
-			}
-		}
-
-		// Reset record count
-		$this->RecCount = 0;
 	}
 
 	// Set up starting group
@@ -839,6 +848,11 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 			$this->StartGrp = intval(($this->StartGrp-1)/$this->DisplayGrps) * $this->DisplayGrps + 1; // Point to page boundary
 			$this->setStartGroup($this->StartGrp);
 		}
+	}
+
+	// Load group db values if necessary
+	function LoadGroupDbValues() {
+		$conn = &$this->Connection();
 	}
 
 	// Process Ajax popup
@@ -896,21 +910,11 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		} elseif (@$_GET["cmd"] <> "") {
 			$sCmd = $_GET["cmd"];
 			if (strtolower($sCmd) == "reset") {
-				$_SESSION["sel_r_rekon2_tgl"] = "";
-				$_SESSION["rf_r_rekon2_tgl"] = "";
-				$_SESSION["rt_r_rekon2_tgl"] = "";
 				$this->ResetPager();
 			}
 		}
 
 		// Load selection criteria to array
-		if (is_array(@$_SESSION["sel_r_rekon2_tgl"])) {
-			$this->tgl->SelectionList = @$_SESSION["sel_r_rekon2_tgl"];
-			$this->tgl->RangeFrom = @$_SESSION["rf_r_rekon2_tgl"];
-			$this->tgl->RangeTo = @$_SESSION["rt_r_rekon2_tgl"];
-		} elseif (@$_SESSION["sel_r_rekon2_tgl"] == EWR_INIT_VALUE) { // Select all
-			$this->tgl->SelectionList = "";
-		}
 	}
 
 	// Reset pager
@@ -950,68 +954,38 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 	// Render row
 	function RenderRow() {
-		global $Security, $ReportLanguage;
+		global $rs, $Security, $ReportLanguage;
 		$conn = &$this->Connection();
+		if (!$this->GrandSummarySetup) { // Get Grand total
+			$bGotCount = FALSE;
+			$bGotSummary = FALSE;
 
-		// Set up summary values
-		$colcnt = $this->ColCount;
-		$this->SummaryCellAttrs = &ewr_InitArray($colcnt, NULL);
-		$this->SummaryViewAttrs = &ewr_InitArray($colcnt, NULL);
-		$this->SummaryLinkAttrs = &ewr_InitArray($colcnt, NULL);
-		$this->SummaryCurrentValue = &ewr_InitArray($colcnt, NULL);
-		$this->SummaryViewValue = &ewr_InitArray($colcnt, NULL);
-		$cnt = count($this->SummaryFields);
-		for ($is = 0; $is < $cnt; $is++) {
-			$smry = &$this->SummaryFields[$is];
-			$smry->SummaryViewAttrs = &ewr_InitArray($colcnt, NULL);
-			$smry->SummaryLinkAttrs = &ewr_InitArray($colcnt, NULL);
-			$smry->SummaryCurrentValue = &ewr_InitArray($colcnt, NULL);
-			$smry->SummaryViewValue = &ewr_InitArray($colcnt, NULL);
-		}
-		if ($this->RowTotalType == EWR_ROWTOTAL_GRAND) { // Grand total
+			// Get total count from sql directly
+			$sSql = ewr_BuildReportSql($this->getSqlSelectCount(), $this->getSqlWhere(), $this->getSqlGroupBy(), $this->getSqlHaving(), "", $this->Filter, "");
+			$rstot = $conn->Execute($sSql);
+			if ($rstot) {
+				$this->TotCount = ($rstot->RecordCount()>1) ? $rstot->RecordCount() : $rstot->fields[0];
+				$rstot->Close();
+				$bGotCount = TRUE;
+			} else {
+				$this->TotCount = 0;
+			}
+		$bGotSummary = TRUE;
 
-			// Aggregate SQL
-			$sSql = ewr_BuildReportSql(str_replace("<DistinctColumnFields>", $this->DistinctColumnFields, $this->getSqlSelectAgg()), $this->getSqlWhere(), $this->getSqlGroupByAgg(), "", "", $this->Filter, "");
-			$rsagg = $conn->Execute($sSql);
-			if ($rsagg && !$rsagg->EOF) $rsagg->MoveFirst();
-		}
-		for ($i = 1; $i <= $this->ColCount; $i++) {
-			if ($this->Col[$i]->Visible) {
-				$cntbaseagg = 0;
-				$cnt = count($this->SummaryFields);
-				for ($is = 0; $is < $cnt; $is++) {
-					$smry = &$this->SummaryFields[$is];
-					if ($this->RowType == EWR_ROWTYPE_DETAIL) { // Detail row
-						$thisval = $smry->SummaryVal[$i];
-						if ($smry->SummaryType == "AVG")
-							$thiscnt = $smry->SummaryValCnt[$i];
-					} elseif ($this->RowTotalType == EWR_ROWTOTAL_GROUP) { // Group total
-						$thisval = $smry->SummarySmry[$i][$this->RowGroupLevel];
-						if ($smry->SummaryType == "AVG")
-							$thiscnt = $smry->SummarySmryCnt[$i][$this->RowGroupLevel];
-					} elseif ($this->RowTotalType == EWR_ROWTOTAL_PAGE) { // Page total
-						$thisval = $smry->SummarySmry[$i][0];
-						if ($smry->SummaryType == "AVG")
-							$thiscnt = $smry->SummarySmryCnt[$i][0];
-					} elseif ($this->RowTotalType == EWR_ROWTOTAL_GRAND) { // Grand total
-						if ($smry->SummaryType == "AVG") {
-							$thisval = ($rsagg && !$rsagg->EOF) ? $rsagg->fields[$i*2+$cntbaseagg-2] : 0;
-							$thiscnt = ($rsagg && !$rsagg->EOF) ? $rsagg->fields[$i*2+$cntbaseagg-1] : 0;
-							$cntbaseagg += $this->ColCount * 2;
-						} else {
-							$thisval = ($rsagg && !$rsagg->EOF) ? $rsagg->fields[$i+$cntbaseagg-1] : 0;
-							$cntbaseagg += $this->ColCount;
-						}
+			// Accumulate grand summary from detail records
+			if (!$bGotCount || !$bGotSummary) {
+				$sSql = ewr_BuildReportSql($this->getSqlSelect(), $this->getSqlWhere(), $this->getSqlGroupBy(), $this->getSqlHaving(), "", $this->Filter, "");
+				$rs = $conn->Execute($sSql);
+				if ($rs) {
+					$this->GetRow(1);
+					while (!$rs->EOF) {
+						$this->AccumulateGrandSummary();
+						$this->GetRow(2);
 					}
-					if ($smry->SummaryType == "AVG")
-						$smry->SummaryCurrentValue[$i-1] = ($thiscnt > 0) ? $thisval / $thiscnt : 0;
-					else
-						$smry->SummaryCurrentValue[$i-1] = $thisval;
+					$rs->Close();
 				}
 			}
-		}
-		if ($this->RowTotalType == EWR_ROWTOTAL_GRAND) { // Grand total
-			if ($rsagg) $rsagg->Close();
+			$this->GrandSummarySetup = TRUE; // No need to set up again
 		}
 
 		// Call Row_Rendering event
@@ -1021,131 +995,56 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Render view codes
 		//
 
-		if ($this->RowType == EWR_ROWTYPE_TOTAL) { // Summary row
+		if ($this->RowType == EWR_ROWTYPE_TOTAL && !($this->RowTotalType == EWR_ROWTOTAL_GROUP && $this->RowTotalSubType == EWR_ROWTOTAL_HEADER)) { // Summary row
+			ewr_PrependClass($this->RowAttrs["class"], ($this->RowTotalType == EWR_ROWTOTAL_PAGE || $this->RowTotalType == EWR_ROWTOTAL_GRAND) ? "ewRptGrpAggregate" : "ewRptGrpSummary" . $this->RowGroupLevel); // Set up row class
 
-			// pegawai_nama
-			$this->pegawai_nama->GroupViewValue = $this->pegawai_nama->GroupOldValue();
-			$this->pegawai_nama->CellAttrs["class"] = ($this->RowGroupLevel == 1) ? "ewRptGrpSummary1" : "ewRptGrpField1";
+			// scan_date
+			$this->scan_date->HrefValue = "";
 
-			// Set up summary values
-			$smry = &$this->SummaryFields[0];
-			$scvcnt = count($smry->SummaryCurrentValue);
-			for ($i = 0; $i < $scvcnt; $i++) {
-				$smry->SummaryViewValue[$i] = $smry->SummaryCurrentValue[$i];
-				$smry->SummaryViewAttrs[$i]["style"] = "";
-				$this->SummaryCellAttrs[$i]["class"] = ($this->RowTotalType == EWR_ROWTOTAL_GROUP) ? "ewRptGrpSummary" . $this->RowGroupLevel : "";
-			}
-
-			// Set up summary values
-			$smry = &$this->SummaryFields[1];
-			$scvcnt = count($smry->SummaryCurrentValue);
-			for ($i = 0; $i < $scvcnt; $i++) {
-				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
-				$smry->SummaryViewAttrs[$i]["style"] = "";
-				$this->SummaryCellAttrs[$i]["class"] = ($this->RowTotalType == EWR_ROWTOTAL_GROUP) ? "ewRptGrpSummary" . $this->RowGroupLevel : "";
-			}
-
-			// Set up summary values
-			$smry = &$this->SummaryFields[2];
-			$scvcnt = count($smry->SummaryCurrentValue);
-			for ($i = 0; $i < $scvcnt; $i++) {
-				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
-				$smry->SummaryViewAttrs[$i]["style"] = "";
-				$this->SummaryCellAttrs[$i]["class"] = ($this->RowTotalType == EWR_ROWTOTAL_GROUP) ? "ewRptGrpSummary" . $this->RowGroupLevel : "";
-			}
-
-			// pegawai_nama
-			$this->pegawai_nama->HrefValue = "";
+			// pin
+			$this->pin->HrefValue = "";
 		} else {
-
-			// pegawai_nama
-			$this->pegawai_nama->GroupViewValue = $this->pegawai_nama->GroupValue();
-			$this->pegawai_nama->CellAttrs["class"] = "ewRptGrpField1";
-			if ($this->pegawai_nama->GroupValue() == $this->pegawai_nama->GroupOldValue() && !$this->ChkLvlBreak(1))
-				$this->pegawai_nama->GroupViewValue = "&nbsp;";
-
-			// Set up summary values
-			$smry = &$this->SummaryFields[0];
-			$scvcnt = count($smry->SummaryCurrentValue);
-			for ($i = 0; $i < $scvcnt; $i++) {
-				$smry->SummaryViewValue[$i] = $smry->SummaryCurrentValue[$i];
-				$smry->SummaryViewAttrs[$i]["style"] = "";
-				$this->SummaryCellAttrs[$i]["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
+			if ($this->RowTotalType == EWR_ROWTOTAL_GROUP && $this->RowTotalSubType == EWR_ROWTOTAL_HEADER) {
+			} else {
 			}
 
-			// Set up summary values
-			$smry = &$this->SummaryFields[1];
-			$scvcnt = count($smry->SummaryCurrentValue);
-			for ($i = 0; $i < $scvcnt; $i++) {
-				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
-				$smry->SummaryViewAttrs[$i]["style"] = "";
-				$this->SummaryCellAttrs[$i]["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
-			}
+			// scan_date
+			$this->scan_date->ViewValue = $this->scan_date->CurrentValue;
+			$this->scan_date->ViewValue = ewr_FormatDateTime($this->scan_date->ViewValue, 1);
+			$this->scan_date->CellAttrs["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
 
-			// Set up summary values
-			$smry = &$this->SummaryFields[2];
-			$scvcnt = count($smry->SummaryCurrentValue);
-			for ($i = 0; $i < $scvcnt; $i++) {
-				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
-				$smry->SummaryViewAttrs[$i]["style"] = "";
-				$this->SummaryCellAttrs[$i]["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
-			}
+			// pin
+			$this->pin->ViewValue = $this->pin->CurrentValue;
+			$this->pin->CellAttrs["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
 
-			// pegawai_nama
-			$this->pegawai_nama->HrefValue = "";
+			// scan_date
+			$this->scan_date->HrefValue = "";
+
+			// pin
+			$this->pin->HrefValue = "";
 		}
 
 		// Call Cell_Rendered event
 		if ($this->RowType == EWR_ROWTYPE_TOTAL) { // Summary row
-
-			// pegawai_nama
-			$this->CurrentIndex = 0; // Current index
-			$CurrentValue = $this->pegawai_nama->GroupOldValue();
-			$ViewValue = &$this->pegawai_nama->GroupViewValue;
-			$ViewAttrs = &$this->pegawai_nama->ViewAttrs;
-			$CellAttrs = &$this->pegawai_nama->CellAttrs;
-			$HrefValue = &$this->pegawai_nama->HrefValue;
-			$LinkAttrs = &$this->pegawai_nama->LinkAttrs;
-			$this->Cell_Rendered($this->pegawai_nama, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
-			for ($i = 0; $i < $scvcnt; $i++) {
-				$this->CurrentIndex = $i;
-				$cnt = count($this->SummaryFields);
-				for ($is = 0; $is < $cnt; $is++) {
-					$smry = &$this->SummaryFields[$is];
-					$CurrentValue = $smry->SummaryCurrentValue[$i];
-					$ViewValue = &$smry->SummaryViewValue[$i];
-					$ViewAttrs = &$smry->SummaryViewAttrs[$i];
-					$CellAttrs = &$this->SummaryCellAttrs[$i];
-					$HrefValue = "";
-					$LinkAttrs = &$smry->SummaryLinkAttrs[$i];
-					$this->Cell_Rendered($smry, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
-				}
-			}
 		} else {
 
-			// pegawai_nama
-			$this->CurrentIndex = 0; // Group index
-			$CurrentValue = $this->pegawai_nama->GroupValue();
-			$ViewValue = &$this->pegawai_nama->GroupViewValue;
-			$ViewAttrs = &$this->pegawai_nama->ViewAttrs;
-			$CellAttrs = &$this->pegawai_nama->CellAttrs;
-			$HrefValue = &$this->pegawai_nama->HrefValue;
-			$LinkAttrs = &$this->pegawai_nama->LinkAttrs;
-			$this->Cell_Rendered($this->pegawai_nama, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
-			for ($i = 0; $i < $scvcnt; $i++) {
-				$this->CurrentIndex = $i;
-				$cnt = count($this->SummaryFields);
-				for ($is = 0; $is < $cnt; $is++) {
-					$smry = &$this->SummaryFields[$is];
-					$CurrentValue = $smry->SummaryCurrentValue[$i];
-					$ViewValue = &$smry->SummaryViewValue[$i];
-					$ViewAttrs = &$smry->SummaryViewAttrs[$i];
-					$CellAttrs = &$this->SummaryCellAttrs[$i];
-					$HrefValue = "";
-					$LinkAttrs = &$smry->SummaryLinkAttrs[$i];
-					$this->Cell_Rendered($smry, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
-				}
-			}
+			// scan_date
+			$CurrentValue = $this->scan_date->CurrentValue;
+			$ViewValue = &$this->scan_date->ViewValue;
+			$ViewAttrs = &$this->scan_date->ViewAttrs;
+			$CellAttrs = &$this->scan_date->CellAttrs;
+			$HrefValue = &$this->scan_date->HrefValue;
+			$LinkAttrs = &$this->scan_date->LinkAttrs;
+			$this->Cell_Rendered($this->scan_date, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+
+			// pin
+			$CurrentValue = $this->pin->CurrentValue;
+			$ViewValue = &$this->pin->ViewValue;
+			$ViewAttrs = &$this->pin->ViewAttrs;
+			$CellAttrs = &$this->pin->CellAttrs;
+			$HrefValue = &$this->pin->HrefValue;
+			$LinkAttrs = &$this->pin->LinkAttrs;
+			$this->Cell_Rendered($this->pin, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
 		}
 
 		// Call Row_Rendered event
@@ -1156,7 +1055,10 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 	// Setup field count
 	function SetupFieldCount() {
 		$this->GrpColumnCount = 0;
-		if ($this->pegawai_nama->Visible) $this->GrpColumnCount += 1;
+		$this->SubGrpColumnCount = 0;
+		$this->DtlColumnCount = 0;
+		if ($this->scan_date->Visible) $this->DtlColumnCount += 1;
+		if ($this->pin->Visible) $this->DtlColumnCount += 1;
 	}
 
 	// Set up Breadcrumb
@@ -1165,7 +1067,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		$ReportBreadcrumb = new crBreadcrumb();
 		$url = substr(ewr_CurrentUrl(), strrpos(ewr_CurrentUrl(), "/")+1);
 		$url = preg_replace('/\?cmd=reset(all){0,1}$/i', '', $url); // Remove cmd=reset / cmd=resetall
-		$ReportBreadcrumb->Add("crosstab", $this->TableVar, $url, "", $this->TableVar, TRUE);
+		$ReportBreadcrumb->Add("summary", $this->TableVar, $url, "", $this->TableVar, TRUE);
 	}
 
 	function SetupExportOptionsExt() {
@@ -1198,20 +1100,20 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		} elseif (@$_GET["cmd"] == "reset") {
 
 			// Load default values
-			$this->SetSessionFilterValues($this->pegawai_nama->SearchValue, $this->pegawai_nama->SearchOperator, $this->pegawai_nama->SearchCondition, $this->pegawai_nama->SearchValue2, $this->pegawai_nama->SearchOperator2, 'pegawai_nama'); // Field pegawai_nama
-			$this->SetSessionFilterValues($this->tgl->SearchValue, $this->tgl->SearchOperator, $this->tgl->SearchCondition, $this->tgl->SearchValue2, $this->tgl->SearchOperator2, 'tgl'); // Field tgl
+			$this->SetSessionFilterValues($this->scan_date->SearchValue, $this->scan_date->SearchOperator, $this->scan_date->SearchCondition, $this->scan_date->SearchValue2, $this->scan_date->SearchOperator2, 'scan_date'); // Field scan_date
+			$this->SetSessionFilterValues($this->pin->SearchValue, $this->pin->SearchOperator, $this->pin->SearchCondition, $this->pin->SearchValue2, $this->pin->SearchOperator2, 'pin'); // Field pin
 
 			//$bSetupFilter = TRUE; // No need to set up, just use default
 		} else {
 			$bRestoreSession = !$this->SearchCommand;
 
-			// Field pegawai_nama
-			if ($this->GetFilterValues($this->pegawai_nama)) {
+			// Field scan_date
+			if ($this->GetFilterValues($this->scan_date)) {
 				$bSetupFilter = TRUE;
 			}
 
-			// Field tgl
-			if ($this->GetFilterValues($this->tgl)) {
+			// Field pin
+			if ($this->GetFilterValues($this->pin)) {
 				$bSetupFilter = TRUE;
 			}
 			if (!$this->ValidateForm()) {
@@ -1222,20 +1124,20 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 		// Restore session
 		if ($bRestoreSession) {
-			$this->GetSessionFilterValues($this->pegawai_nama); // Field pegawai_nama
-			$this->GetSessionFilterValues($this->tgl); // Field tgl
+			$this->GetSessionFilterValues($this->scan_date); // Field scan_date
+			$this->GetSessionFilterValues($this->pin); // Field pin
 		}
 
 		// Call page filter validated event
 		$this->Page_FilterValidated();
 
 		// Build SQL
-		$this->BuildExtendedFilter($this->pegawai_nama, $sFilter, FALSE, TRUE); // Field pegawai_nama
-		$this->BuildExtendedFilter($this->tgl, $sFilter, FALSE, TRUE); // Field tgl
+		$this->BuildExtendedFilter($this->scan_date, $sFilter, FALSE, TRUE); // Field scan_date
+		$this->BuildExtendedFilter($this->pin, $sFilter, FALSE, TRUE); // Field pin
 
 		// Save parms to session
-		$this->SetSessionFilterValues($this->pegawai_nama->SearchValue, $this->pegawai_nama->SearchOperator, $this->pegawai_nama->SearchCondition, $this->pegawai_nama->SearchValue2, $this->pegawai_nama->SearchOperator2, 'pegawai_nama'); // Field pegawai_nama
-		$this->SetSessionFilterValues($this->tgl->SearchValue, $this->tgl->SearchOperator, $this->tgl->SearchCondition, $this->tgl->SearchValue2, $this->tgl->SearchOperator2, 'tgl'); // Field tgl
+		$this->SetSessionFilterValues($this->scan_date->SearchValue, $this->scan_date->SearchOperator, $this->scan_date->SearchCondition, $this->scan_date->SearchValue2, $this->scan_date->SearchOperator2, 'scan_date'); // Field scan_date
+		$this->SetSessionFilterValues($this->pin->SearchValue, $this->pin->SearchOperator, $this->pin->SearchCondition, $this->pin->SearchValue2, $this->pin->SearchOperator2, 'pin'); // Field pin
 
 		// Setup filter
 		if ($bSetupFilter) {
@@ -1439,18 +1341,18 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 	// Get dropdown value from session
 	function GetSessionDropDownValue(&$fld) {
 		$parm = substr($fld->FldVar, 2);
-		$this->GetSessionValue($fld->DropDownValue, 'sv_r_rekon2_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator, 'so_r_rekon2_' . $parm);
+		$this->GetSessionValue($fld->DropDownValue, 'sv_r_scan_log_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator, 'so_r_scan_log_' . $parm);
 	}
 
 	// Get filter values from session
 	function GetSessionFilterValues(&$fld) {
 		$parm = substr($fld->FldVar, 2);
-		$this->GetSessionValue($fld->SearchValue, 'sv_r_rekon2_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator, 'so_r_rekon2_' . $parm);
-		$this->GetSessionValue($fld->SearchCondition, 'sc_r_rekon2_' . $parm);
-		$this->GetSessionValue($fld->SearchValue2, 'sv2_r_rekon2_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator2, 'so2_r_rekon2_' . $parm);
+		$this->GetSessionValue($fld->SearchValue, 'sv_r_scan_log_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator, 'so_r_scan_log_' . $parm);
+		$this->GetSessionValue($fld->SearchCondition, 'sc_r_scan_log_' . $parm);
+		$this->GetSessionValue($fld->SearchValue2, 'sv2_r_scan_log_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator2, 'so2_r_scan_log_' . $parm);
 	}
 
 	// Get value from session
@@ -1461,17 +1363,17 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 	// Set dropdown value to session
 	function SetSessionDropDownValue($sv, $so, $parm) {
-		$_SESSION['sv_r_rekon2_' . $parm] = $sv;
-		$_SESSION['so_r_rekon2_' . $parm] = $so;
+		$_SESSION['sv_r_scan_log_' . $parm] = $sv;
+		$_SESSION['so_r_scan_log_' . $parm] = $so;
 	}
 
 	// Set filter values to session
 	function SetSessionFilterValues($sv1, $so1, $sc, $sv2, $so2, $parm) {
-		$_SESSION['sv_r_rekon2_' . $parm] = $sv1;
-		$_SESSION['so_r_rekon2_' . $parm] = $so1;
-		$_SESSION['sc_r_rekon2_' . $parm] = $sc;
-		$_SESSION['sv2_r_rekon2_' . $parm] = $sv2;
-		$_SESSION['so2_r_rekon2_' . $parm] = $so2;
+		$_SESSION['sv_r_scan_log_' . $parm] = $sv1;
+		$_SESSION['so_r_scan_log_' . $parm] = $so1;
+		$_SESSION['sc_r_scan_log_' . $parm] = $sc;
+		$_SESSION['sv2_r_scan_log_' . $parm] = $sv2;
+		$_SESSION['so2_r_scan_log_' . $parm] = $so2;
 	}
 
 	// Check if has Session filter values
@@ -1505,13 +1407,13 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Check if validation required
 		if (!EWR_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!ewr_CheckDateDef($this->tgl->SearchValue)) {
+		if (!ewr_CheckDateDef($this->scan_date->SearchValue)) {
 			if ($gsFormError <> "") $gsFormError .= "<br>";
-			$gsFormError .= $this->tgl->FldErrMsg();
+			$gsFormError .= $this->scan_date->FldErrMsg();
 		}
-		if (!ewr_CheckDateDef($this->tgl->SearchValue2)) {
+		if (!ewr_CheckDateDef($this->scan_date->SearchValue2)) {
 			if ($gsFormError <> "") $gsFormError .= "<br>";
-			$gsFormError .= $this->tgl->FldErrMsg();
+			$gsFormError .= $this->scan_date->FldErrMsg();
 		}
 
 		// Return validate result
@@ -1529,17 +1431,17 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 	// Clear selection stored in session
 	function ClearSessionSelection($parm) {
-		$_SESSION["sel_r_rekon2_$parm"] = "";
-		$_SESSION["rf_r_rekon2_$parm"] = "";
-		$_SESSION["rt_r_rekon2_$parm"] = "";
+		$_SESSION["sel_r_scan_log_$parm"] = "";
+		$_SESSION["rf_r_scan_log_$parm"] = "";
+		$_SESSION["rt_r_scan_log_$parm"] = "";
 	}
 
 	// Load selection from session
 	function LoadSelectionFromSession($parm) {
 		$fld = &$this->fields($parm);
-		$fld->SelectionList = @$_SESSION["sel_r_rekon2_$parm"];
-		$fld->RangeFrom = @$_SESSION["rf_r_rekon2_$parm"];
-		$fld->RangeTo = @$_SESSION["rt_r_rekon2_$parm"];
+		$fld->SelectionList = @$_SESSION["sel_r_scan_log_$parm"];
+		$fld->RangeFrom = @$_SESSION["rf_r_scan_log_$parm"];
+		$fld->RangeTo = @$_SESSION["rt_r_scan_log_$parm"];
 	}
 
 	// Load default value for filters
@@ -1559,13 +1461,13 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		* $sv2 - Default ext filter value 2 (if operator 2 is enabled)
 		*/
 
-		// Field pegawai_nama
-		$this->SetDefaultExtFilter($this->pegawai_nama, "=", NULL, 'AND', "=", NULL);
-		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->pegawai_nama);
+		// Field scan_date
+		$this->SetDefaultExtFilter($this->scan_date, "BETWEEN", NULL, 'AND', "=", NULL);
+		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->scan_date);
 
-		// Field tgl
-		$this->SetDefaultExtFilter($this->tgl, "BETWEEN", NULL, 'AND', "=", NULL);
-		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->tgl);
+		// Field pin
+		$this->SetDefaultExtFilter($this->pin, "LIKE", NULL, 'AND', "=", NULL);
+		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->pin);
 		/**
 		* Set up default values for popup filters
 		*/
@@ -1574,12 +1476,12 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 	// Check if filter applied
 	function CheckFilter() {
 
-		// Check pegawai_nama text filter
-		if ($this->TextFilterApplied($this->pegawai_nama))
+		// Check scan_date text filter
+		if ($this->TextFilterApplied($this->scan_date))
 			return TRUE;
 
-		// Check tgl text filter
-		if ($this->TextFilterApplied($this->tgl))
+		// Check pin text filter
+		if ($this->TextFilterApplied($this->pin))
 			return TRUE;
 		return FALSE;
 	}
@@ -1591,29 +1493,29 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Initialize
 		$sFilterList = "";
 
-		// Field pegawai_nama
+		// Field scan_date
 		$sExtWrk = "";
 		$sWrk = "";
-		$this->BuildExtendedFilter($this->pegawai_nama, $sExtWrk);
+		$this->BuildExtendedFilter($this->scan_date, $sExtWrk);
 		$sFilter = "";
 		if ($sExtWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sExtWrk</span>";
 		elseif ($sWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sWrk</span>";
 		if ($sFilter <> "")
-			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->pegawai_nama->FldCaption() . "</span>" . $sFilter . "</div>";
+			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->scan_date->FldCaption() . "</span>" . $sFilter . "</div>";
 
-		// Field tgl
+		// Field pin
 		$sExtWrk = "";
 		$sWrk = "";
-		$this->BuildExtendedFilter($this->tgl, $sExtWrk);
+		$this->BuildExtendedFilter($this->pin, $sExtWrk);
 		$sFilter = "";
 		if ($sExtWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sExtWrk</span>";
 		elseif ($sWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sWrk</span>";
 		if ($sFilter <> "")
-			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->tgl->FldCaption() . "</span>" . $sFilter . "</div>";
+			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->pin->FldCaption() . "</span>" . $sFilter . "</div>";
 		$divstyle = "";
 		$divdataclass = "";
 
@@ -1636,28 +1538,28 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Initialize
 		$sFilterList = "";
 
-		// Field pegawai_nama
+		// Field scan_date
 		$sWrk = "";
-		if ($this->pegawai_nama->SearchValue <> "" || $this->pegawai_nama->SearchValue2 <> "") {
-			$sWrk = "\"sv_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchValue) . "\"," .
-				"\"so_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchOperator) . "\"," .
-				"\"sc_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchCondition) . "\"," .
-				"\"sv2_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchValue2) . "\"," .
-				"\"so2_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchOperator2) . "\"";
+		if ($this->scan_date->SearchValue <> "" || $this->scan_date->SearchValue2 <> "") {
+			$sWrk = "\"sv_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchValue) . "\"," .
+				"\"so_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchOperator) . "\"," .
+				"\"sc_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchCondition) . "\"," .
+				"\"sv2_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchValue2) . "\"," .
+				"\"so2_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchOperator2) . "\"";
 		}
 		if ($sWrk <> "") {
 			if ($sFilterList <> "") $sFilterList .= ",";
 			$sFilterList .= $sWrk;
 		}
 
-		// Field tgl
+		// Field pin
 		$sWrk = "";
-		if ($this->tgl->SearchValue <> "" || $this->tgl->SearchValue2 <> "") {
-			$sWrk = "\"sv_tgl\":\"" . ewr_JsEncode2($this->tgl->SearchValue) . "\"," .
-				"\"so_tgl\":\"" . ewr_JsEncode2($this->tgl->SearchOperator) . "\"," .
-				"\"sc_tgl\":\"" . ewr_JsEncode2($this->tgl->SearchCondition) . "\"," .
-				"\"sv2_tgl\":\"" . ewr_JsEncode2($this->tgl->SearchValue2) . "\"," .
-				"\"so2_tgl\":\"" . ewr_JsEncode2($this->tgl->SearchOperator2) . "\"";
+		if ($this->pin->SearchValue <> "" || $this->pin->SearchValue2 <> "") {
+			$sWrk = "\"sv_pin\":\"" . ewr_JsEncode2($this->pin->SearchValue) . "\"," .
+				"\"so_pin\":\"" . ewr_JsEncode2($this->pin->SearchOperator) . "\"," .
+				"\"sc_pin\":\"" . ewr_JsEncode2($this->pin->SearchCondition) . "\"," .
+				"\"sv2_pin\":\"" . ewr_JsEncode2($this->pin->SearchValue2) . "\"," .
+				"\"so2_pin\":\"" . ewr_JsEncode2($this->pin->SearchOperator2) . "\"";
 		}
 		if ($sWrk <> "") {
 			if ($sFilterList <> "") $sFilterList .= ",";
@@ -1686,28 +1588,28 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		if (!is_array($filter))
 			return FALSE;
 
-		// Field pegawai_nama
+		// Field scan_date
 		$bRestoreFilter = FALSE;
-		if (array_key_exists("sv_pegawai_nama", $filter) || array_key_exists("so_pegawai_nama", $filter) ||
-			array_key_exists("sc_pegawai_nama", $filter) ||
-			array_key_exists("sv2_pegawai_nama", $filter) || array_key_exists("so2_pegawai_nama", $filter)) {
-			$this->SetSessionFilterValues(@$filter["sv_pegawai_nama"], @$filter["so_pegawai_nama"], @$filter["sc_pegawai_nama"], @$filter["sv2_pegawai_nama"], @$filter["so2_pegawai_nama"], "pegawai_nama");
+		if (array_key_exists("sv_scan_date", $filter) || array_key_exists("so_scan_date", $filter) ||
+			array_key_exists("sc_scan_date", $filter) ||
+			array_key_exists("sv2_scan_date", $filter) || array_key_exists("so2_scan_date", $filter)) {
+			$this->SetSessionFilterValues(@$filter["sv_scan_date"], @$filter["so_scan_date"], @$filter["sc_scan_date"], @$filter["sv2_scan_date"], @$filter["so2_scan_date"], "scan_date");
 			$bRestoreFilter = TRUE;
 		}
 		if (!$bRestoreFilter) { // Clear filter
-			$this->SetSessionFilterValues("", "=", "AND", "", "=", "pegawai_nama");
+			$this->SetSessionFilterValues("", "=", "AND", "", "=", "scan_date");
 		}
 
-		// Field tgl
+		// Field pin
 		$bRestoreFilter = FALSE;
-		if (array_key_exists("sv_tgl", $filter) || array_key_exists("so_tgl", $filter) ||
-			array_key_exists("sc_tgl", $filter) ||
-			array_key_exists("sv2_tgl", $filter) || array_key_exists("so2_tgl", $filter)) {
-			$this->SetSessionFilterValues(@$filter["sv_tgl"], @$filter["so_tgl"], @$filter["sc_tgl"], @$filter["sv2_tgl"], @$filter["so2_tgl"], "tgl");
+		if (array_key_exists("sv_pin", $filter) || array_key_exists("so_pin", $filter) ||
+			array_key_exists("sc_pin", $filter) ||
+			array_key_exists("sv2_pin", $filter) || array_key_exists("so2_pin", $filter)) {
+			$this->SetSessionFilterValues(@$filter["sv_pin"], @$filter["so_pin"], @$filter["sc_pin"], @$filter["sv2_pin"], @$filter["so2_pin"], "pin");
 			$bRestoreFilter = TRUE;
 		}
 		if (!$bRestoreFilter) { // Clear filter
-			$this->SetSessionFilterValues("", "=", "AND", "", "=", "tgl");
+			$this->SetSessionFilterValues("", "=", "AND", "", "=", "pin");
 		}
 		return TRUE;
 	}
@@ -1738,13 +1640,15 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		if ($bResetSort) {
 			$this->setOrderBy("");
 			$this->setStartGroup(1);
-			$this->pegawai_nama->setSort("");
+			$this->scan_date->setSort("");
+			$this->pin->setSort("");
 
 		// Check for an Order parameter
 		} elseif ($orderBy <> "") {
 			$this->CurrentOrder = $orderBy;
 			$this->CurrentOrderType = $orderType;
-			$this->UpdateSort($this->pegawai_nama, $bCtrl); // pegawai_nama
+			$this->UpdateSort($this->scan_date, $bCtrl); // scan_date
+			$this->UpdateSort($this->pin, $bCtrl); // pin
 			$sSortSql = $this->SortSql();
 			$this->setOrderBy($sSortSql);
 			$this->setStartGroup(1);
@@ -2019,9 +1923,9 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 <?php
 
 // Create page object
-if (!isset($r_rekon2_crosstab)) $r_rekon2_crosstab = new crr_rekon2_crosstab();
+if (!isset($r_scan_log_summary)) $r_scan_log_summary = new crr_scan_log_summary();
 if (isset($Page)) $OldPage = $Page;
-$Page = &$r_rekon2_crosstab;
+$Page = &$r_scan_log_summary;
 
 // Page init
 $Page->Page_Init();
@@ -2041,21 +1945,21 @@ $Page->Page_Render();
 <script type="text/javascript">
 
 // Create page object
-var r_rekon2_crosstab = new ewr_Page("r_rekon2_crosstab");
+var r_scan_log_summary = new ewr_Page("r_scan_log_summary");
 
 // Page properties
-r_rekon2_crosstab.PageID = "crosstab"; // Page ID
-var EWR_PAGE_ID = r_rekon2_crosstab.PageID;
+r_scan_log_summary.PageID = "summary"; // Page ID
+var EWR_PAGE_ID = r_scan_log_summary.PageID;
 
 // Extend page with Chart_Rendering function
-r_rekon2_crosstab.Chart_Rendering = 
+r_scan_log_summary.Chart_Rendering = 
  function(chart, chartid) { // DO NOT CHANGE THIS LINE!
 
  	//alert(chartid);
  }
 
 // Extend page with Chart_Rendered function
-r_rekon2_crosstab.Chart_Rendered = 
+r_scan_log_summary.Chart_Rendered = 
  function(chart, chartid) { // DO NOT CHANGE THIS LINE!
 
  	//alert(chartid);
@@ -2066,21 +1970,21 @@ r_rekon2_crosstab.Chart_Rendered =
 <script type="text/javascript">
 
 // Form object
-var CurrentForm = fr_rekon2crosstab = new ewr_Form("fr_rekon2crosstab");
+var CurrentForm = fr_scan_logsummary = new ewr_Form("fr_scan_logsummary");
 
 // Validate method
-fr_rekon2crosstab.Validate = function() {
+fr_scan_logsummary.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
-	var elm = fobj.sv_tgl;
+	var elm = fobj.sv_scan_date;
 	if (elm && !ewr_CheckDateDef(elm.value)) {
-		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->tgl->FldErrMsg()) ?>"))
+		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->scan_date->FldErrMsg()) ?>"))
 			return false;
 	}
-	var elm = fobj.sv2_tgl;
+	var elm = fobj.sv2_scan_date;
 	if (elm && !ewr_CheckDateDef(elm.value)) {
-		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->tgl->FldErrMsg()) ?>"))
+		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->scan_date->FldErrMsg()) ?>"))
 			return false;
 	}
 
@@ -2091,16 +1995,16 @@ fr_rekon2crosstab.Validate = function() {
 }
 
 // Form_CustomValidate method
-fr_rekon2crosstab.Form_CustomValidate = 
+fr_scan_logsummary.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
  	return true;
  }
 <?php if (EWR_CLIENT_VALIDATE) { ?>
-fr_rekon2crosstab.ValidateRequired = true; // Uses JavaScript validation
+fr_scan_logsummary.ValidateRequired = true; // Uses JavaScript validation
 <?php } else { ?>
-fr_rekon2crosstab.ValidateRequired = false; // No JavaScript validation
+fr_scan_logsummary.ValidateRequired = false; // No JavaScript validation
 <?php } ?>
 
 // Use Ajax
@@ -2111,8 +2015,6 @@ fr_rekon2crosstab.ValidateRequired = false; // No JavaScript validation
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php } ?>
-<?php if ($Page->Export == "" && !$Page->DrillDown) { ?>
 <?php } ?>
 <?php if ($Page->Export == "") { ?>
 <!-- container (begin) -->
@@ -2146,50 +2048,50 @@ if (!$Page->DrillDownInPanel) {
 <?php $Page->ShowMessage(); ?>
 <?php if ($Page->Export == "") { ?>
 </div>
-<!-- Top container (end) -->
+<!-- top container (end) -->
 	<!-- left container (begin) -->
 	<div id="ewLeft" class="ewLeft">
 <?php } ?>
-	<!-- left slot -->
+	<!-- Left slot -->
 <?php if ($Page->Export == "") { ?>
 	</div>
 	<!-- left container (end) -->
-	<!-- center container (report) (begin) -->
+	<!-- center container - report (begin) -->
 	<div id="ewCenter" class="ewCenter">
 <?php } ?>
 	<!-- center slot -->
-<!-- crosstab report starts -->
+<!-- summary report starts -->
 <?php if ($Page->Export <> "pdf") { ?>
-<div id="report_crosstab">
+<div id="report_summary">
 <?php } ?>
 <?php if ($Page->Export == "" && !$Page->DrillDown) { ?>
 <!-- Search form (begin) -->
-<form name="fr_rekon2crosstab" id="fr_rekon2crosstab" class="form-inline ewForm ewExtFilterForm" action="<?php echo ewr_CurrentPage() ?>">
+<form name="fr_scan_logsummary" id="fr_scan_logsummary" class="form-inline ewForm ewExtFilterForm" action="<?php echo ewr_CurrentPage() ?>">
 <?php $SearchPanelClass = ($Page->Filter <> "") ? " in" : " in"; ?>
-<div id="fr_rekon2crosstab_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<div id="fr_scan_logsummary_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
 <div id="r_1" class="ewRow">
-<div id="c_pegawai_nama" class="ewCell form-group">
-	<label for="sv_pegawai_nama" class="ewSearchCaption ewLabel"><?php echo $Page->pegawai_nama->FldCaption() ?></label>
-	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("="); ?><input type="hidden" name="so_pegawai_nama" id="so_pegawai_nama" value="="></span>
+<div id="c_scan_date" class="ewCell form-group">
+	<label for="sv_scan_date" class="ewSearchCaption ewLabel"><?php echo $Page->scan_date->FldCaption() ?></label>
+	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("BETWEEN"); ?><input type="hidden" name="so_scan_date" id="so_scan_date" value="BETWEEN"></span>
 	<span class="control-group ewSearchField">
-<?php ewr_PrependClass($Page->pegawai_nama->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon2" data-field="x_pegawai_nama" id="sv_pegawai_nama" name="sv_pegawai_nama" size="30" maxlength="255" placeholder="<?php echo $Page->pegawai_nama->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->pegawai_nama->SearchValue) ?>"<?php echo $Page->pegawai_nama->EditAttributes() ?>>
+<?php ewr_PrependClass($Page->scan_date->EditAttrs["class"], "form-control"); // PR8 ?>
+<input type="text" data-table="r_scan_log" data-field="x_scan_date" id="sv_scan_date" name="sv_scan_date" placeholder="<?php echo $Page->scan_date->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->scan_date->SearchValue) ?>" data-calendar="true" data-formatid="1"<?php echo $Page->scan_date->EditAttributes() ?>>
+</span>
+	<span class="ewSearchCond btw1_scan_date"><?php echo $ReportLanguage->Phrase("AND") ?></span>
+	<span class="ewSearchField btw1_scan_date">
+<?php ewr_PrependClass($Page->scan_date->EditAttrs["class"], "form-control"); // PR8 ?>
+<input type="text" data-table="r_scan_log" data-field="x_scan_date" id="sv2_scan_date" name="sv2_scan_date" placeholder="<?php echo $Page->scan_date->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->scan_date->SearchValue2) ?>" data-calendar="true" data-formatid="1"<?php echo $Page->scan_date->EditAttributes() ?>>
 </span>
 </div>
 </div>
 <div id="r_2" class="ewRow">
-<div id="c_tgl" class="ewCell form-group">
-	<label for="sv_tgl" class="ewSearchCaption ewLabel"><?php echo $Page->tgl->FldCaption() ?></label>
-	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("BETWEEN"); ?><input type="hidden" name="so_tgl" id="so_tgl" value="BETWEEN"></span>
+<div id="c_pin" class="ewCell form-group">
+	<label for="sv_pin" class="ewSearchCaption ewLabel"><?php echo $Page->pin->FldCaption() ?></label>
+	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("LIKE"); ?><input type="hidden" name="so_pin" id="so_pin" value="LIKE"></span>
 	<span class="control-group ewSearchField">
-<?php ewr_PrependClass($Page->tgl->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon2" data-field="x_tgl" id="sv_tgl" name="sv_tgl" placeholder="<?php echo $Page->tgl->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl->SearchValue) ?>" data-calendar="true" data-formatid="0"<?php echo $Page->tgl->EditAttributes() ?>>
-</span>
-	<span class="ewSearchCond btw1_tgl"><?php echo $ReportLanguage->Phrase("AND") ?></span>
-	<span class="ewSearchField btw1_tgl">
-<?php ewr_PrependClass($Page->tgl->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon2" data-field="x_tgl" id="sv2_tgl" name="sv2_tgl" placeholder="<?php echo $Page->tgl->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->tgl->SearchValue2) ?>" data-calendar="true" data-formatid="0"<?php echo $Page->tgl->EditAttributes() ?>>
+<?php ewr_PrependClass($Page->pin->EditAttrs["class"], "form-control"); // PR8 ?>
+<input type="text" data-table="r_scan_log" data-field="x_pin" id="sv_pin" name="sv_pin" size="30" maxlength="32" placeholder="<?php echo $Page->pin->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->pin->SearchValue) ?>"<?php echo $Page->pin->EditAttributes() ?>>
 </span>
 </div>
 </div>
@@ -2198,8 +2100,8 @@ if (!$Page->DrillDownInPanel) {
 </div>
 </form>
 <script type="text/javascript">
-fr_rekon2crosstab.Init();
-fr_rekon2crosstab.FilterList = <?php echo $Page->GetFilterList() ?>;
+fr_scan_logsummary.Init();
+fr_scan_logsummary.FilterList = <?php echo $Page->GetFilterList() ?>;
 </script>
 <!-- Search form (end) -->
 <?php } ?>
@@ -2216,43 +2118,26 @@ if ($Page->ExportAll && $Page->Export <> "") {
 }
 
 // Stop group <= total number of groups
-if (intval($Page->StopGrp) > intval($Page->TotalGrps)) {
+if (intval($Page->StopGrp) > intval($Page->TotalGrps))
 	$Page->StopGrp = $Page->TotalGrps;
-}
-
-// Navigate
 $Page->RecCount = 0;
 $Page->RecIndex = 0;
 
 // Get first row
 if ($Page->TotalGrps > 0) {
-	$Page->GetGrpRow(1);
+	$Page->GetRow(1);
 	$Page->GrpCount = 1;
 }
-while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page->ShowHeader) {
+$Page->GrpIdx = ewr_InitArray(2, -1);
+$Page->GrpIdx[0] = -1;
+$Page->GrpIdx[1] = $Page->StopGrp - $Page->StartGrp + 1;
+while ($rs && !$rs->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page->ShowHeader) {
 
+	// Show dummy header for custom template
 	// Show header
+
 	if ($Page->ShowHeader) {
 ?>
-<?php if ($Page->GrpCount > 1) { ?>
-</tbody>
-</table>
-<?php if ($Page->Export <> "pdf") { ?>
-</div>
-<?php } ?>
-<?php if ($Page->TotalGrps > 0) { ?>
-<?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
-<div class="panel-footer ewGridLowerPanel">
-<?php include "r_rekon2ctbpager.php" ?>
-<div class="clearfix"></div>
-</div>
-<?php } ?>
-<?php } ?>
-<?php if ($Page->Export <> "pdf") { ?>
-</div>
-<?php } ?>
-<?php echo $Page->PageBreakContent ?>
-<?php } ?>
 <?php if ($Page->Export <> "pdf") { ?>
 <?php if ($Page->Export == "word" || $Page->Export == "excel") { ?>
 <div class="ewGrid"<?php echo $Page->ReportTableStyle ?>>
@@ -2262,7 +2147,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <?php } ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-heading ewGridUpperPanel">
-<?php include "r_rekon2ctbpager.php" ?>
+<?php include "r_scan_logsmrypager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -2274,50 +2159,42 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <thead>
 	<!-- Table header -->
 	<tr class="ewTableHeader">
-<?php if ($Page->GrpColumnCount > 0) { ?>
-		<td class="ewRptColSummary" colspan="<?php echo $Page->GrpColumnCount ?>"><div><?php echo $Page->RenderSummaryCaptions() ?></div></td>
-<?php } ?>
-		<td class="ewRptColHeader" colspan="<?php echo @$Page->ColSpan ?>">
-			<div class="ewTableHeaderBtn">
-				<span class="ewTableHeaderCaption"><?php echo $Page->tgl->FldCaption() ?></span>
-			</div>
-		</td>
-	</tr>
-	<tr class="ewTableHeader">
-<?php if ($Page->pegawai_nama->Visible) { ?>
+<?php if ($Page->scan_date->Visible) { ?>
 <?php if ($Page->Export <> "" || $Page->DrillDown) { ?>
-	<td data-field="pegawai_nama">
-		<div class="r_rekon2_pegawai_nama"><span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span></div>
-	</td>
+	<td data-field="scan_date"><div class="r_scan_log_scan_date"><span class="ewTableHeaderCaption"><?php echo $Page->scan_date->FldCaption() ?></span></div></td>
 <?php } else { ?>
-	<td data-field="pegawai_nama">
-<?php if ($Page->SortUrl($Page->pegawai_nama) == "") { ?>
-		<div class="ewTableHeaderBtn r_rekon2_pegawai_nama">
-			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span>			
+	<td data-field="scan_date">
+<?php if ($Page->SortUrl($Page->scan_date) == "") { ?>
+		<div class="ewTableHeaderBtn r_scan_log_scan_date">
+			<span class="ewTableHeaderCaption"><?php echo $Page->scan_date->FldCaption() ?></span>
 		</div>
 <?php } else { ?>
-		<div class="ewTableHeaderBtn ewPointer r_rekon2_pegawai_nama" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->pegawai_nama) ?>',2);">
-			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span>
-			<span class="ewTableHeaderSort"><?php if ($Page->pegawai_nama->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->pegawai_nama->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
+		<div class="ewTableHeaderBtn ewPointer r_scan_log_scan_date" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->scan_date) ?>',2);">
+			<span class="ewTableHeaderCaption"><?php echo $Page->scan_date->FldCaption() ?></span>
+			<span class="ewTableHeaderSort"><?php if ($Page->scan_date->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->scan_date->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
 		</div>
 <?php } ?>
 	</td>
 <?php } ?>
 <?php } ?>
-<!-- Dynamic columns begin -->
-<?php
-	$cntval = count($Page->Col);
-	for ($iy = 1; $iy < $cntval; $iy++) {
-		if ($Page->Col[$iy]->Visible) {
-			$Page->SummaryCurrentValue[$iy-1] = $Page->Col[$iy]->Caption;
-			$Page->SummaryViewValue[$iy-1] = tgl_indo($Page->SummaryCurrentValue[$iy-1]);
-?>
-		<td class="ewTableHeader"<?php echo $Page->tgl->CellAttributes() ?>><div<?php echo $Page->tgl->ViewAttributes() ?>><?php echo $Page->SummaryViewValue[$iy-1]; ?></div></td>
-<?php
-		}
-	}
-?>
-<!-- Dynamic columns end -->
+<?php if ($Page->pin->Visible) { ?>
+<?php if ($Page->Export <> "" || $Page->DrillDown) { ?>
+	<td data-field="pin"><div class="r_scan_log_pin"><span class="ewTableHeaderCaption"><?php echo $Page->pin->FldCaption() ?></span></div></td>
+<?php } else { ?>
+	<td data-field="pin">
+<?php if ($Page->SortUrl($Page->pin) == "") { ?>
+		<div class="ewTableHeaderBtn r_scan_log_pin">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pin->FldCaption() ?></span>
+		</div>
+<?php } else { ?>
+		<div class="ewTableHeaderBtn ewPointer r_scan_log_pin" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->pin) ?>',2);">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pin->FldCaption() ?></span>
+			<span class="ewTableHeaderSort"><?php if ($Page->pin->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->pin->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
+		</div>
+<?php } ?>
+	</td>
+<?php } ?>
+<?php } ?>
 	</tr>
 </thead>
 <tbody>
@@ -2325,48 +2202,25 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 		if ($Page->TotalGrps == 0) break; // Show header only
 		$Page->ShowHeader = FALSE;
 	}
+	$Page->RecCount++;
+	$Page->RecIndex++;
+?>
+<?php
 
-	// Build detail SQL
-	$sWhere = ewr_DetailFilterSQL($Page->pegawai_nama, $Page->getSqlFirstGroupField(), $Page->pegawai_nama->GroupValue(), $Page->DBID);
-	if ($Page->PageFirstGroupFilter <> "") $Page->PageFirstGroupFilter .= " OR ";
-	$Page->PageFirstGroupFilter .= $sWhere;
-	if ($Page->Filter != "")
-		$sWhere = "($Page->Filter) AND ($sWhere)";
-	$sSql = ewr_BuildReportSql(str_replace("<DistinctColumnFields>", $Page->DistinctColumnFields, $Page->getSqlSelect()), $Page->getSqlWhere(), $Page->getSqlGroupBy(), "", $Page->getSqlOrderBy(), $sWhere, $Page->Sort);
-	$rs = $conn->Execute($sSql);
-	$rsdtlcnt = ($rs) ? $rs->RecordCount() : 0;
-	if ($rsdtlcnt > 0)
-		$Page->GetRow(1);
-	while ($rs && !$rs->EOF) {
-		$Page->RecCount++;
-		$Page->RecIndex++;
-
-		// Render row
+		// Render detail row
 		$Page->ResetAttrs();
 		$Page->RowType = EWR_ROWTYPE_DETAIL;
 		$Page->RenderRow();
 ?>
 	<tr<?php echo $Page->RowAttributes(); ?>>
-<?php if ($Page->pegawai_nama->Visible) { ?>
-		<!-- pegawai_nama -->
-		<td data-field="pegawai_nama"<?php echo $Page->pegawai_nama->CellAttributes(); ?>>
-<span data-class="tpx<?php echo $Page->GrpCount ?>_r_rekon2_pegawai_nama"<?php echo $Page->pegawai_nama->ViewAttributes() ?>><?php echo $Page->pegawai_nama->GroupViewValue ?></span></td>
+<?php if ($Page->scan_date->Visible) { ?>
+		<td data-field="scan_date"<?php echo $Page->scan_date->CellAttributes() ?>>
+<span data-class="tpx<?php echo $Page->GrpCount ?>_<?php echo $Page->RecCount ?>_r_scan_log_scan_date"<?php echo $Page->scan_date->ViewAttributes() ?>><?php echo $Page->scan_date->ListViewValue() ?></span></td>
 <?php } ?>
-<!-- Dynamic columns begin -->
-<?php
-		$cntcol = count($Page->SummaryViewValue);
-		for ($iy = 1; $iy <= $cntcol; $iy++) {
-			$bColShow = ($iy <= $Page->ColCount) ? $Page->Col[$iy]->Visible : TRUE;
-			$sColDesc = ($iy <= $Page->ColCount) ? $Page->Col[$iy]->Caption : $ReportLanguage->Phrase("Summary");
-			if ($bColShow) {
-?>
-		<!-- <?php echo $sColDesc; ?> -->
-		<td<?php echo $Page->SummaryCellAttributes($iy-1) ?>><?php echo $Page->RenderSummaryFields($iy-1) ?></td>
-<?php
-			}
-		}
-?>
-<!-- Dynamic columns end -->
+<?php if ($Page->pin->Visible) { ?>
+		<td data-field="pin"<?php echo $Page->pin->CellAttributes() ?>>
+<span data-class="tpx<?php echo $Page->GrpCount ?>_<?php echo $Page->RecCount ?>_r_scan_log_pin"<?php echo $Page->pin->ViewAttributes() ?>><?php echo $Page->pin->ListViewValue() ?></span></td>
+<?php } ?>
 	</tr>
 <?php
 
@@ -2375,31 +2229,22 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 
 		// Get next record
 		$Page->GetRow(2);
-?>
-<?php
-	} // End detail records loop
-?>
-<?php
-	$Page->GetGrpRow(2);
-
-	// Show header if page break
-	if ($Page->Export <> "")
-		$Page->ShowHeader = ($Page->ExportPageBreakCount == 0) ? FALSE : ($Page->GrpCount % $Page->ExportPageBreakCount == 0);
-
-	// Page_Breaking server event
-	if ($Page->ShowHeader)
-		$Page->Page_Breaking($Page->ShowHeader, $Page->PageBreakContent);
 	$Page->GrpCount++;
-
-	// Handle EOF
-	if (!$rsgrp || $rsgrp->EOF)
-		$Page->ShowHeader = FALSE;
-}
+} // End while
 ?>
 <?php if ($Page->TotalGrps > 0) { ?>
 </tbody>
 <tfoot>
-</tfoot>
+<?php
+	$Page->ResetAttrs();
+	$Page->RowType = EWR_ROWTYPE_TOTAL;
+	$Page->RowTotalType = EWR_ROWTOTAL_GRAND;
+	$Page->RowTotalSubType = EWR_ROWTOTAL_FOOTER;
+	$Page->RowAttrs["class"] = "ewRptGrandSummary";
+	$Page->RenderRow();
+?>
+	<tr<?php echo $Page->RowAttributes() ?>><td colspan="<?php echo ($Page->GrpColumnCount + $Page->DtlColumnCount) ?>"><?php echo $ReportLanguage->Phrase("RptGrandSummary") ?> <span class="ewDirLtr">(<?php echo ewr_FormatNumber($Page->TotCount,0,-2,-2,-2); ?><?php echo $ReportLanguage->Phrase("RptDtlRec") ?>)</span></td></tr>
+	</tfoot>
 <?php } elseif (!$Page->ShowHeader && FALSE) { // No header displayed ?>
 <?php if ($Page->Export <> "pdf") { ?>
 <?php if ($Page->Export == "word" || $Page->Export == "excel") { ?>
@@ -2410,7 +2255,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <?php } ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-heading ewGridUpperPanel">
-<?php include "r_rekon2ctbpager.php" ?>
+<?php include "r_scan_logsmrypager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -2428,7 +2273,7 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <?php if ($Page->TotalGrps > 0) { ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-footer ewGridLowerPanel">
-<?php include "r_rekon2ctbpager.php" ?>
+<?php include "r_scan_logsmrypager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -2440,10 +2285,10 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 <?php if ($Page->Export <> "pdf") { ?>
 </div>
 <?php } ?>
-<!-- Crosstab report ends -->
+<!-- Summary Report Ends -->
 <?php if ($Page->Export == "") { ?>
 	</div>
-	<!-- center container (report) (end) -->
+	<!-- center container - report (end) -->
 	<!-- right container (begin) -->
 	<div id="ewRight" class="ewRight">
 <?php } ?>
@@ -2458,9 +2303,9 @@ while ($rsgrp && !$rsgrp->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page-
 	<!-- Bottom slot -->
 <?php if ($Page->Export == "") { ?>
 	</div>
-<!-- Bottom container (end) -->
+<!-- Bottom Container (End) -->
 </div>
-<!-- container (end) -->
+<!-- Table Container (End) -->
 <?php } ?>
 <?php $Page->ShowPageFooter(); ?>
 <?php if (EWR_DEBUG_ENABLED) echo ewr_DebugMsg(); ?>

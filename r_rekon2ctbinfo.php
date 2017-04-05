@@ -432,7 +432,7 @@ class crr_rekon2 extends crTableCrosstab {
 		// 2nd dimension = no of distinct values
 
 		$nGrps = 1;
-		$this->SummaryFields[0] = new crSummaryField('x_scan_masuk', 'scan_masuk', '`scan_masuk`', 'MAX');
+		$this->SummaryFields[0] = new crSummaryField('x_jk_kd', 'jk_kd', '`jk_kd`', 'MAX');
 		$this->SummaryFields[0]->SummaryCaption = $ReportLanguage->Phrase("RptMax");
 		$this->SummaryFields[0]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
 		$this->SummaryFields[0]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);
@@ -440,7 +440,7 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->SummaryFields[0]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[0]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[0]->SummaryInitValue = NULL;
-		$this->SummaryFields[1] = new crSummaryField('x_scan_keluar', 'scan_keluar', '`scan_keluar`', 'MAX');
+		$this->SummaryFields[1] = new crSummaryField('x_scan_masuk', 'scan_masuk', '`scan_masuk`', 'MAX');
 		$this->SummaryFields[1]->SummaryCaption = $ReportLanguage->Phrase("RptMax");
 		$this->SummaryFields[1]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
 		$this->SummaryFields[1]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);
@@ -448,6 +448,14 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->SummaryFields[1]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[1]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[1]->SummaryInitValue = NULL;
+		$this->SummaryFields[2] = new crSummaryField('x_scan_keluar', 'scan_keluar', '`scan_keluar`', 'MAX');
+		$this->SummaryFields[2]->SummaryCaption = $ReportLanguage->Phrase("RptMax");
+		$this->SummaryFields[2]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
+		$this->SummaryFields[2]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);
+		$this->SummaryFields[2]->SummaryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[2]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[2]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[2]->SummaryInitValue = NULL;
 
 		// Update crosstab sql
 		$sSqlFlds = "";
