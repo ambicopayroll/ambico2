@@ -311,7 +311,7 @@ Page_Rendering();
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<form id="myform" name="myform" class="form-horizontal" method="post" action="rekon.php">
+<form id="myform" name="myform" class="form-horizontal" method="post" action="rekon1.php">
 	<div id="r_start" class="form-group">
 		<label for="start" class="col-sm-2 control-label ewLabel">Date Start</label>
 		<div class="col-sm-10">
