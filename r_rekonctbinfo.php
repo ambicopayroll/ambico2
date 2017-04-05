@@ -23,7 +23,7 @@ class crr_rekon extends crTableCrosstab {
 		$this->TableName = 'r_rekon';
 		$this->TableType = 'REPORT';
 		$this->DBID = 'DB';
-		$this->ExportAll = FALSE;
+		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0;
 
 		// jdw_id
@@ -46,7 +46,7 @@ class crr_rekon extends crTableCrosstab {
 		$this->pegawai_id->SqlOrderBy = "";
 
 		// tgl
-		$this->tgl = new crField('r_rekon', 'r_rekon', 'x_tgl', 'tgl', '`tgl`', 133, EWR_DATATYPE_DATE, 0);
+		$this->tgl = new crField('r_rekon', 'r_rekon', 'x_tgl', 'tgl', '`tgl`', 133, EWR_DATATYPE_DATE, -1);
 		$this->tgl->Sortable = TRUE; // Allow sort
 		$this->tgl->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_FORMAT"], $ReportLanguage->Phrase("IncorrectDate"));
 		$this->fields['tgl'] = &$this->tgl;

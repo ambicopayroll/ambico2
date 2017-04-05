@@ -23,7 +23,7 @@ class crt_user extends crTableBase {
 		$this->TableName = 't_user';
 		$this->TableType = 'TABLE';
 		$this->DBID = 'DB';
-		$this->ExportAll = FALSE;
+		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0;
 
 		// user_id

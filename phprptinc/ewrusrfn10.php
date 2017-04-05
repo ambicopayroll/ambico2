@@ -41,7 +41,6 @@ function ewr_CurrentHost() {
 }
 
 function tgl_indo($tgl) {
-	if ($tgl == null) return "";
 	$a_namabln = array(
 		1 => "Jan",
 		"Feb",
@@ -54,14 +53,23 @@ function tgl_indo($tgl) {
 		"Sep",
 		"Okt",
 		"Nov",
-		"Des"
-	);
+		"Des");
+	$a_hari = array(
+		"Min",
+		"Sen",
+		"Sel",
+		"Rab",
+		"Kam",
+		"Jum",
+		"Sab");
 	$tgl_data = strtotime($tgl);
 
 	//$tgl_data = $tgl;
 	$tanggal = date("d", $tgl_data);
 	$bulan = $a_namabln[intval(date("m", $tgl_data))];
 	$tahun = date("Y", $tgl_data);
-	return $tanggal." ".$bulan." ".$tahun;
+
+	//$hari = date("w", $tgl);
+	return $a_hari[date("w", $tgl_data)].", ".$tanggal." ".$bulan." ".$tahun;
 }
 ?>
