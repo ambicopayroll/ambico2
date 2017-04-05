@@ -315,14 +315,14 @@ Page_Rendering();
 	<body>
 		<form action="rekon.php">
 			<?php
-			if ($_GET["ok"] == "1") {
-				echo "Selesai";
-			}
-			else {
+			//if ($_GET["ok"] == "1") {
+			//	echo "Selesai";
+			//}
+			//else {
 			?>
 				<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Generate Rekonsiliasi</button>
 			<?php
-			}
+			//}
 			?>
 		</form>
 	</body>
