@@ -17,11 +17,11 @@ $msql = "
 		left join t_jk b on a.jk_id = b.jk_id
 		left join pegawai c on a.pegawai_id = c.pegawai_id
 	where
-		a.pegawai_id = 295
+		a.tgl between cast('".$_POST["start"]."' as date) and cast('".$_POST["end"]."' as date)
 		and (
 		isnull(scan_masuk)
 		or isnull(scan_keluar))
-	";
+	"; //echo $msql; exit;
 $mquery = mysql_query($msql);
 if (mysql_num_rows($mquery) < 0) {
 	exit;	

@@ -845,6 +845,9 @@
         <ExtTable TblName="rekon_.php">
           <Properties><![CDATA[[{"Id":"Add","Type":"Boolean","Value":"1"},{"Id":"Edit","Type":"Boolean","Value":"1"},{"Id":"Delete","Type":"Boolean","Value":"1"},{"Id":"View","Type":"Boolean","Value":"0"},{"Id":"ViewData","Type":"Boolean","Value":"0"},{"Id":"Search","Type":"Boolean","Value":"0"}]]]></Properties>
         </ExtTable>
+        <ExtTable TblName="v_rekon">
+          <Properties><![CDATA[[{"Id":"Add","Type":"Boolean","Value":"1"},{"Id":"Edit","Type":"Boolean","Value":"1"},{"Id":"Delete","Type":"Boolean","Value":"1"},{"Id":"View","Type":"Boolean","Value":"0"},{"Id":"ViewData","Type":"Boolean","Value":"0"},{"Id":"Search","Type":"Boolean","Value":"0"}]]]></Properties>
+        </ExtTable>
         <Properties><![CDATA[[]]]></Properties>
       </ExtDatabase>
       <Properties><![CDATA[[]]]></Properties>
@@ -1373,32 +1376,14 @@ function Database_Connecting(&$info) {
 	</body>
 </html>
 ]]></CustomScript>
-  <CustomScript ScriptType="Template" ScriptCodeType="Table" ScriptName="Content" ScriptCtrlID="custom" ScriptL1Key="rekon_.php" ScriptL2Key=""><![CDATA[<html>
-	<body>
-		<form action="rekon.php">
-			<?php
-			//if ($_GET["ok"] == "1") {
-			//	echo "Selesai";
-			//}
-			//else {
-			?>
-				<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Generate Rekonsiliasi</button>
-			<?php
-			//}
-			?>
-		</form>
-	</body>
-</html>
-
-<!--
-<form id="myform" name="myform" class="form-horizontal" method="post" action="rekon.php">
+  <CustomScript ScriptType="Template" ScriptCodeType="Table" ScriptName="Content" ScriptCtrlID="custom" ScriptL1Key="rekon_.php" ScriptL2Key=""><![CDATA[<form id="myform" name="myform" class="form-horizontal" method="post" action="rekon.php">
 	<div id="r_start" class="form-group">
 		<label for="start" class="col-sm-2 control-label ewLabel">Date Start</label>
 		<div class="col-sm-10">
 		  <span id="el_calendar_start">
-		  <input type="text" name="start" data-field="start" data-format="7" size="20" class="form-control" id="start">
+		  <input type="text" name="start" data-field="start" data-format="5" size="20" class="form-control" id="start">
 		  <script type="text/javascript">
-			ew_CreateCalendar("myform", "start", 7);
+			ew_CreateCalendar("myform", "start", 5);
 		  </script>
 		  </span>
 		</div>
@@ -1407,16 +1392,15 @@ function Database_Connecting(&$info) {
 		<label for="end" class="col-sm-2 control-label ewLabel">Date End</label>
 		<div class="col-sm-10">
 		  <span id="el_calendar_end">
-		  <input type="text" name="end" data-field="end" data-format="7" size="20" class="form-control" id="end">
+		  <input type="text" name="end" data-field="end" data-format="5" size="20" class="form-control" id="end">
 		  <script type="text/javascript">
-			ew_CreateCalendar("myform", "end", 7);
+			ew_CreateCalendar("myform", "end", 5);
 		  </script>
 		  </span>
 		</div>
 	</div>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Submit</button>
 </form>
--->
 ]]></CustomScript>
   <Menu MenuID="64" MenuText="Dashboard" MenuParentID="-1" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="0" MenuSecurity="" MenuUrl="dashboard.php" MenuCustomUrl="0" MenuLevel="0" MenuShow="1" MenuDisplayOrder="100" />
   <Menu MenuID="129" MenuText="Absensi" MenuParentID="-1" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="8" MenuSecurity="" MenuUrl="" MenuCustomUrl="1" MenuLevel="0" MenuShow="1" MenuDisplayOrder="200" />

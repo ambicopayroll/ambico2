@@ -77,7 +77,7 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->jk_id->SqlOrderBy = "";
 
 		// scan_masuk
-		$this->scan_masuk = new crField('r_rekon2', 'r_rekon2', 'x_scan_masuk', 'scan_masuk', '`scan_masuk`', 135, EWR_DATATYPE_DATE, 0);
+		$this->scan_masuk = new crField('r_rekon2', 'r_rekon2', 'x_scan_masuk', 'scan_masuk', '`scan_masuk`', 135, EWR_DATATYPE_DATE, 1);
 		$this->scan_masuk->Sortable = TRUE; // Allow sort
 		$this->scan_masuk->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_FORMAT"], $ReportLanguage->Phrase("IncorrectDate"));
 		$this->fields['scan_masuk'] = &$this->scan_masuk;
@@ -86,7 +86,7 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->scan_masuk->SqlOrderBy = "";
 
 		// scan_keluar
-		$this->scan_keluar = new crField('r_rekon2', 'r_rekon2', 'x_scan_keluar', 'scan_keluar', '`scan_keluar`', 135, EWR_DATATYPE_DATE, 0);
+		$this->scan_keluar = new crField('r_rekon2', 'r_rekon2', 'x_scan_keluar', 'scan_keluar', '`scan_keluar`', 135, EWR_DATATYPE_DATE, 1);
 		$this->scan_keluar->Sortable = TRUE; // Allow sort
 		$this->scan_keluar->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_FORMAT"], $ReportLanguage->Phrase("IncorrectDate"));
 		$this->fields['scan_keluar'] = &$this->scan_keluar;
