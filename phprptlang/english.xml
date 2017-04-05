@@ -369,7 +369,7 @@
       <phrase id="menutext" value="v rekon" />
     </menu>
     <menu id="72">
-      <phrase id="menutext" value="Rekonsiliasi Absensi #2" />
+      <phrase id="menutext" value="Laporan Rekonsiliasi Absensi" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="att log" />
@@ -2277,7 +2277,7 @@
       </field>
     </table>
     <table id="r_rekon2">
-      <phrase id="tblcaption" value="Rekonsiliasi Absensi #2" />
+      <phrase id="tblcaption" value="Laporan Rekonsiliasi Absensi" />
       <field id="jdw_id">
         <phrase id="fldcaption" value="jdw id" />
       </field>

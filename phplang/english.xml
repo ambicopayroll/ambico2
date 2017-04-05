@@ -592,11 +592,11 @@
     <menu id="1">
       <phrase id="menutext" value="Data Finger Pegawai" />
     </menu>
-    <menu id="10070">
-      <phrase id="menutext" value="Rekonsiliasi Absensi" />
+    <menu id="10080">
+      <phrase id="menutext" value="Generate Rekonsiliasi Absensi" />
     </menu>
     <menu id="10081">
-      <phrase id="menutext" value="Rekonsiliasi Absensi #2" />
+      <phrase id="menutext" value="Laporan Rekonsiliasi Absensi" />
     </menu>
     <menu id="128">
       <phrase id="menutext" value="Pegawai" />
@@ -612,9 +612,6 @@
     </menu>
     <menu id="10078">
       <phrase id="menutext" value="Jadwal Kerja Pegawai Default" />
-    </menu>
-    <menu id="10080">
-      <phrase id="menutext" value="Rekonsiliasi Absensi" />
     </menu>
     <menu id="63">
       <phrase id="menutext" value="Pengaturan" />
@@ -819,6 +816,9 @@
     </menu>
     <menu id="10069">
       <phrase id="menutext" value="t jk" />
+    </menu>
+    <menu id="10070">
+      <phrase id="menutext" value="Rekonsiliasi Absensi" />
     </menu>
     <menu id="10071">
       <phrase id="menutext" value="v rekon" />
@@ -2684,7 +2684,7 @@
       <phrase id="tblcaption" value="Generate Jadwal Kerja" />
     </table>
     <table id="rekon__php">
-      <phrase id="tblcaption" value="Rekonsiliasi Absensi" />
+      <phrase id="tblcaption" value="Generate Rekonsiliasi Absensi" />
     </table>
   </project>
 </ew-language>

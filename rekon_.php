@@ -311,6 +311,24 @@ Page_Rendering();
 <div class="clearfix"></div>
 </div>
 <?php } ?>
+<html>
+	<body>
+		<form action="rekon.php">
+			<?php
+			if ($_GET["ok"] == "1") {
+				echo "Selesai";
+			}
+			else {
+			?>
+				<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Generate Rekonsiliasi</button>
+			<?php
+			}
+			?>
+		</form>
+	</body>
+</html>
+
+<!--
 <form id="myform" name="myform" class="form-horizontal" method="post" action="rekon.php">
 	<div id="r_start" class="form-group">
 		<label for="start" class="col-sm-2 control-label ewLabel">Date Start</label>
@@ -336,6 +354,7 @@ Page_Rendering();
 	</div>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Submit</button>
 </form>
+-->
 <?php if (EW_DEBUG_ENABLED) echo ew_DebugMsg(); ?>
 <?php include_once "footer.php" ?>
 <?php
