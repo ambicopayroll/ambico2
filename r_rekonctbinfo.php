@@ -64,7 +64,7 @@ class crr_rekon extends crTableCrosstab {
 		$this->jk_id->SqlOrderBy = "";
 
 		// scan_masuk
-		$this->scan_masuk = new crField('r_rekon', 'r_rekon', 'x_scan_masuk', 'scan_masuk', '`scan_masuk`', 135, EWR_DATATYPE_DATE, 0);
+		$this->scan_masuk = new crField('r_rekon', 'r_rekon', 'x_scan_masuk', 'scan_masuk', '`scan_masuk`', 135, EWR_DATATYPE_DATE, 4);
 		$this->scan_masuk->Sortable = TRUE; // Allow sort
 		$this->scan_masuk->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_FORMAT"], $ReportLanguage->Phrase("IncorrectDate"));
 		$this->fields['scan_masuk'] = &$this->scan_masuk;
@@ -73,7 +73,7 @@ class crr_rekon extends crTableCrosstab {
 		$this->scan_masuk->SqlOrderBy = "";
 
 		// scan_keluar
-		$this->scan_keluar = new crField('r_rekon', 'r_rekon', 'x_scan_keluar', 'scan_keluar', '`scan_keluar`', 135, EWR_DATATYPE_DATE, 0);
+		$this->scan_keluar = new crField('r_rekon', 'r_rekon', 'x_scan_keluar', 'scan_keluar', '`scan_keluar`', 135, EWR_DATATYPE_DATE, 4);
 		$this->scan_keluar->Sortable = TRUE; // Allow sort
 		$this->scan_keluar->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_FORMAT"], $ReportLanguage->Phrase("IncorrectDate"));
 		$this->fields['scan_keluar'] = &$this->scan_keluar;
@@ -403,6 +403,14 @@ class crr_rekon extends crTableCrosstab {
 		$this->SummaryFields[1]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[1]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[1]->SummaryInitValue = NULL;
+		$this->SummaryFields[2] = new crSummaryField('x_jk_id', 'jk_id', '`jk_id`', 'MAX');
+		$this->SummaryFields[2]->SummaryCaption = $ReportLanguage->Phrase("RptMax");
+		$this->SummaryFields[2]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
+		$this->SummaryFields[2]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);
+		$this->SummaryFields[2]->SummaryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[2]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[2]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[2]->SummaryInitValue = NULL;
 
 		// Update crosstab sql
 		$sSqlFlds = "";

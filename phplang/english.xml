@@ -586,20 +586,17 @@
     <menu id="64">
       <phrase id="menutext" value="Dashboard" />
     </menu>
-    <menu id="10071">
-      <phrase id="menutext" value="kartu scanlog" />
-    </menu>
     <menu id="129">
       <phrase id="menutext" value="Absensi" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="Data Finger Pegawai" />
     </menu>
-    <menu id="10065">
-      <phrase id="menutext" value="r rekon 2" />
-    </menu>
     <menu id="10070">
       <phrase id="menutext" value="Rekonsiliasi Absensi" />
+    </menu>
+    <menu id="10081">
+      <phrase id="menutext" value="Rekonsiliasi Absensi #2" />
     </menu>
     <menu id="128">
       <phrase id="menutext" value="Pegawai" />
@@ -822,6 +819,9 @@
     </menu>
     <menu id="10069">
       <phrase id="menutext" value="t jk" />
+    </menu>
+    <menu id="10071">
+      <phrase id="menutext" value="v rekon" />
     </menu>
     <menu id="10001">
       <phrase id="menutext" value="att log" />
