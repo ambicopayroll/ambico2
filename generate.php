@@ -19,7 +19,7 @@ while (!$rs->EOF) {
 		$mtgl1 = $rs->fields["tgl1"];
 		$mtgl2 = $rs->fields["tgl2"];
 		while (strtotime($mtgl1) <= strtotime($mtgl2)) {
-			$msql = "insert into t_jdw_krj_def values (null, ".$mpegawai_id.", '".$mtgl1."', ".$rs->fields["jk_id"].")";
+			$msql = "insert into t_jdw_krj_def values (null, ".$mpegawai_id.", '".$mtgl1."', ".$rs->fields["jk_id"].", null, null)";
 			$conn->Execute($msql);
 			$mtgl1 = date("Y-m-d", strtotime("+1 day", strtotime($mtgl1)));
 		}
@@ -32,7 +32,7 @@ while (!$rs->EOF) {
 		$rs2 = $conn->Execute($msql);
 		while (!$rs2->EOF) {
 			for ($i = 1; $i <= $rs2->fields["jk_id_count"]; $i++) {
-				$conn->Execute("insert into t_jdw_krj_def values (null, ".$mpegawai_id.", '".$mtgl_start."', ".$rs2->fields["jk_id"].")");
+				$conn->Execute("insert into t_jdw_krj_def values (null, ".$mpegawai_id.", '".$mtgl_start."', ".$rs2->fields["jk_id"].", null, null)");
 				$mtgl_start = date("Y-m-d", strtotime("+1 day", strtotime($mtgl_start)));
 			}
 			$rs2->MoveNext();
