@@ -500,7 +500,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 	var $StopGrp = 0; // Stop group
 	var $TotalGrps = 0; // Total groups
 	var $GrpCount = 0; // Group count
-	var $DisplayGrps = 50; // Groups per page
+	var $DisplayGrps = 100; // Groups per page
 	var $GrpRange = 10;
 	var $Sort = "";
 	var $Filter = "";
@@ -931,7 +931,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 				if (strtoupper($sWrk) == "ALL") { // Display all groups
 					$this->DisplayGrps = -1;
 				} else {
-					$this->DisplayGrps = 50; // Non-numeric, load default
+					$this->DisplayGrps = 100; // Non-numeric, load default
 				}
 			}
 			$this->setGroupPerPage($this->DisplayGrps); // Save to session
@@ -943,7 +943,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 			if ($this->getGroupPerPage() <> "") {
 				$this->DisplayGrps = $this->getGroupPerPage(); // Restore from session
 			} else {
-				$this->DisplayGrps = 50; // Load default
+				$this->DisplayGrps = 100; // Load default
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2017/04/05" author="e.World Technology Ltd.">
-  <project id="{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}" file="D:\xampp\htdocs\ambico2\ambico2.prp" name="ambico2" product="PHPReportMaker" version="10.0" datetime="2017/04/05 23:34:30" languagefolder="phprptlang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2017/04/06" author="e.World Technology Ltd.">
+  <project id="{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}" file="D:\xampp\htdocs\ambico2\ambico2.prp" name="ambico2" product="PHPReportMaker" version="10.0" datetime="2017/04/06 23:25:06" languagefolder="phprptlang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="att_log" name="att_log" caption="att log" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="audittrail" name="audittrail" caption="audittrail" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="cuti_normatif" name="cuti_normatif" caption="cuti normatif" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -69,6 +69,7 @@
     <table id="t_jk" name="t_jk" caption="t jk" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="v_rekon" name="v_rekon" caption="v rekon" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="r_rekon2" name="r_rekon2" caption="Laporan Rekonsiliasi Absensi" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="r_scan_log" name="r_scan_log" caption="Scan Log" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="v_att_log" name="v_att_log" caption="v att log" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="r_att_log" name="r_att_log" caption="Laporan Scan Finger" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

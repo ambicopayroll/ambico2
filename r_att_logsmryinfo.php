@@ -1,37 +1,37 @@
 <?php
 
 // Global variable for table object
-$r_scan_log = NULL;
+$r_att_log = NULL;
 
 //
-// Table class for r_scan_log
+// Table class for r_att_log
 //
-class crr_scan_log extends crTableBase {
+class crr_att_log extends crTableBase {
 	var $ShowGroupHeaderAsRow = FALSE;
 	var $ShowCompactSummaryFooter = TRUE;
 	var $sn;
 	var $scan_date;
 	var $pin;
-	var $verifymode;
-	var $inoutmode;
-	var $reserved;
-	var $work_code;
 	var $att_id;
+	var $pegawai_nip;
+	var $pegawai_nama;
+	var $scan_date_tgl_jam;
+	var $scan_date_tgl;
 
 	//
 	// Table class constructor
 	//
 	function __construct() {
 		global $ReportLanguage, $gsLanguage;
-		$this->TableVar = 'r_scan_log';
-		$this->TableName = 'r_scan_log';
+		$this->TableVar = 'r_att_log';
+		$this->TableName = 'r_att_log';
 		$this->TableType = 'REPORT';
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0;
 
 		// sn
-		$this->sn = new crField('r_scan_log', 'r_scan_log', 'x_sn', 'sn', '`sn`', 200, EWR_DATATYPE_STRING, -1);
+		$this->sn = new crField('r_att_log', 'r_att_log', 'x_sn', 'sn', '`sn`', 200, EWR_DATATYPE_STRING, -1);
 		$this->sn->Sortable = TRUE; // Allow sort
 		$this->fields['sn'] = &$this->sn;
 		$this->sn->DateFilter = "";
@@ -39,65 +39,62 @@ class crr_scan_log extends crTableBase {
 		$this->sn->SqlOrderBy = "";
 
 		// scan_date
-		$this->scan_date = new crField('r_scan_log', 'r_scan_log', 'x_scan_date', 'scan_date', '`scan_date`', 135, EWR_DATATYPE_DATE, 11);
+		$this->scan_date = new crField('r_att_log', 'r_att_log', 'x_scan_date', 'scan_date', '`scan_date`', 135, EWR_DATATYPE_DATE, 0);
 		$this->scan_date->Sortable = TRUE; // Allow sort
-		$this->scan_date->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_SEPARATOR"], $ReportLanguage->Phrase("IncorrectDateDMY"));
+		$this->scan_date->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_FORMAT"], $ReportLanguage->Phrase("IncorrectDate"));
 		$this->fields['scan_date'] = &$this->scan_date;
 		$this->scan_date->DateFilter = "";
 		$this->scan_date->SqlSelect = "";
 		$this->scan_date->SqlOrderBy = "";
 
 		// pin
-		$this->pin = new crField('r_scan_log', 'r_scan_log', 'x_pin', 'pin', '`pin`', 200, EWR_DATATYPE_STRING, -1);
+		$this->pin = new crField('r_att_log', 'r_att_log', 'x_pin', 'pin', '`pin`', 200, EWR_DATATYPE_STRING, -1);
 		$this->pin->Sortable = TRUE; // Allow sort
 		$this->fields['pin'] = &$this->pin;
 		$this->pin->DateFilter = "";
 		$this->pin->SqlSelect = "";
 		$this->pin->SqlOrderBy = "";
 
-		// verifymode
-		$this->verifymode = new crField('r_scan_log', 'r_scan_log', 'x_verifymode', 'verifymode', '`verifymode`', 3, EWR_DATATYPE_NUMBER, -1);
-		$this->verifymode->Sortable = TRUE; // Allow sort
-		$this->verifymode->FldDefaultErrMsg = $ReportLanguage->Phrase("IncorrectInteger");
-		$this->fields['verifymode'] = &$this->verifymode;
-		$this->verifymode->DateFilter = "";
-		$this->verifymode->SqlSelect = "";
-		$this->verifymode->SqlOrderBy = "";
-
-		// inoutmode
-		$this->inoutmode = new crField('r_scan_log', 'r_scan_log', 'x_inoutmode', 'inoutmode', '`inoutmode`', 3, EWR_DATATYPE_NUMBER, -1);
-		$this->inoutmode->Sortable = TRUE; // Allow sort
-		$this->inoutmode->FldDefaultErrMsg = $ReportLanguage->Phrase("IncorrectInteger");
-		$this->fields['inoutmode'] = &$this->inoutmode;
-		$this->inoutmode->DateFilter = "";
-		$this->inoutmode->SqlSelect = "";
-		$this->inoutmode->SqlOrderBy = "";
-
-		// reserved
-		$this->reserved = new crField('r_scan_log', 'r_scan_log', 'x_reserved', 'reserved', '`reserved`', 3, EWR_DATATYPE_NUMBER, -1);
-		$this->reserved->Sortable = TRUE; // Allow sort
-		$this->reserved->FldDefaultErrMsg = $ReportLanguage->Phrase("IncorrectInteger");
-		$this->fields['reserved'] = &$this->reserved;
-		$this->reserved->DateFilter = "";
-		$this->reserved->SqlSelect = "";
-		$this->reserved->SqlOrderBy = "";
-
-		// work_code
-		$this->work_code = new crField('r_scan_log', 'r_scan_log', 'x_work_code', 'work_code', '`work_code`', 3, EWR_DATATYPE_NUMBER, -1);
-		$this->work_code->Sortable = TRUE; // Allow sort
-		$this->work_code->FldDefaultErrMsg = $ReportLanguage->Phrase("IncorrectInteger");
-		$this->fields['work_code'] = &$this->work_code;
-		$this->work_code->DateFilter = "";
-		$this->work_code->SqlSelect = "";
-		$this->work_code->SqlOrderBy = "";
-
 		// att_id
-		$this->att_id = new crField('r_scan_log', 'r_scan_log', 'x_att_id', 'att_id', '`att_id`', 200, EWR_DATATYPE_STRING, -1);
+		$this->att_id = new crField('r_att_log', 'r_att_log', 'x_att_id', 'att_id', '`att_id`', 200, EWR_DATATYPE_STRING, -1);
 		$this->att_id->Sortable = TRUE; // Allow sort
 		$this->fields['att_id'] = &$this->att_id;
 		$this->att_id->DateFilter = "";
 		$this->att_id->SqlSelect = "";
 		$this->att_id->SqlOrderBy = "";
+
+		// pegawai_nip
+		$this->pegawai_nip = new crField('r_att_log', 'r_att_log', 'x_pegawai_nip', 'pegawai_nip', '`pegawai_nip`', 200, EWR_DATATYPE_STRING, -1);
+		$this->pegawai_nip->Sortable = TRUE; // Allow sort
+		$this->fields['pegawai_nip'] = &$this->pegawai_nip;
+		$this->pegawai_nip->DateFilter = "";
+		$this->pegawai_nip->SqlSelect = "";
+		$this->pegawai_nip->SqlOrderBy = "";
+
+		// pegawai_nama
+		$this->pegawai_nama = new crField('r_att_log', 'r_att_log', 'x_pegawai_nama', 'pegawai_nama', '`pegawai_nama`', 200, EWR_DATATYPE_STRING, -1);
+		$this->pegawai_nama->Sortable = TRUE; // Allow sort
+		$this->fields['pegawai_nama'] = &$this->pegawai_nama;
+		$this->pegawai_nama->DateFilter = "";
+		$this->pegawai_nama->SqlSelect = "";
+		$this->pegawai_nama->SqlOrderBy = "";
+
+		// scan_date_tgl_jam
+		$this->scan_date_tgl_jam = new crField('r_att_log', 'r_att_log', 'x_scan_date_tgl_jam', 'scan_date_tgl_jam', '`scan_date_tgl_jam`', 200, EWR_DATATYPE_STRING, -1);
+		$this->scan_date_tgl_jam->Sortable = TRUE; // Allow sort
+		$this->fields['scan_date_tgl_jam'] = &$this->scan_date_tgl_jam;
+		$this->scan_date_tgl_jam->DateFilter = "";
+		$this->scan_date_tgl_jam->SqlSelect = "";
+		$this->scan_date_tgl_jam->SqlOrderBy = "";
+
+		// scan_date_tgl
+		$this->scan_date_tgl = new crField('r_att_log', 'r_att_log', 'x_scan_date_tgl', 'scan_date_tgl', '`scan_date_tgl`', 133, EWR_DATATYPE_DATE, -1);
+		$this->scan_date_tgl->Sortable = TRUE; // Allow sort
+		$this->scan_date_tgl->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EWR_DATE_FORMAT"], $ReportLanguage->Phrase("IncorrectDate"));
+		$this->fields['scan_date_tgl'] = &$this->scan_date_tgl;
+		$this->scan_date_tgl->DateFilter = "";
+		$this->scan_date_tgl->SqlSelect = "";
+		$this->scan_date_tgl->SqlOrderBy = "";
 	}
 
 	// Set Field Visibility
@@ -169,7 +166,7 @@ class crr_scan_log extends crTableBase {
 	var $_SqlFrom = "";
 
 	function getSqlFrom() {
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`att_log`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`v_att_log`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -382,6 +379,32 @@ class crr_scan_log extends crTableBase {
 	function SetupLookupFilters($fld) {
 		global $gsLanguage;
 		switch ($fld->FldVar) {
+		case "x_pegawai_nip":
+			$sSqlWrk = "";
+		$sSqlWrk = "SELECT DISTINCT `pegawai_nip`, `pegawai_nip` AS `DispFld`, '' AS `DispFld2`, '' AS `DispFld3`, '' AS `DispFld4` FROM `v_att_log`";
+		$sWhereWrk = "{filter}";
+		$this->pegawai_nip->LookupFilters = array("dx1" => '`pegawai_nip`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "DB", "f0" => '`pegawai_nip` = {filter_value}', "t0" => "200", "fn0" => "");
+			$sSqlWrk = "";
+		$this->Lookup_Selecting($this->pegawai_nip, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `pegawai_nip` ASC";
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_pegawai_nama":
+			$sSqlWrk = "";
+		$sSqlWrk = "SELECT DISTINCT `pegawai_nama`, `pegawai_nama` AS `DispFld`, '' AS `DispFld2`, '' AS `DispFld3`, '' AS `DispFld4` FROM `v_att_log`";
+		$sWhereWrk = "{filter}";
+		$this->pegawai_nama->LookupFilters = array("dx1" => '`pegawai_nama`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "DB", "f0" => '`pegawai_nama` = {filter_value}', "t0" => "200", "fn0" => "");
+			$sSqlWrk = "";
+		$this->Lookup_Selecting($this->pegawai_nama, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `pegawai_nama` ASC";
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 		}
 	}
 

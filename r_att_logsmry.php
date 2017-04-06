@@ -6,16 +6,16 @@ ob_start();
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "phprptinc/ewmysql.php") ?>
 <?php include_once "phprptinc/ewrfn10.php" ?>
 <?php include_once "phprptinc/ewrusrfn10.php" ?>
-<?php include_once "r_scan_logsmryinfo.php" ?>
+<?php include_once "r_att_logsmryinfo.php" ?>
 <?php
 
 //
 // Page class
 //
 
-$r_scan_log_summary = NULL; // Initialize page object first
+$r_att_log_summary = NULL; // Initialize page object first
 
-class crr_scan_log_summary extends crr_scan_log {
+class crr_att_log_summary extends crr_att_log {
 
 	// Page ID
 	var $PageID = 'summary';
@@ -24,7 +24,7 @@ class crr_scan_log_summary extends crr_scan_log {
 	var $ProjectID = "{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}";
 
 	// Page object name
-	var $PageObjName = 'r_scan_log_summary';
+	var $PageObjName = 'r_att_log_summary';
 
 	// Page name
 	function PageName() {
@@ -203,10 +203,10 @@ class crr_scan_log_summary extends crr_scan_log {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (r_scan_log)
-		if (!isset($GLOBALS["r_scan_log"])) {
-			$GLOBALS["r_scan_log"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["r_scan_log"];
+		// Table object (r_att_log)
+		if (!isset($GLOBALS["r_att_log"])) {
+			$GLOBALS["r_att_log"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["r_att_log"];
 		}
 
 		// Initialize URLs
@@ -221,7 +221,7 @@ class crr_scan_log_summary extends crr_scan_log {
 
 		// Table name (for backward compatibility)
 		if (!defined("EWR_TABLE_NAME"))
-			define("EWR_TABLE_NAME", 'r_scan_log', TRUE);
+			define("EWR_TABLE_NAME", 'r_att_log', TRUE);
 
 		// Start timer
 		$GLOBALS["gsTimer"] = new crTimer();
@@ -248,7 +248,7 @@ class crr_scan_log_summary extends crr_scan_log {
 		// Filter options
 		$this->FilterOptions = new crListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption fr_scan_logsummary";
+		$this->FilterOptions->TagClassName = "ewFilterOption fr_att_logsummary";
 
 		// Generate report options
 		$this->GenerateOptions = new crListOptions();
@@ -267,7 +267,7 @@ class crr_scan_log_summary extends crr_scan_log {
 		$Security = new crAdvancedSecurity();
 		if (!$Security->IsLoggedIn()) $Security->AutoLogin(); // Auto login
 		$Security->TablePermission_Loading();
-		$Security->LoadCurrentUserLevel($this->ProjectID . 'r_scan_log');
+		$Security->LoadCurrentUserLevel($this->ProjectID . 'r_att_log');
 		$Security->TablePermission_Loaded();
 		if (!$Security->CanList()) {
 			$Security->SaveLastUrl();
@@ -293,8 +293,7 @@ class crr_scan_log_summary extends crr_scan_log {
 		$gsEmailContentType = @$_POST["contenttype"]; // Get email content type
 
 		// Setup placeholder
-		$this->scan_date->PlaceHolder = $this->scan_date->FldCaption();
-		$this->pin->PlaceHolder = $this->pin->FldCaption();
+		$this->scan_date_tgl->PlaceHolder = $this->scan_date_tgl->FldCaption();
 
 		// Setup export options
 		$this->SetupExportOptions();
@@ -355,7 +354,7 @@ class crr_scan_log_summary extends crr_scan_log {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = $this->PageUrl() . "export=email";
-		$item->Body = "<a title=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" data-caption=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" id=\"emf_r_scan_log\" href=\"javascript:void(0);\" onclick=\"ewr_EmailDialogShow({lnk:'emf_r_scan_log',hdr:ewLanguage.Phrase('ExportToEmail'),url:'$url',exportid:'$exportid',el:this});\">" . $ReportLanguage->Phrase("ExportToEmail") . "</a>";
+		$item->Body = "<a title=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" data-caption=\"" . ewr_HtmlEncode($ReportLanguage->Phrase("ExportToEmail", TRUE)) . "\" id=\"emf_r_att_log\" href=\"javascript:void(0);\" onclick=\"ewr_EmailDialogShow({lnk:'emf_r_att_log',hdr:ewLanguage.Phrase('ExportToEmail'),url:'$url',exportid:'$exportid',el:this});\">" . $ReportLanguage->Phrase("ExportToEmail") . "</a>";
 		$item->Visible = TRUE;
 		$ReportTypes["email"] = $item->Visible ? $ReportLanguage->Phrase("ReportFormEmail") : "";
 		$ReportOptions["ReportTypes"] = $ReportTypes;
@@ -373,10 +372,10 @@ class crr_scan_log_summary extends crr_scan_log {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fr_scan_logsummary\" href=\"#\">" . $ReportLanguage->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fr_att_logsummary\" href=\"#\">" . $ReportLanguage->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fr_scan_logsummary\" href=\"#\">" . $ReportLanguage->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fr_att_logsummary\" href=\"#\">" . $ReportLanguage->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton; // v8
@@ -410,7 +409,7 @@ class crr_scan_log_summary extends crr_scan_log {
 		// Filter panel button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = $this->FilterApplied ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-caption=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-toggle=\"button\" data-form=\"fr_scan_logsummary\">" . $ReportLanguage->Phrase("SearchBtn") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-caption=\"" . $ReportLanguage->Phrase("SearchBtn", TRUE) . "\" data-toggle=\"button\" data-form=\"fr_att_logsummary\">" . $ReportLanguage->Phrase("SearchBtn") . "</button>";
 		$item->Visible = TRUE;
 
 		// Reset filter
@@ -500,7 +499,7 @@ class crr_scan_log_summary extends crr_scan_log {
 	var $TotalGrps = 0; // Total groups
 	var $GrpCount = 0; // Group count
 	var $GrpCounter = array(); // Group counter
-	var $DisplayGrps = 50; // Groups per page
+	var $DisplayGrps = 100; // Groups per page
 	var $GrpRange = 10;
 	var $Sort = "";
 	var $Filter = "";
@@ -539,14 +538,16 @@ class crr_scan_log_summary extends crr_scan_log {
 		global $ReportLanguage;
 
 		// Set field visibility for detail fields
-		$this->scan_date->SetVisibility();
-		$this->pin->SetVisibility();
+		$this->pegawai_nip->SetVisibility();
+		$this->pegawai_nama->SetVisibility();
+		$this->scan_date_tgl_jam->SetVisibility();
+		$this->scan_date_tgl->SetVisibility();
 
 		// Aggregate variables
 		// 1st dimension = no of groups (level 0 used for grand total)
 		// 2nd dimension = no of fields
 
-		$nDtls = 3;
+		$nDtls = 5;
 		$nGrps = 1;
 		$this->Val = &ewr_InitArray($nDtls, 0);
 		$this->Cnt = &ewr_Init2DArray($nGrps, $nDtls, 0);
@@ -559,7 +560,7 @@ class crr_scan_log_summary extends crr_scan_log {
 		$this->GrandMx = &ewr_InitArray($nDtls, NULL);
 
 		// Set up array if accumulation required: array(Accum, SkipNullOrZero)
-		$this->Col = array(array(FALSE, FALSE), array(FALSE,FALSE), array(FALSE,FALSE));
+		$this->Col = array(array(FALSE, FALSE), array(FALSE,FALSE), array(FALSE,FALSE), array(FALSE,FALSE), array(FALSE,FALSE));
 
 		// Set up groups per page dynamically
 		$this->SetUpDisplayGrps();
@@ -776,11 +777,11 @@ class crr_scan_log_summary extends crr_scan_log {
 				$this->FirstRowData['sn'] = ewr_Conv($rs->fields('sn'), 200);
 				$this->FirstRowData['scan_date'] = ewr_Conv($rs->fields('scan_date'), 135);
 				$this->FirstRowData['pin'] = ewr_Conv($rs->fields('pin'), 200);
-				$this->FirstRowData['verifymode'] = ewr_Conv($rs->fields('verifymode'), 3);
-				$this->FirstRowData['inoutmode'] = ewr_Conv($rs->fields('inoutmode'), 3);
-				$this->FirstRowData['reserved'] = ewr_Conv($rs->fields('reserved'), 3);
-				$this->FirstRowData['work_code'] = ewr_Conv($rs->fields('work_code'), 3);
 				$this->FirstRowData['att_id'] = ewr_Conv($rs->fields('att_id'), 200);
+				$this->FirstRowData['pegawai_nip'] = ewr_Conv($rs->fields('pegawai_nip'), 200);
+				$this->FirstRowData['pegawai_nama'] = ewr_Conv($rs->fields('pegawai_nama'), 200);
+				$this->FirstRowData['scan_date_tgl_jam'] = ewr_Conv($rs->fields('scan_date_tgl_jam'), 200);
+				$this->FirstRowData['scan_date_tgl'] = ewr_Conv($rs->fields('scan_date_tgl'), 133);
 		} else { // Get next row
 			$rs->MoveNext();
 		}
@@ -788,22 +789,24 @@ class crr_scan_log_summary extends crr_scan_log {
 			$this->sn->setDbValue($rs->fields('sn'));
 			$this->scan_date->setDbValue($rs->fields('scan_date'));
 			$this->pin->setDbValue($rs->fields('pin'));
-			$this->verifymode->setDbValue($rs->fields('verifymode'));
-			$this->inoutmode->setDbValue($rs->fields('inoutmode'));
-			$this->reserved->setDbValue($rs->fields('reserved'));
-			$this->work_code->setDbValue($rs->fields('work_code'));
 			$this->att_id->setDbValue($rs->fields('att_id'));
-			$this->Val[1] = $this->scan_date->CurrentValue;
-			$this->Val[2] = $this->pin->CurrentValue;
+			$this->pegawai_nip->setDbValue($rs->fields('pegawai_nip'));
+			$this->pegawai_nama->setDbValue($rs->fields('pegawai_nama'));
+			$this->scan_date_tgl_jam->setDbValue($rs->fields('scan_date_tgl_jam'));
+			$this->scan_date_tgl->setDbValue($rs->fields('scan_date_tgl'));
+			$this->Val[1] = $this->pegawai_nip->CurrentValue;
+			$this->Val[2] = $this->pegawai_nama->CurrentValue;
+			$this->Val[3] = $this->scan_date_tgl_jam->CurrentValue;
+			$this->Val[4] = $this->scan_date_tgl->CurrentValue;
 		} else {
 			$this->sn->setDbValue("");
 			$this->scan_date->setDbValue("");
 			$this->pin->setDbValue("");
-			$this->verifymode->setDbValue("");
-			$this->inoutmode->setDbValue("");
-			$this->reserved->setDbValue("");
-			$this->work_code->setDbValue("");
 			$this->att_id->setDbValue("");
+			$this->pegawai_nip->setDbValue("");
+			$this->pegawai_nama->setDbValue("");
+			$this->scan_date_tgl_jam->setDbValue("");
+			$this->scan_date_tgl->setDbValue("");
 		}
 	}
 
@@ -935,7 +938,7 @@ class crr_scan_log_summary extends crr_scan_log {
 				if (strtoupper($sWrk) == "ALL") { // Display all groups
 					$this->DisplayGrps = -1;
 				} else {
-					$this->DisplayGrps = 50; // Non-numeric, load default
+					$this->DisplayGrps = 100; // Non-numeric, load default
 				}
 			}
 			$this->setGroupPerPage($this->DisplayGrps); // Save to session
@@ -947,7 +950,7 @@ class crr_scan_log_summary extends crr_scan_log {
 			if ($this->getGroupPerPage() <> "") {
 				$this->DisplayGrps = $this->getGroupPerPage(); // Restore from session
 			} else {
-				$this->DisplayGrps = 50; // Load default
+				$this->DisplayGrps = 100; // Load default
 			}
 		}
 	}
@@ -998,53 +1001,90 @@ class crr_scan_log_summary extends crr_scan_log {
 		if ($this->RowType == EWR_ROWTYPE_TOTAL && !($this->RowTotalType == EWR_ROWTOTAL_GROUP && $this->RowTotalSubType == EWR_ROWTOTAL_HEADER)) { // Summary row
 			ewr_PrependClass($this->RowAttrs["class"], ($this->RowTotalType == EWR_ROWTOTAL_PAGE || $this->RowTotalType == EWR_ROWTOTAL_GRAND) ? "ewRptGrpAggregate" : "ewRptGrpSummary" . $this->RowGroupLevel); // Set up row class
 
-			// scan_date
-			$this->scan_date->HrefValue = "";
+			// pegawai_nip
+			$this->pegawai_nip->HrefValue = "";
 
-			// pin
-			$this->pin->HrefValue = "";
+			// pegawai_nama
+			$this->pegawai_nama->HrefValue = "";
+
+			// scan_date_tgl_jam
+			$this->scan_date_tgl_jam->HrefValue = "";
+
+			// scan_date_tgl
+			$this->scan_date_tgl->HrefValue = "";
 		} else {
 			if ($this->RowTotalType == EWR_ROWTOTAL_GROUP && $this->RowTotalSubType == EWR_ROWTOTAL_HEADER) {
 			} else {
 			}
 
-			// scan_date
-			$this->scan_date->ViewValue = $this->scan_date->CurrentValue;
-			$this->scan_date->ViewValue = ewr_FormatDateTime($this->scan_date->ViewValue, 11);
-			$this->scan_date->CellAttrs["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
+			// pegawai_nip
+			$this->pegawai_nip->ViewValue = $this->pegawai_nip->CurrentValue;
+			$this->pegawai_nip->CellAttrs["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
 
-			// pin
-			$this->pin->ViewValue = $this->pin->CurrentValue;
-			$this->pin->CellAttrs["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
+			// pegawai_nama
+			$this->pegawai_nama->ViewValue = $this->pegawai_nama->CurrentValue;
+			$this->pegawai_nama->CellAttrs["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
 
-			// scan_date
-			$this->scan_date->HrefValue = "";
+			// scan_date_tgl_jam
+			$this->scan_date_tgl_jam->ViewValue = $this->scan_date_tgl_jam->CurrentValue;
+			$this->scan_date_tgl_jam->CellAttrs["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
 
-			// pin
-			$this->pin->HrefValue = "";
+			// scan_date_tgl
+			$this->scan_date_tgl->ViewValue = $this->scan_date_tgl->CurrentValue;
+			$this->scan_date_tgl->CellAttrs["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
+
+			// pegawai_nip
+			$this->pegawai_nip->HrefValue = "";
+
+			// pegawai_nama
+			$this->pegawai_nama->HrefValue = "";
+
+			// scan_date_tgl_jam
+			$this->scan_date_tgl_jam->HrefValue = "";
+
+			// scan_date_tgl
+			$this->scan_date_tgl->HrefValue = "";
 		}
 
 		// Call Cell_Rendered event
 		if ($this->RowType == EWR_ROWTYPE_TOTAL) { // Summary row
 		} else {
 
-			// scan_date
-			$CurrentValue = $this->scan_date->CurrentValue;
-			$ViewValue = &$this->scan_date->ViewValue;
-			$ViewAttrs = &$this->scan_date->ViewAttrs;
-			$CellAttrs = &$this->scan_date->CellAttrs;
-			$HrefValue = &$this->scan_date->HrefValue;
-			$LinkAttrs = &$this->scan_date->LinkAttrs;
-			$this->Cell_Rendered($this->scan_date, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+			// pegawai_nip
+			$CurrentValue = $this->pegawai_nip->CurrentValue;
+			$ViewValue = &$this->pegawai_nip->ViewValue;
+			$ViewAttrs = &$this->pegawai_nip->ViewAttrs;
+			$CellAttrs = &$this->pegawai_nip->CellAttrs;
+			$HrefValue = &$this->pegawai_nip->HrefValue;
+			$LinkAttrs = &$this->pegawai_nip->LinkAttrs;
+			$this->Cell_Rendered($this->pegawai_nip, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
 
-			// pin
-			$CurrentValue = $this->pin->CurrentValue;
-			$ViewValue = &$this->pin->ViewValue;
-			$ViewAttrs = &$this->pin->ViewAttrs;
-			$CellAttrs = &$this->pin->CellAttrs;
-			$HrefValue = &$this->pin->HrefValue;
-			$LinkAttrs = &$this->pin->LinkAttrs;
-			$this->Cell_Rendered($this->pin, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+			// pegawai_nama
+			$CurrentValue = $this->pegawai_nama->CurrentValue;
+			$ViewValue = &$this->pegawai_nama->ViewValue;
+			$ViewAttrs = &$this->pegawai_nama->ViewAttrs;
+			$CellAttrs = &$this->pegawai_nama->CellAttrs;
+			$HrefValue = &$this->pegawai_nama->HrefValue;
+			$LinkAttrs = &$this->pegawai_nama->LinkAttrs;
+			$this->Cell_Rendered($this->pegawai_nama, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+
+			// scan_date_tgl_jam
+			$CurrentValue = $this->scan_date_tgl_jam->CurrentValue;
+			$ViewValue = &$this->scan_date_tgl_jam->ViewValue;
+			$ViewAttrs = &$this->scan_date_tgl_jam->ViewAttrs;
+			$CellAttrs = &$this->scan_date_tgl_jam->CellAttrs;
+			$HrefValue = &$this->scan_date_tgl_jam->HrefValue;
+			$LinkAttrs = &$this->scan_date_tgl_jam->LinkAttrs;
+			$this->Cell_Rendered($this->scan_date_tgl_jam, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
+
+			// scan_date_tgl
+			$CurrentValue = $this->scan_date_tgl->CurrentValue;
+			$ViewValue = &$this->scan_date_tgl->ViewValue;
+			$ViewAttrs = &$this->scan_date_tgl->ViewAttrs;
+			$CellAttrs = &$this->scan_date_tgl->CellAttrs;
+			$HrefValue = &$this->scan_date_tgl->HrefValue;
+			$LinkAttrs = &$this->scan_date_tgl->LinkAttrs;
+			$this->Cell_Rendered($this->scan_date_tgl, $CurrentValue, $ViewValue, $ViewAttrs, $CellAttrs, $HrefValue, $LinkAttrs);
 		}
 
 		// Call Row_Rendered event
@@ -1057,8 +1097,10 @@ class crr_scan_log_summary extends crr_scan_log {
 		$this->GrpColumnCount = 0;
 		$this->SubGrpColumnCount = 0;
 		$this->DtlColumnCount = 0;
-		if ($this->scan_date->Visible) $this->DtlColumnCount += 1;
-		if ($this->pin->Visible) $this->DtlColumnCount += 1;
+		if ($this->pegawai_nip->Visible) $this->DtlColumnCount += 1;
+		if ($this->pegawai_nama->Visible) $this->DtlColumnCount += 1;
+		if ($this->scan_date_tgl_jam->Visible) $this->DtlColumnCount += 1;
+		if ($this->scan_date_tgl->Visible) $this->DtlColumnCount += 1;
 	}
 
 	// Set up Breadcrumb
@@ -1100,20 +1142,30 @@ class crr_scan_log_summary extends crr_scan_log {
 		} elseif (@$_GET["cmd"] == "reset") {
 
 			// Load default values
-			$this->SetSessionFilterValues($this->scan_date->SearchValue, $this->scan_date->SearchOperator, $this->scan_date->SearchCondition, $this->scan_date->SearchValue2, $this->scan_date->SearchOperator2, 'scan_date'); // Field scan_date
-			$this->SetSessionFilterValues($this->pin->SearchValue, $this->pin->SearchOperator, $this->pin->SearchCondition, $this->pin->SearchValue2, $this->pin->SearchOperator2, 'pin'); // Field pin
+			$this->SetSessionDropDownValue($this->pegawai_nip->DropDownValue, $this->pegawai_nip->SearchOperator, 'pegawai_nip'); // Field pegawai_nip
+			$this->SetSessionDropDownValue($this->pegawai_nama->DropDownValue, $this->pegawai_nama->SearchOperator, 'pegawai_nama'); // Field pegawai_nama
+			$this->SetSessionFilterValues($this->scan_date_tgl->SearchValue, $this->scan_date_tgl->SearchOperator, $this->scan_date_tgl->SearchCondition, $this->scan_date_tgl->SearchValue2, $this->scan_date_tgl->SearchOperator2, 'scan_date_tgl'); // Field scan_date_tgl
 
 			//$bSetupFilter = TRUE; // No need to set up, just use default
 		} else {
 			$bRestoreSession = !$this->SearchCommand;
 
-			// Field scan_date
-			if ($this->GetFilterValues($this->scan_date)) {
+			// Field pegawai_nip
+			if ($this->GetDropDownValue($this->pegawai_nip)) {
+				$bSetupFilter = TRUE;
+			} elseif ($this->pegawai_nip->DropDownValue <> EWR_INIT_VALUE && !isset($_SESSION['sv_r_att_log_pegawai_nip'])) {
 				$bSetupFilter = TRUE;
 			}
 
-			// Field pin
-			if ($this->GetFilterValues($this->pin)) {
+			// Field pegawai_nama
+			if ($this->GetDropDownValue($this->pegawai_nama)) {
+				$bSetupFilter = TRUE;
+			} elseif ($this->pegawai_nama->DropDownValue <> EWR_INIT_VALUE && !isset($_SESSION['sv_r_att_log_pegawai_nama'])) {
+				$bSetupFilter = TRUE;
+			}
+
+			// Field scan_date_tgl
+			if ($this->GetFilterValues($this->scan_date_tgl)) {
 				$bSetupFilter = TRUE;
 			}
 			if (!$this->ValidateForm()) {
@@ -1124,24 +1176,33 @@ class crr_scan_log_summary extends crr_scan_log {
 
 		// Restore session
 		if ($bRestoreSession) {
-			$this->GetSessionFilterValues($this->scan_date); // Field scan_date
-			$this->GetSessionFilterValues($this->pin); // Field pin
+			$this->GetSessionDropDownValue($this->pegawai_nip); // Field pegawai_nip
+			$this->GetSessionDropDownValue($this->pegawai_nama); // Field pegawai_nama
+			$this->GetSessionFilterValues($this->scan_date_tgl); // Field scan_date_tgl
 		}
 
 		// Call page filter validated event
 		$this->Page_FilterValidated();
 
 		// Build SQL
-		$this->BuildExtendedFilter($this->scan_date, $sFilter, FALSE, TRUE); // Field scan_date
-		$this->BuildExtendedFilter($this->pin, $sFilter, FALSE, TRUE); // Field pin
+		$this->BuildDropDownFilter($this->pegawai_nip, $sFilter, $this->pegawai_nip->SearchOperator, FALSE, TRUE); // Field pegawai_nip
+		$this->BuildDropDownFilter($this->pegawai_nama, $sFilter, $this->pegawai_nama->SearchOperator, FALSE, TRUE); // Field pegawai_nama
+		$this->BuildExtendedFilter($this->scan_date_tgl, $sFilter, FALSE, TRUE); // Field scan_date_tgl
 
 		// Save parms to session
-		$this->SetSessionFilterValues($this->scan_date->SearchValue, $this->scan_date->SearchOperator, $this->scan_date->SearchCondition, $this->scan_date->SearchValue2, $this->scan_date->SearchOperator2, 'scan_date'); // Field scan_date
-		$this->SetSessionFilterValues($this->pin->SearchValue, $this->pin->SearchOperator, $this->pin->SearchCondition, $this->pin->SearchValue2, $this->pin->SearchOperator2, 'pin'); // Field pin
+		$this->SetSessionDropDownValue($this->pegawai_nip->DropDownValue, $this->pegawai_nip->SearchOperator, 'pegawai_nip'); // Field pegawai_nip
+		$this->SetSessionDropDownValue($this->pegawai_nama->DropDownValue, $this->pegawai_nama->SearchOperator, 'pegawai_nama'); // Field pegawai_nama
+		$this->SetSessionFilterValues($this->scan_date_tgl->SearchValue, $this->scan_date_tgl->SearchOperator, $this->scan_date_tgl->SearchCondition, $this->scan_date_tgl->SearchValue2, $this->scan_date_tgl->SearchOperator2, 'scan_date_tgl'); // Field scan_date_tgl
 
 		// Setup filter
 		if ($bSetupFilter) {
 		}
+
+		// Field pegawai_nip
+		ewr_LoadDropDownList($this->pegawai_nip->DropDownList, $this->pegawai_nip->DropDownValue);
+
+		// Field pegawai_nama
+		ewr_LoadDropDownList($this->pegawai_nama->DropDownList, $this->pegawai_nama->DropDownValue);
 		return $sFilter;
 	}
 
@@ -1341,18 +1402,18 @@ class crr_scan_log_summary extends crr_scan_log {
 	// Get dropdown value from session
 	function GetSessionDropDownValue(&$fld) {
 		$parm = substr($fld->FldVar, 2);
-		$this->GetSessionValue($fld->DropDownValue, 'sv_r_scan_log_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator, 'so_r_scan_log_' . $parm);
+		$this->GetSessionValue($fld->DropDownValue, 'sv_r_att_log_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator, 'so_r_att_log_' . $parm);
 	}
 
 	// Get filter values from session
 	function GetSessionFilterValues(&$fld) {
 		$parm = substr($fld->FldVar, 2);
-		$this->GetSessionValue($fld->SearchValue, 'sv_r_scan_log_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator, 'so_r_scan_log_' . $parm);
-		$this->GetSessionValue($fld->SearchCondition, 'sc_r_scan_log_' . $parm);
-		$this->GetSessionValue($fld->SearchValue2, 'sv2_r_scan_log_' . $parm);
-		$this->GetSessionValue($fld->SearchOperator2, 'so2_r_scan_log_' . $parm);
+		$this->GetSessionValue($fld->SearchValue, 'sv_r_att_log_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator, 'so_r_att_log_' . $parm);
+		$this->GetSessionValue($fld->SearchCondition, 'sc_r_att_log_' . $parm);
+		$this->GetSessionValue($fld->SearchValue2, 'sv2_r_att_log_' . $parm);
+		$this->GetSessionValue($fld->SearchOperator2, 'so2_r_att_log_' . $parm);
 	}
 
 	// Get value from session
@@ -1363,17 +1424,17 @@ class crr_scan_log_summary extends crr_scan_log {
 
 	// Set dropdown value to session
 	function SetSessionDropDownValue($sv, $so, $parm) {
-		$_SESSION['sv_r_scan_log_' . $parm] = $sv;
-		$_SESSION['so_r_scan_log_' . $parm] = $so;
+		$_SESSION['sv_r_att_log_' . $parm] = $sv;
+		$_SESSION['so_r_att_log_' . $parm] = $so;
 	}
 
 	// Set filter values to session
 	function SetSessionFilterValues($sv1, $so1, $sc, $sv2, $so2, $parm) {
-		$_SESSION['sv_r_scan_log_' . $parm] = $sv1;
-		$_SESSION['so_r_scan_log_' . $parm] = $so1;
-		$_SESSION['sc_r_scan_log_' . $parm] = $sc;
-		$_SESSION['sv2_r_scan_log_' . $parm] = $sv2;
-		$_SESSION['so2_r_scan_log_' . $parm] = $so2;
+		$_SESSION['sv_r_att_log_' . $parm] = $sv1;
+		$_SESSION['so_r_att_log_' . $parm] = $so1;
+		$_SESSION['sc_r_att_log_' . $parm] = $sc;
+		$_SESSION['sv2_r_att_log_' . $parm] = $sv2;
+		$_SESSION['so2_r_att_log_' . $parm] = $so2;
 	}
 
 	// Check if has Session filter values
@@ -1407,13 +1468,13 @@ class crr_scan_log_summary extends crr_scan_log {
 		// Check if validation required
 		if (!EWR_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!ewr_CheckEuroDate($this->scan_date->SearchValue)) {
+		if (!ewr_CheckDateDef($this->scan_date_tgl->SearchValue)) {
 			if ($gsFormError <> "") $gsFormError .= "<br>";
-			$gsFormError .= $this->scan_date->FldErrMsg();
+			$gsFormError .= $this->scan_date_tgl->FldErrMsg();
 		}
-		if (!ewr_CheckEuroDate($this->scan_date->SearchValue2)) {
+		if (!ewr_CheckDateDef($this->scan_date_tgl->SearchValue2)) {
 			if ($gsFormError <> "") $gsFormError .= "<br>";
-			$gsFormError .= $this->scan_date->FldErrMsg();
+			$gsFormError .= $this->scan_date_tgl->FldErrMsg();
 		}
 
 		// Return validate result
@@ -1431,17 +1492,17 @@ class crr_scan_log_summary extends crr_scan_log {
 
 	// Clear selection stored in session
 	function ClearSessionSelection($parm) {
-		$_SESSION["sel_r_scan_log_$parm"] = "";
-		$_SESSION["rf_r_scan_log_$parm"] = "";
-		$_SESSION["rt_r_scan_log_$parm"] = "";
+		$_SESSION["sel_r_att_log_$parm"] = "";
+		$_SESSION["rf_r_att_log_$parm"] = "";
+		$_SESSION["rt_r_att_log_$parm"] = "";
 	}
 
 	// Load selection from session
 	function LoadSelectionFromSession($parm) {
 		$fld = &$this->fields($parm);
-		$fld->SelectionList = @$_SESSION["sel_r_scan_log_$parm"];
-		$fld->RangeFrom = @$_SESSION["rf_r_scan_log_$parm"];
-		$fld->RangeTo = @$_SESSION["rt_r_scan_log_$parm"];
+		$fld->SelectionList = @$_SESSION["sel_r_att_log_$parm"];
+		$fld->RangeFrom = @$_SESSION["rf_r_att_log_$parm"];
+		$fld->RangeTo = @$_SESSION["rt_r_att_log_$parm"];
 	}
 
 	// Load default value for filters
@@ -1449,6 +1510,14 @@ class crr_scan_log_summary extends crr_scan_log {
 		/**
 		* Set up default values for non Text filters
 		*/
+
+		// Field pegawai_nip
+		$this->pegawai_nip->DefaultDropDownValue = EWR_INIT_VALUE;
+		if (!$this->SearchCommand) $this->pegawai_nip->DropDownValue = $this->pegawai_nip->DefaultDropDownValue;
+
+		// Field pegawai_nama
+		$this->pegawai_nama->DefaultDropDownValue = EWR_INIT_VALUE;
+		if (!$this->SearchCommand) $this->pegawai_nama->DropDownValue = $this->pegawai_nama->DefaultDropDownValue;
 		/**
 		* Set up default values for extended filters
 		* function SetDefaultExtFilter(&$fld, $so1, $sv1, $sc, $so2, $sv2)
@@ -1461,13 +1530,9 @@ class crr_scan_log_summary extends crr_scan_log {
 		* $sv2 - Default ext filter value 2 (if operator 2 is enabled)
 		*/
 
-		// Field scan_date
-		$this->SetDefaultExtFilter($this->scan_date, "BETWEEN", NULL, 'AND', "=", NULL);
-		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->scan_date);
-
-		// Field pin
-		$this->SetDefaultExtFilter($this->pin, "LIKE", NULL, 'AND', "=", NULL);
-		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->pin);
+		// Field scan_date_tgl
+		$this->SetDefaultExtFilter($this->scan_date_tgl, "BETWEEN", NULL, 'AND', "=", NULL);
+		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->scan_date_tgl);
 		/**
 		* Set up default values for popup filters
 		*/
@@ -1476,12 +1541,16 @@ class crr_scan_log_summary extends crr_scan_log {
 	// Check if filter applied
 	function CheckFilter() {
 
-		// Check scan_date text filter
-		if ($this->TextFilterApplied($this->scan_date))
+		// Check pegawai_nip extended filter
+		if ($this->NonTextFilterApplied($this->pegawai_nip))
 			return TRUE;
 
-		// Check pin text filter
-		if ($this->TextFilterApplied($this->pin))
+		// Check pegawai_nama extended filter
+		if ($this->NonTextFilterApplied($this->pegawai_nama))
+			return TRUE;
+
+		// Check scan_date_tgl text filter
+		if ($this->TextFilterApplied($this->scan_date_tgl))
 			return TRUE;
 		return FALSE;
 	}
@@ -1493,29 +1562,41 @@ class crr_scan_log_summary extends crr_scan_log {
 		// Initialize
 		$sFilterList = "";
 
-		// Field scan_date
+		// Field pegawai_nip
 		$sExtWrk = "";
 		$sWrk = "";
-		$this->BuildExtendedFilter($this->scan_date, $sExtWrk);
+		$this->BuildDropDownFilter($this->pegawai_nip, $sExtWrk, $this->pegawai_nip->SearchOperator);
 		$sFilter = "";
 		if ($sExtWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sExtWrk</span>";
 		elseif ($sWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sWrk</span>";
 		if ($sFilter <> "")
-			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->scan_date->FldCaption() . "</span>" . $sFilter . "</div>";
+			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->pegawai_nip->FldCaption() . "</span>" . $sFilter . "</div>";
 
-		// Field pin
+		// Field pegawai_nama
 		$sExtWrk = "";
 		$sWrk = "";
-		$this->BuildExtendedFilter($this->pin, $sExtWrk);
+		$this->BuildDropDownFilter($this->pegawai_nama, $sExtWrk, $this->pegawai_nama->SearchOperator);
 		$sFilter = "";
 		if ($sExtWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sExtWrk</span>";
 		elseif ($sWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sWrk</span>";
 		if ($sFilter <> "")
-			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->pin->FldCaption() . "</span>" . $sFilter . "</div>";
+			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->pegawai_nama->FldCaption() . "</span>" . $sFilter . "</div>";
+
+		// Field scan_date_tgl
+		$sExtWrk = "";
+		$sWrk = "";
+		$this->BuildExtendedFilter($this->scan_date_tgl, $sExtWrk);
+		$sFilter = "";
+		if ($sExtWrk <> "")
+			$sFilter .= "<span class=\"ewFilterValue\">$sExtWrk</span>";
+		elseif ($sWrk <> "")
+			$sFilter .= "<span class=\"ewFilterValue\">$sWrk</span>";
+		if ($sFilter <> "")
+			$sFilterList .= "<div><span class=\"ewFilterCaption\">" . $this->scan_date_tgl->FldCaption() . "</span>" . $sFilter . "</div>";
 		$divstyle = "";
 		$divdataclass = "";
 
@@ -1538,28 +1619,38 @@ class crr_scan_log_summary extends crr_scan_log {
 		// Initialize
 		$sFilterList = "";
 
-		// Field scan_date
+		// Field pegawai_nip
 		$sWrk = "";
-		if ($this->scan_date->SearchValue <> "" || $this->scan_date->SearchValue2 <> "") {
-			$sWrk = "\"sv_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchValue) . "\"," .
-				"\"so_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchOperator) . "\"," .
-				"\"sc_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchCondition) . "\"," .
-				"\"sv2_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchValue2) . "\"," .
-				"\"so2_scan_date\":\"" . ewr_JsEncode2($this->scan_date->SearchOperator2) . "\"";
-		}
+		$sWrk = ($this->pegawai_nip->DropDownValue <> EWR_INIT_VALUE) ? $this->pegawai_nip->DropDownValue : "";
+		if (is_array($sWrk))
+			$sWrk = implode("||", $sWrk);
+		if ($sWrk <> "")
+			$sWrk = "\"sv_pegawai_nip\":\"" . ewr_JsEncode2($sWrk) . "\"";
 		if ($sWrk <> "") {
 			if ($sFilterList <> "") $sFilterList .= ",";
 			$sFilterList .= $sWrk;
 		}
 
-		// Field pin
+		// Field pegawai_nama
 		$sWrk = "";
-		if ($this->pin->SearchValue <> "" || $this->pin->SearchValue2 <> "") {
-			$sWrk = "\"sv_pin\":\"" . ewr_JsEncode2($this->pin->SearchValue) . "\"," .
-				"\"so_pin\":\"" . ewr_JsEncode2($this->pin->SearchOperator) . "\"," .
-				"\"sc_pin\":\"" . ewr_JsEncode2($this->pin->SearchCondition) . "\"," .
-				"\"sv2_pin\":\"" . ewr_JsEncode2($this->pin->SearchValue2) . "\"," .
-				"\"so2_pin\":\"" . ewr_JsEncode2($this->pin->SearchOperator2) . "\"";
+		$sWrk = ($this->pegawai_nama->DropDownValue <> EWR_INIT_VALUE) ? $this->pegawai_nama->DropDownValue : "";
+		if (is_array($sWrk))
+			$sWrk = implode("||", $sWrk);
+		if ($sWrk <> "")
+			$sWrk = "\"sv_pegawai_nama\":\"" . ewr_JsEncode2($sWrk) . "\"";
+		if ($sWrk <> "") {
+			if ($sFilterList <> "") $sFilterList .= ",";
+			$sFilterList .= $sWrk;
+		}
+
+		// Field scan_date_tgl
+		$sWrk = "";
+		if ($this->scan_date_tgl->SearchValue <> "" || $this->scan_date_tgl->SearchValue2 <> "") {
+			$sWrk = "\"sv_scan_date_tgl\":\"" . ewr_JsEncode2($this->scan_date_tgl->SearchValue) . "\"," .
+				"\"so_scan_date_tgl\":\"" . ewr_JsEncode2($this->scan_date_tgl->SearchOperator) . "\"," .
+				"\"sc_scan_date_tgl\":\"" . ewr_JsEncode2($this->scan_date_tgl->SearchCondition) . "\"," .
+				"\"sv2_scan_date_tgl\":\"" . ewr_JsEncode2($this->scan_date_tgl->SearchValue2) . "\"," .
+				"\"so2_scan_date_tgl\":\"" . ewr_JsEncode2($this->scan_date_tgl->SearchOperator2) . "\"";
 		}
 		if ($sWrk <> "") {
 			if ($sFilterList <> "") $sFilterList .= ",";
@@ -1588,28 +1679,42 @@ class crr_scan_log_summary extends crr_scan_log {
 		if (!is_array($filter))
 			return FALSE;
 
-		// Field scan_date
+		// Field pegawai_nip
 		$bRestoreFilter = FALSE;
-		if (array_key_exists("sv_scan_date", $filter) || array_key_exists("so_scan_date", $filter) ||
-			array_key_exists("sc_scan_date", $filter) ||
-			array_key_exists("sv2_scan_date", $filter) || array_key_exists("so2_scan_date", $filter)) {
-			$this->SetSessionFilterValues(@$filter["sv_scan_date"], @$filter["so_scan_date"], @$filter["sc_scan_date"], @$filter["sv2_scan_date"], @$filter["so2_scan_date"], "scan_date");
+		if (array_key_exists("sv_pegawai_nip", $filter)) {
+			$sWrk = $filter["sv_pegawai_nip"];
+			if (strpos($sWrk, "||") !== FALSE)
+				$sWrk = explode("||", $sWrk);
+			$this->SetSessionDropDownValue($sWrk, @$filter["so_pegawai_nip"], "pegawai_nip");
 			$bRestoreFilter = TRUE;
 		}
 		if (!$bRestoreFilter) { // Clear filter
-			$this->SetSessionFilterValues("", "=", "AND", "", "=", "scan_date");
+			$this->SetSessionDropDownValue(EWR_INIT_VALUE, "", "pegawai_nip");
 		}
 
-		// Field pin
+		// Field pegawai_nama
 		$bRestoreFilter = FALSE;
-		if (array_key_exists("sv_pin", $filter) || array_key_exists("so_pin", $filter) ||
-			array_key_exists("sc_pin", $filter) ||
-			array_key_exists("sv2_pin", $filter) || array_key_exists("so2_pin", $filter)) {
-			$this->SetSessionFilterValues(@$filter["sv_pin"], @$filter["so_pin"], @$filter["sc_pin"], @$filter["sv2_pin"], @$filter["so2_pin"], "pin");
+		if (array_key_exists("sv_pegawai_nama", $filter)) {
+			$sWrk = $filter["sv_pegawai_nama"];
+			if (strpos($sWrk, "||") !== FALSE)
+				$sWrk = explode("||", $sWrk);
+			$this->SetSessionDropDownValue($sWrk, @$filter["so_pegawai_nama"], "pegawai_nama");
 			$bRestoreFilter = TRUE;
 		}
 		if (!$bRestoreFilter) { // Clear filter
-			$this->SetSessionFilterValues("", "=", "AND", "", "=", "pin");
+			$this->SetSessionDropDownValue(EWR_INIT_VALUE, "", "pegawai_nama");
+		}
+
+		// Field scan_date_tgl
+		$bRestoreFilter = FALSE;
+		if (array_key_exists("sv_scan_date_tgl", $filter) || array_key_exists("so_scan_date_tgl", $filter) ||
+			array_key_exists("sc_scan_date_tgl", $filter) ||
+			array_key_exists("sv2_scan_date_tgl", $filter) || array_key_exists("so2_scan_date_tgl", $filter)) {
+			$this->SetSessionFilterValues(@$filter["sv_scan_date_tgl"], @$filter["so_scan_date_tgl"], @$filter["sc_scan_date_tgl"], @$filter["sv2_scan_date_tgl"], @$filter["so2_scan_date_tgl"], "scan_date_tgl");
+			$bRestoreFilter = TRUE;
+		}
+		if (!$bRestoreFilter) { // Clear filter
+			$this->SetSessionFilterValues("", "=", "AND", "", "=", "scan_date_tgl");
 		}
 		return TRUE;
 	}
@@ -1640,15 +1745,19 @@ class crr_scan_log_summary extends crr_scan_log {
 		if ($bResetSort) {
 			$this->setOrderBy("");
 			$this->setStartGroup(1);
-			$this->scan_date->setSort("");
-			$this->pin->setSort("");
+			$this->pegawai_nip->setSort("");
+			$this->pegawai_nama->setSort("");
+			$this->scan_date_tgl_jam->setSort("");
+			$this->scan_date_tgl->setSort("");
 
 		// Check for an Order parameter
 		} elseif ($orderBy <> "") {
 			$this->CurrentOrder = $orderBy;
 			$this->CurrentOrderType = $orderType;
-			$this->UpdateSort($this->scan_date, $bCtrl); // scan_date
-			$this->UpdateSort($this->pin, $bCtrl); // pin
+			$this->UpdateSort($this->pegawai_nip, $bCtrl); // pegawai_nip
+			$this->UpdateSort($this->pegawai_nama, $bCtrl); // pegawai_nama
+			$this->UpdateSort($this->scan_date_tgl_jam, $bCtrl); // scan_date_tgl_jam
+			$this->UpdateSort($this->scan_date_tgl, $bCtrl); // scan_date_tgl
 			$sSortSql = $this->SortSql();
 			$this->setOrderBy($sSortSql);
 			$this->setStartGroup(1);
@@ -1923,9 +2032,9 @@ class crr_scan_log_summary extends crr_scan_log {
 <?php
 
 // Create page object
-if (!isset($r_scan_log_summary)) $r_scan_log_summary = new crr_scan_log_summary();
+if (!isset($r_att_log_summary)) $r_att_log_summary = new crr_att_log_summary();
 if (isset($Page)) $OldPage = $Page;
-$Page = &$r_scan_log_summary;
+$Page = &$r_att_log_summary;
 
 // Page init
 $Page->Page_Init();
@@ -1945,21 +2054,21 @@ $Page->Page_Render();
 <script type="text/javascript">
 
 // Create page object
-var r_scan_log_summary = new ewr_Page("r_scan_log_summary");
+var r_att_log_summary = new ewr_Page("r_att_log_summary");
 
 // Page properties
-r_scan_log_summary.PageID = "summary"; // Page ID
-var EWR_PAGE_ID = r_scan_log_summary.PageID;
+r_att_log_summary.PageID = "summary"; // Page ID
+var EWR_PAGE_ID = r_att_log_summary.PageID;
 
 // Extend page with Chart_Rendering function
-r_scan_log_summary.Chart_Rendering = 
+r_att_log_summary.Chart_Rendering = 
  function(chart, chartid) { // DO NOT CHANGE THIS LINE!
 
  	//alert(chartid);
  }
 
 // Extend page with Chart_Rendered function
-r_scan_log_summary.Chart_Rendered = 
+r_att_log_summary.Chart_Rendered = 
  function(chart, chartid) { // DO NOT CHANGE THIS LINE!
 
  	//alert(chartid);
@@ -1970,21 +2079,21 @@ r_scan_log_summary.Chart_Rendered =
 <script type="text/javascript">
 
 // Form object
-var CurrentForm = fr_scan_logsummary = new ewr_Form("fr_scan_logsummary");
+var CurrentForm = fr_att_logsummary = new ewr_Form("fr_att_logsummary");
 
 // Validate method
-fr_scan_logsummary.Validate = function() {
+fr_att_logsummary.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
-	var elm = fobj.sv_scan_date;
-	if (elm && !ewr_CheckEuroDate(elm.value)) {
-		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->scan_date->FldErrMsg()) ?>"))
+	var elm = fobj.sv_scan_date_tgl;
+	if (elm && !ewr_CheckDateDef(elm.value)) {
+		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->scan_date_tgl->FldErrMsg()) ?>"))
 			return false;
 	}
-	var elm = fobj.sv2_scan_date;
-	if (elm && !ewr_CheckEuroDate(elm.value)) {
-		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->scan_date->FldErrMsg()) ?>"))
+	var elm = fobj.sv2_scan_date_tgl;
+	if (elm && !ewr_CheckDateDef(elm.value)) {
+		if (!this.OnError(elm, "<?php echo ewr_JsEncode2($Page->scan_date_tgl->FldErrMsg()) ?>"))
 			return false;
 	}
 
@@ -1995,19 +2104,21 @@ fr_scan_logsummary.Validate = function() {
 }
 
 // Form_CustomValidate method
-fr_scan_logsummary.Form_CustomValidate = 
+fr_att_logsummary.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
  	return true;
  }
 <?php if (EWR_CLIENT_VALIDATE) { ?>
-fr_scan_logsummary.ValidateRequired = true; // Uses JavaScript validation
+fr_att_logsummary.ValidateRequired = true; // Uses JavaScript validation
 <?php } else { ?>
-fr_scan_logsummary.ValidateRequired = false; // No JavaScript validation
+fr_att_logsummary.ValidateRequired = false; // No JavaScript validation
 <?php } ?>
 
 // Use Ajax
+fr_att_logsummary.Lists["sv_pegawai_nip"] = {"LinkField":"sv_pegawai_nip","Ajax":true,"DisplayFields":["sv_pegawai_nip","","",""],"ParentFields":[],"FilterFields":[],"Options":[],"Template":""};
+fr_att_logsummary.Lists["sv_pegawai_nama"] = {"LinkField":"sv_pegawai_nama","Ajax":true,"DisplayFields":["sv_pegawai_nama","","",""],"ParentFields":[],"FilterFields":[],"Options":[],"Template":""};
 </script>
 <?php } ?>
 <?php if ($Page->Export == "" && !$Page->DrillDown) { ?>
@@ -2066,32 +2177,46 @@ if (!$Page->DrillDownInPanel) {
 <?php } ?>
 <?php if ($Page->Export == "" && !$Page->DrillDown) { ?>
 <!-- Search form (begin) -->
-<form name="fr_scan_logsummary" id="fr_scan_logsummary" class="form-inline ewForm ewExtFilterForm" action="<?php echo ewr_CurrentPage() ?>">
+<form name="fr_att_logsummary" id="fr_att_logsummary" class="form-inline ewForm ewExtFilterForm" action="<?php echo ewr_CurrentPage() ?>">
 <?php $SearchPanelClass = ($Page->Filter <> "") ? " in" : " in"; ?>
-<div id="fr_scan_logsummary_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<div id="fr_att_logsummary_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
 <div id="r_1" class="ewRow">
-<div id="c_scan_date" class="ewCell form-group">
-	<label for="sv_scan_date" class="ewSearchCaption ewLabel"><?php echo $Page->scan_date->FldCaption() ?></label>
-	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("BETWEEN"); ?><input type="hidden" name="so_scan_date" id="so_scan_date" value="BETWEEN"></span>
-	<span class="control-group ewSearchField">
-<?php ewr_PrependClass($Page->scan_date->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_scan_log" data-field="x_scan_date" id="sv_scan_date" name="sv_scan_date" placeholder="<?php echo $Page->scan_date->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->scan_date->SearchValue) ?>" data-calendar="true" data-formatid="11"<?php echo $Page->scan_date->EditAttributes() ?>>
+<div id="c_pegawai_nip" class="ewCell form-group">
+	<label for="sv_pegawai_nip" class="ewSearchCaption ewLabel"><?php echo $Page->pegawai_nip->FldCaption() ?></label>
+	<span class="ewSearchField">
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_sv_pegawai_nip"><?php echo (strval(ewr_FilterDropDownValue($Page->pegawai_nip)) == "" ? $ReportLanguage->Phrase("PleaseSelect") : ewr_FilterDropDownValue($Page->pegawai_nip)); ?></span>
 </span>
-	<span class="ewSearchCond btw1_scan_date"><?php echo $ReportLanguage->Phrase("AND") ?></span>
-	<span class="ewSearchField btw1_scan_date">
-<?php ewr_PrependClass($Page->scan_date->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_scan_log" data-field="x_scan_date" id="sv2_scan_date" name="sv2_scan_date" placeholder="<?php echo $Page->scan_date->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->scan_date->SearchValue2) ?>" data-calendar="true" data-formatid="11"<?php echo $Page->scan_date->EditAttributes() ?>>
-</span>
+<button type="button" title="<?php echo ewr_HtmlEncode(str_replace("%s", ewr_RemoveHtml($Page->pegawai_nip->FldCaption()), $ReportLanguage->Phrase("LookupLink", TRUE))) ?>" onclick="ewr_ModalLookupShow({lnk:this,el:'sv_pegawai_nip',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="r_att_log" data-field="x_pegawai_nip" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $Page->pegawai_nip->DisplayValueSeparatorAttribute() ?>" name="sv_pegawai_nip" id="sv_pegawai_nip" value="<?php echo ewr_FilterDropDownValue($Page->pegawai_nip) ?>"<?php echo $Page->pegawai_nip->EditAttributes() ?>>
+<input type="hidden" name="s_sv_pegawai_nip" id="s_sv_pegawai_nip" value="<?php echo $Page->pegawai_nip->LookupFilterQuery() ?>"></span>
 </div>
 </div>
 <div id="r_2" class="ewRow">
-<div id="c_pin" class="ewCell form-group">
-	<label for="sv_pin" class="ewSearchCaption ewLabel"><?php echo $Page->pin->FldCaption() ?></label>
-	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("LIKE"); ?><input type="hidden" name="so_pin" id="so_pin" value="LIKE"></span>
+<div id="c_pegawai_nama" class="ewCell form-group">
+	<label for="sv_pegawai_nama" class="ewSearchCaption ewLabel"><?php echo $Page->pegawai_nama->FldCaption() ?></label>
+	<span class="ewSearchField">
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_sv_pegawai_nama"><?php echo (strval(ewr_FilterDropDownValue($Page->pegawai_nama)) == "" ? $ReportLanguage->Phrase("PleaseSelect") : ewr_FilterDropDownValue($Page->pegawai_nama)); ?></span>
+</span>
+<button type="button" title="<?php echo ewr_HtmlEncode(str_replace("%s", ewr_RemoveHtml($Page->pegawai_nama->FldCaption()), $ReportLanguage->Phrase("LookupLink", TRUE))) ?>" onclick="ewr_ModalLookupShow({lnk:this,el:'sv_pegawai_nama',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="r_att_log" data-field="x_pegawai_nama" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $Page->pegawai_nama->DisplayValueSeparatorAttribute() ?>" name="sv_pegawai_nama" id="sv_pegawai_nama" value="<?php echo ewr_FilterDropDownValue($Page->pegawai_nama) ?>"<?php echo $Page->pegawai_nama->EditAttributes() ?>>
+<input type="hidden" name="s_sv_pegawai_nama" id="s_sv_pegawai_nama" value="<?php echo $Page->pegawai_nama->LookupFilterQuery() ?>"></span>
+</div>
+</div>
+<div id="r_3" class="ewRow">
+<div id="c_scan_date_tgl" class="ewCell form-group">
+	<label for="sv_scan_date_tgl" class="ewSearchCaption ewLabel"><?php echo $Page->scan_date_tgl->FldCaption() ?></label>
+	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("BETWEEN"); ?><input type="hidden" name="so_scan_date_tgl" id="so_scan_date_tgl" value="BETWEEN"></span>
 	<span class="control-group ewSearchField">
-<?php ewr_PrependClass($Page->pin->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_scan_log" data-field="x_pin" id="sv_pin" name="sv_pin" size="30" maxlength="32" placeholder="<?php echo $Page->pin->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->pin->SearchValue) ?>"<?php echo $Page->pin->EditAttributes() ?>>
+<?php ewr_PrependClass($Page->scan_date_tgl->EditAttrs["class"], "form-control"); // PR8 ?>
+<input type="text" data-table="r_att_log" data-field="x_scan_date_tgl" id="sv_scan_date_tgl" name="sv_scan_date_tgl" size="30" maxlength="10" placeholder="<?php echo $Page->scan_date_tgl->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->scan_date_tgl->SearchValue) ?>" data-calendar="true" data-formatid="0"<?php echo $Page->scan_date_tgl->EditAttributes() ?>>
+</span>
+	<span class="ewSearchCond btw1_scan_date_tgl"><?php echo $ReportLanguage->Phrase("AND") ?></span>
+	<span class="ewSearchField btw1_scan_date_tgl">
+<?php ewr_PrependClass($Page->scan_date_tgl->EditAttrs["class"], "form-control"); // PR8 ?>
+<input type="text" data-table="r_att_log" data-field="x_scan_date_tgl" id="sv2_scan_date_tgl" name="sv2_scan_date_tgl" size="30" maxlength="10" placeholder="<?php echo $Page->scan_date_tgl->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->scan_date_tgl->SearchValue2) ?>" data-calendar="true" data-formatid="0"<?php echo $Page->scan_date_tgl->EditAttributes() ?>>
 </span>
 </div>
 </div>
@@ -2100,8 +2225,8 @@ if (!$Page->DrillDownInPanel) {
 </div>
 </form>
 <script type="text/javascript">
-fr_scan_logsummary.Init();
-fr_scan_logsummary.FilterList = <?php echo $Page->GetFilterList() ?>;
+fr_att_logsummary.Init();
+fr_att_logsummary.FilterList = <?php echo $Page->GetFilterList() ?>;
 </script>
 <!-- Search form (end) -->
 <?php } ?>
@@ -2147,7 +2272,7 @@ while ($rs && !$rs->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page->ShowH
 <?php } ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-heading ewGridUpperPanel">
-<?php include "r_scan_logsmrypager.php" ?>
+<?php include "r_att_logsmrypager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -2159,37 +2284,73 @@ while ($rs && !$rs->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page->ShowH
 <thead>
 	<!-- Table header -->
 	<tr class="ewTableHeader">
-<?php if ($Page->scan_date->Visible) { ?>
+<?php if ($Page->pegawai_nip->Visible) { ?>
 <?php if ($Page->Export <> "" || $Page->DrillDown) { ?>
-	<td data-field="scan_date"><div class="r_scan_log_scan_date"><span class="ewTableHeaderCaption"><?php echo $Page->scan_date->FldCaption() ?></span></div></td>
+	<td data-field="pegawai_nip"><div class="r_att_log_pegawai_nip"><span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nip->FldCaption() ?></span></div></td>
 <?php } else { ?>
-	<td data-field="scan_date">
-<?php if ($Page->SortUrl($Page->scan_date) == "") { ?>
-		<div class="ewTableHeaderBtn r_scan_log_scan_date">
-			<span class="ewTableHeaderCaption"><?php echo $Page->scan_date->FldCaption() ?></span>
+	<td data-field="pegawai_nip">
+<?php if ($Page->SortUrl($Page->pegawai_nip) == "") { ?>
+		<div class="ewTableHeaderBtn r_att_log_pegawai_nip">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nip->FldCaption() ?></span>
 		</div>
 <?php } else { ?>
-		<div class="ewTableHeaderBtn ewPointer r_scan_log_scan_date" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->scan_date) ?>',2);">
-			<span class="ewTableHeaderCaption"><?php echo $Page->scan_date->FldCaption() ?></span>
-			<span class="ewTableHeaderSort"><?php if ($Page->scan_date->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->scan_date->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
+		<div class="ewTableHeaderBtn ewPointer r_att_log_pegawai_nip" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->pegawai_nip) ?>',2);">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nip->FldCaption() ?></span>
+			<span class="ewTableHeaderSort"><?php if ($Page->pegawai_nip->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->pegawai_nip->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
 		</div>
 <?php } ?>
 	</td>
 <?php } ?>
 <?php } ?>
-<?php if ($Page->pin->Visible) { ?>
+<?php if ($Page->pegawai_nama->Visible) { ?>
 <?php if ($Page->Export <> "" || $Page->DrillDown) { ?>
-	<td data-field="pin"><div class="r_scan_log_pin"><span class="ewTableHeaderCaption"><?php echo $Page->pin->FldCaption() ?></span></div></td>
+	<td data-field="pegawai_nama"><div class="r_att_log_pegawai_nama"><span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span></div></td>
 <?php } else { ?>
-	<td data-field="pin">
-<?php if ($Page->SortUrl($Page->pin) == "") { ?>
-		<div class="ewTableHeaderBtn r_scan_log_pin">
-			<span class="ewTableHeaderCaption"><?php echo $Page->pin->FldCaption() ?></span>
+	<td data-field="pegawai_nama">
+<?php if ($Page->SortUrl($Page->pegawai_nama) == "") { ?>
+		<div class="ewTableHeaderBtn r_att_log_pegawai_nama">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span>
 		</div>
 <?php } else { ?>
-		<div class="ewTableHeaderBtn ewPointer r_scan_log_pin" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->pin) ?>',2);">
-			<span class="ewTableHeaderCaption"><?php echo $Page->pin->FldCaption() ?></span>
-			<span class="ewTableHeaderSort"><?php if ($Page->pin->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->pin->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
+		<div class="ewTableHeaderBtn ewPointer r_att_log_pegawai_nama" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->pegawai_nama) ?>',2);">
+			<span class="ewTableHeaderCaption"><?php echo $Page->pegawai_nama->FldCaption() ?></span>
+			<span class="ewTableHeaderSort"><?php if ($Page->pegawai_nama->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->pegawai_nama->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
+		</div>
+<?php } ?>
+	</td>
+<?php } ?>
+<?php } ?>
+<?php if ($Page->scan_date_tgl_jam->Visible) { ?>
+<?php if ($Page->Export <> "" || $Page->DrillDown) { ?>
+	<td data-field="scan_date_tgl_jam"><div class="r_att_log_scan_date_tgl_jam"><span class="ewTableHeaderCaption"><?php echo $Page->scan_date_tgl_jam->FldCaption() ?></span></div></td>
+<?php } else { ?>
+	<td data-field="scan_date_tgl_jam">
+<?php if ($Page->SortUrl($Page->scan_date_tgl_jam) == "") { ?>
+		<div class="ewTableHeaderBtn r_att_log_scan_date_tgl_jam">
+			<span class="ewTableHeaderCaption"><?php echo $Page->scan_date_tgl_jam->FldCaption() ?></span>
+		</div>
+<?php } else { ?>
+		<div class="ewTableHeaderBtn ewPointer r_att_log_scan_date_tgl_jam" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->scan_date_tgl_jam) ?>',2);">
+			<span class="ewTableHeaderCaption"><?php echo $Page->scan_date_tgl_jam->FldCaption() ?></span>
+			<span class="ewTableHeaderSort"><?php if ($Page->scan_date_tgl_jam->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->scan_date_tgl_jam->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
+		</div>
+<?php } ?>
+	</td>
+<?php } ?>
+<?php } ?>
+<?php if ($Page->scan_date_tgl->Visible) { ?>
+<?php if ($Page->Export <> "" || $Page->DrillDown) { ?>
+	<td data-field="scan_date_tgl"><div class="r_att_log_scan_date_tgl"><span class="ewTableHeaderCaption"><?php echo $Page->scan_date_tgl->FldCaption() ?></span></div></td>
+<?php } else { ?>
+	<td data-field="scan_date_tgl">
+<?php if ($Page->SortUrl($Page->scan_date_tgl) == "") { ?>
+		<div class="ewTableHeaderBtn r_att_log_scan_date_tgl">
+			<span class="ewTableHeaderCaption"><?php echo $Page->scan_date_tgl->FldCaption() ?></span>
+		</div>
+<?php } else { ?>
+		<div class="ewTableHeaderBtn ewPointer r_att_log_scan_date_tgl" onclick="ewr_Sort(event,'<?php echo $Page->SortUrl($Page->scan_date_tgl) ?>',2);">
+			<span class="ewTableHeaderCaption"><?php echo $Page->scan_date_tgl->FldCaption() ?></span>
+			<span class="ewTableHeaderSort"><?php if ($Page->scan_date_tgl->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($Page->scan_date_tgl->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span>
 		</div>
 <?php } ?>
 	</td>
@@ -2213,13 +2374,21 @@ while ($rs && !$rs->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page->ShowH
 		$Page->RenderRow();
 ?>
 	<tr<?php echo $Page->RowAttributes(); ?>>
-<?php if ($Page->scan_date->Visible) { ?>
-		<td data-field="scan_date"<?php echo $Page->scan_date->CellAttributes() ?>>
-<span data-class="tpx<?php echo $Page->GrpCount ?>_<?php echo $Page->RecCount ?>_r_scan_log_scan_date"<?php echo $Page->scan_date->ViewAttributes() ?>><?php echo $Page->scan_date->ListViewValue() ?></span></td>
+<?php if ($Page->pegawai_nip->Visible) { ?>
+		<td data-field="pegawai_nip"<?php echo $Page->pegawai_nip->CellAttributes() ?>>
+<span data-class="tpx<?php echo $Page->GrpCount ?>_<?php echo $Page->RecCount ?>_r_att_log_pegawai_nip"<?php echo $Page->pegawai_nip->ViewAttributes() ?>><?php echo $Page->pegawai_nip->ListViewValue() ?></span></td>
 <?php } ?>
-<?php if ($Page->pin->Visible) { ?>
-		<td data-field="pin"<?php echo $Page->pin->CellAttributes() ?>>
-<span data-class="tpx<?php echo $Page->GrpCount ?>_<?php echo $Page->RecCount ?>_r_scan_log_pin"<?php echo $Page->pin->ViewAttributes() ?>><?php echo $Page->pin->ListViewValue() ?></span></td>
+<?php if ($Page->pegawai_nama->Visible) { ?>
+		<td data-field="pegawai_nama"<?php echo $Page->pegawai_nama->CellAttributes() ?>>
+<span data-class="tpx<?php echo $Page->GrpCount ?>_<?php echo $Page->RecCount ?>_r_att_log_pegawai_nama"<?php echo $Page->pegawai_nama->ViewAttributes() ?>><?php echo $Page->pegawai_nama->ListViewValue() ?></span></td>
+<?php } ?>
+<?php if ($Page->scan_date_tgl_jam->Visible) { ?>
+		<td data-field="scan_date_tgl_jam"<?php echo $Page->scan_date_tgl_jam->CellAttributes() ?>>
+<span data-class="tpx<?php echo $Page->GrpCount ?>_<?php echo $Page->RecCount ?>_r_att_log_scan_date_tgl_jam"<?php echo $Page->scan_date_tgl_jam->ViewAttributes() ?>><?php echo $Page->scan_date_tgl_jam->ListViewValue() ?></span></td>
+<?php } ?>
+<?php if ($Page->scan_date_tgl->Visible) { ?>
+		<td data-field="scan_date_tgl"<?php echo $Page->scan_date_tgl->CellAttributes() ?>>
+<span data-class="tpx<?php echo $Page->GrpCount ?>_<?php echo $Page->RecCount ?>_r_att_log_scan_date_tgl"<?php echo $Page->scan_date_tgl->ViewAttributes() ?>><?php echo $Page->scan_date_tgl->ListViewValue() ?></span></td>
 <?php } ?>
 	</tr>
 <?php
@@ -2255,7 +2424,7 @@ while ($rs && !$rs->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page->ShowH
 <?php } ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-heading ewGridUpperPanel">
-<?php include "r_scan_logsmrypager.php" ?>
+<?php include "r_att_logsmrypager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -2273,7 +2442,7 @@ while ($rs && !$rs->EOF && $Page->GrpCount <= $Page->DisplayGrps || $Page->ShowH
 <?php if ($Page->TotalGrps > 0) { ?>
 <?php if ($Page->Export == "" && !($Page->DrillDown && $Page->TotalGrps > 0)) { ?>
 <div class="panel-footer ewGridLowerPanel">
-<?php include "r_scan_logsmrypager.php" ?>
+<?php include "r_att_logsmrypager.php" ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>

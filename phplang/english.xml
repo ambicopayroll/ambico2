@@ -586,17 +586,20 @@
     <menu id="10082">
       <phrase id="menutext" value="kartu scanlog" />
     </menu>
-    <menu id="10083">
-      <phrase id="menutext" value="v rekon" />
-    </menu>
     <menu id="64">
       <phrase id="menutext" value="Dashboard" />
+    </menu>
+    <menu id="10083">
+      <phrase id="menutext" value="v rekon" />
     </menu>
     <menu id="129">
       <phrase id="menutext" value="Absensi" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="Data Finger Pegawai" />
+    </menu>
+    <menu id="10075">
+      <phrase id="menutext" value="Laporan Scan Finger" />
     </menu>
     <menu id="10073">
       <phrase id="menutext" value="Scan Log" />
@@ -816,6 +819,9 @@
     </menu>
     <menu id="10070">
       <phrase id="menutext" value="Rekonsiliasi Absensi" />
+    </menu>
+    <menu id="10074">
+      <phrase id="menutext" value="v att log" />
     </menu>
     <menu id="10066">
       <phrase id="menutext" value="kartu scanlog" />

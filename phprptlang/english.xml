@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/4/5" version="10.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/4/6" version="10.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -350,8 +350,11 @@
   <project>
     <phrase id="bodytitle" value="AMBICO" />
     <phrase id="footertext" value="&amp;copy;2017 AMBICO. All rights reserved." />
-    <menu id="73">
-      <phrase id="menutext" value="Scan Log" />
+    <menu id="74">
+      <phrase id="menutext" value="v att log" />
+    </menu>
+    <menu id="75">
+      <phrase id="menutext" value="Laporan Scan Finger" />
     </menu>
     <menu id="66">
       <phrase id="menutext" value="kartu scanlog" />
@@ -2291,31 +2294,58 @@
         <phrase id="fldcaption" value="Jadwal" />
       </field>
     </table>
-    <table id="r_scan_log">
-      <phrase id="tblcaption" value="Scan Log" />
+    <table id="v_att_log">
+      <phrase id="tblcaption" value="v att log" />
       <field id="sn">
-        <phrase id="fldcaption" value="SN" />
+        <phrase id="fldcaption" value="sn" />
       </field>
       <field id="scan_date">
-        <phrase id="fldcaption" value="Scan Date" />
+        <phrase id="fldcaption" value="scan date" />
       </field>
       <field id="pin">
-        <phrase id="fldcaption" value="PIN" />
-      </field>
-      <field id="verifymode">
-        <phrase id="fldcaption" value="verifymode" />
-      </field>
-      <field id="inoutmode">
-        <phrase id="fldcaption" value="inoutmode" />
-      </field>
-      <field id="reserved">
-        <phrase id="fldcaption" value="reserved" />
-      </field>
-      <field id="work_code">
-        <phrase id="fldcaption" value="work code" />
+        <phrase id="fldcaption" value="pin" />
       </field>
       <field id="att_id">
         <phrase id="fldcaption" value="att id" />
+      </field>
+      <field id="scan_date_tgl_jam">
+        <phrase id="fldcaption" value="scan date tgl jam" />
+      </field>
+      <field id="pegawai_nama">
+        <phrase id="fldcaption" value="pegawai nama" />
+      </field>
+      <field id="pegawai_nip">
+        <phrase id="fldcaption" value="pegawai nip" />
+      </field>
+      <field id="scan_date_tgl">
+        <phrase id="fldcaption" value="scan date tgl" />
+      </field>
+    </table>
+    <table id="r_att_log">
+      <phrase id="tblcaption" value="Laporan Scan Finger" />
+      <field id="sn">
+        <phrase id="fldcaption" value="sn" />
+      </field>
+      <field id="scan_date">
+        <phrase id="fldcaption" value="scan date" />
+      </field>
+      <field id="pin">
+        <phrase id="fldcaption" value="pin" />
+      </field>
+      <field id="att_id">
+        <phrase id="fldcaption" value="att id" />
+      </field>
+      <field id="pegawai_nip">
+        <phrase id="fldcaption" value="NIK" />
+      </field>
+      <field id="pegawai_nama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+      <field id="scan_date_tgl_jam">
+        <phrase id="fldcaption" value="Tgl. &amp; Jam" />
+      </field>
+      <field id="scan_date_tgl">
+        <phrase id="fldcaption" value="Tanggal (Thn-Bln-Tgl)" />
       </field>
     </table>
   </project>

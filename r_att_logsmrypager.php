@@ -44,7 +44,7 @@
 <?php } ?>
 <?php if ($Page->TotalGrps > 0) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="r_rekon2">
+<input type="hidden" name="t" value="r_att_log">
 <select name="<?php echo EWR_TABLE_GROUP_PER_PAGE; ?>" class="form-control input-sm" onchange="this.form.submit();">
 <option value="1"<?php if ($Page->DisplayGrps == 1) echo " selected" ?>>1</option>
 <option value="2"<?php if ($Page->DisplayGrps == 2) echo " selected" ?>>2</option>
