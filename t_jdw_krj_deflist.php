@@ -2170,12 +2170,12 @@ class ct_jdw_krj_def_list extends ct_jdw_krj_def {
 		$this->jk_id->setOldValue($objForm->GetValue("o_jk_id"));
 		if (!$this->scan_masuk->FldIsDetailKey) {
 			$this->scan_masuk->setFormValue($objForm->GetValue("x_scan_masuk"));
-			$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 0);
+			$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1);
 		}
 		$this->scan_masuk->setOldValue($objForm->GetValue("o_scan_masuk"));
 		if (!$this->scan_keluar->FldIsDetailKey) {
 			$this->scan_keluar->setFormValue($objForm->GetValue("x_scan_keluar"));
-			$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 0);
+			$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1);
 		}
 		$this->scan_keluar->setOldValue($objForm->GetValue("o_scan_keluar"));
 	}
@@ -2190,9 +2190,9 @@ class ct_jdw_krj_def_list extends ct_jdw_krj_def {
 		$this->tgl->CurrentValue = ew_UnFormatDateTime($this->tgl->CurrentValue, 0);
 		$this->jk_id->CurrentValue = $this->jk_id->FormValue;
 		$this->scan_masuk->CurrentValue = $this->scan_masuk->FormValue;
-		$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 0);
+		$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1);
 		$this->scan_keluar->CurrentValue = $this->scan_keluar->FormValue;
-		$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 0);
+		$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1);
 	}
 
 	// Load recordset
@@ -2394,12 +2394,12 @@ class ct_jdw_krj_def_list extends ct_jdw_krj_def {
 
 		// scan_masuk
 		$this->scan_masuk->ViewValue = $this->scan_masuk->CurrentValue;
-		$this->scan_masuk->ViewValue = ew_FormatDateTime($this->scan_masuk->ViewValue, 0);
+		$this->scan_masuk->ViewValue = ew_FormatDateTime($this->scan_masuk->ViewValue, 1);
 		$this->scan_masuk->ViewCustomAttributes = "";
 
 		// scan_keluar
 		$this->scan_keluar->ViewValue = $this->scan_keluar->CurrentValue;
-		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 0);
+		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 1);
 		$this->scan_keluar->ViewCustomAttributes = "";
 
 			// jdw_id
@@ -2726,13 +2726,13 @@ class ct_jdw_krj_def_list extends ct_jdw_krj_def {
 			// scan_masuk
 			$this->scan_masuk->EditAttrs["class"] = "form-control";
 			$this->scan_masuk->EditCustomAttributes = "";
-			$this->scan_masuk->EditValue = ew_HtmlEncode(ew_FormatDateTime(ew_UnFormatDateTime($this->scan_masuk->AdvancedSearch->SearchValue, 0), 8));
+			$this->scan_masuk->EditValue = ew_HtmlEncode(ew_FormatDateTime(ew_UnFormatDateTime($this->scan_masuk->AdvancedSearch->SearchValue, 1), 8));
 			$this->scan_masuk->PlaceHolder = ew_RemoveHtml($this->scan_masuk->FldCaption());
 
 			// scan_keluar
 			$this->scan_keluar->EditAttrs["class"] = "form-control";
 			$this->scan_keluar->EditCustomAttributes = "";
-			$this->scan_keluar->EditValue = ew_HtmlEncode(ew_FormatDateTime(ew_UnFormatDateTime($this->scan_keluar->AdvancedSearch->SearchValue, 0), 8));
+			$this->scan_keluar->EditValue = ew_HtmlEncode(ew_FormatDateTime(ew_UnFormatDateTime($this->scan_keluar->AdvancedSearch->SearchValue, 1), 8));
 			$this->scan_keluar->PlaceHolder = ew_RemoveHtml($this->scan_keluar->FldCaption());
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD ||
@@ -2931,10 +2931,10 @@ class ct_jdw_krj_def_list extends ct_jdw_krj_def {
 			$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, $this->jk_id->ReadOnly);
 
 			// scan_masuk
-			$this->scan_masuk->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 0), NULL, $this->scan_masuk->ReadOnly);
+			$this->scan_masuk->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1), NULL, $this->scan_masuk->ReadOnly);
 
 			// scan_keluar
-			$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 0), NULL, $this->scan_keluar->ReadOnly);
+			$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1), NULL, $this->scan_keluar->ReadOnly);
 
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
@@ -2989,10 +2989,10 @@ class ct_jdw_krj_def_list extends ct_jdw_krj_def {
 		$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, FALSE);
 
 		// scan_masuk
-		$this->scan_masuk->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 0), NULL, FALSE);
+		$this->scan_masuk->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1), NULL, FALSE);
 
 		// scan_keluar
-		$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 0), NULL, FALSE);
+		$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1), NULL, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
@@ -4166,7 +4166,7 @@ ew_CreateCalendar("ft_jdw_krj_deflist", "x<?php echo $t_jdw_krj_def_list->RowInd
 	<?php if ($t_jdw_krj_def->scan_masuk->Visible) { // scan_masuk ?>
 		<td data-name="scan_masuk">
 <span id="el<?php echo $t_jdw_krj_def_list->RowCnt ?>_t_jdw_krj_def_scan_masuk" class="form-group t_jdw_krj_def_scan_masuk">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" data-format="1" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" value="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->OldValue) ?>">
 </td>
@@ -4174,7 +4174,7 @@ ew_CreateCalendar("ft_jdw_krj_deflist", "x<?php echo $t_jdw_krj_def_list->RowInd
 	<?php if ($t_jdw_krj_def->scan_keluar->Visible) { // scan_keluar ?>
 		<td data-name="scan_keluar">
 <span id="el<?php echo $t_jdw_krj_def_list->RowCnt ?>_t_jdw_krj_def_scan_keluar" class="form-group t_jdw_krj_def_scan_keluar">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" data-format="1" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" value="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->OldValue) ?>">
 </td>
@@ -4455,13 +4455,13 @@ ew_CreateCalendar("ft_jdw_krj_deflist", "x<?php echo $t_jdw_krj_def_list->RowInd
 		<td data-name="scan_masuk"<?php echo $t_jdw_krj_def->scan_masuk->CellAttributes() ?>>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t_jdw_krj_def_list->RowCnt ?>_t_jdw_krj_def_scan_masuk" class="form-group t_jdw_krj_def_scan_masuk">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" data-format="1" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" value="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->OldValue) ?>">
 <?php } ?>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t_jdw_krj_def_list->RowCnt ?>_t_jdw_krj_def_scan_masuk" class="form-group t_jdw_krj_def_scan_masuk">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" data-format="1" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
 </span>
 <?php } ?>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -4476,13 +4476,13 @@ ew_CreateCalendar("ft_jdw_krj_deflist", "x<?php echo $t_jdw_krj_def_list->RowInd
 		<td data-name="scan_keluar"<?php echo $t_jdw_krj_def->scan_keluar->CellAttributes() ?>>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t_jdw_krj_def_list->RowCnt ?>_t_jdw_krj_def_scan_keluar" class="form-group t_jdw_krj_def_scan_keluar">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" data-format="1" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" value="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->OldValue) ?>">
 <?php } ?>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t_jdw_krj_def_list->RowCnt ?>_t_jdw_krj_def_scan_keluar" class="form-group t_jdw_krj_def_scan_keluar">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" data-format="1" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
 </span>
 <?php } ?>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -4599,7 +4599,7 @@ ew_CreateCalendar("ft_jdw_krj_deflist", "x<?php echo $t_jdw_krj_def_list->RowInd
 	<?php if ($t_jdw_krj_def->scan_masuk->Visible) { // scan_masuk ?>
 		<td data-name="scan_masuk">
 <span id="el$rowindex$_t_jdw_krj_def_scan_masuk" class="form-group t_jdw_krj_def_scan_masuk">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" data-format="1" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" id="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_masuk" value="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->OldValue) ?>">
 </td>
@@ -4607,7 +4607,7 @@ ew_CreateCalendar("ft_jdw_krj_deflist", "x<?php echo $t_jdw_krj_def_list->RowInd
 	<?php if ($t_jdw_krj_def->scan_keluar->Visible) { // scan_keluar ?>
 		<td data-name="scan_keluar">
 <span id="el$rowindex$_t_jdw_krj_def_scan_keluar" class="form-group t_jdw_krj_def_scan_keluar">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" data-format="1" name="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" id="o<?php echo $t_jdw_krj_def_list->RowIndex ?>_scan_keluar" value="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->OldValue) ?>">
 </td>

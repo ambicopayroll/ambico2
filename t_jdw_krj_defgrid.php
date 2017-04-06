@@ -521,13 +521,13 @@ ew_CreateCalendar("ft_jdw_krj_defgrid", "x<?php echo $t_jdw_krj_def_grid->RowInd
 		<td data-name="scan_masuk"<?php echo $t_jdw_krj_def->scan_masuk->CellAttributes() ?>>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t_jdw_krj_def_grid->RowCnt ?>_t_jdw_krj_def_scan_masuk" class="form-group t_jdw_krj_def_scan_masuk">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" data-format="1" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="o<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" id="o<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" value="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->OldValue) ?>">
 <?php } ?>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t_jdw_krj_def_grid->RowCnt ?>_t_jdw_krj_def_scan_masuk" class="form-group t_jdw_krj_def_scan_masuk">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" data-format="1" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
 </span>
 <?php } ?>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -549,13 +549,13 @@ ew_CreateCalendar("ft_jdw_krj_defgrid", "x<?php echo $t_jdw_krj_def_grid->RowInd
 		<td data-name="scan_keluar"<?php echo $t_jdw_krj_def->scan_keluar->CellAttributes() ?>>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t_jdw_krj_def_grid->RowCnt ?>_t_jdw_krj_def_scan_keluar" class="form-group t_jdw_krj_def_scan_keluar">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" data-format="1" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="o<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" id="o<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" value="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->OldValue) ?>">
 <?php } ?>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t_jdw_krj_def_grid->RowCnt ?>_t_jdw_krj_def_scan_keluar" class="form-group t_jdw_krj_def_scan_keluar">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" data-format="1" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
 </span>
 <?php } ?>
 <?php if ($t_jdw_krj_def->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -712,7 +712,7 @@ ew_CreateCalendar("ft_jdw_krj_defgrid", "x<?php echo $t_jdw_krj_def_grid->RowInd
 		<td data-name="scan_masuk">
 <?php if ($t_jdw_krj_def->CurrentAction <> "F") { ?>
 <span id="el$rowindex$_t_jdw_krj_def_scan_masuk" class="form-group t_jdw_krj_def_scan_masuk">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_masuk" data-format="1" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_masuk" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_masuk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_masuk->EditValue ?>"<?php echo $t_jdw_krj_def->scan_masuk->EditAttributes() ?>>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_t_jdw_krj_def_scan_masuk" class="form-group t_jdw_krj_def_scan_masuk">
@@ -728,7 +728,7 @@ ew_CreateCalendar("ft_jdw_krj_defgrid", "x<?php echo $t_jdw_krj_def_grid->RowInd
 		<td data-name="scan_keluar">
 <?php if ($t_jdw_krj_def->CurrentAction <> "F") { ?>
 <span id="el$rowindex$_t_jdw_krj_def_scan_keluar" class="form-group t_jdw_krj_def_scan_keluar">
-<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
+<input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" data-format="1" name="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" id="x<?php echo $t_jdw_krj_def_grid->RowIndex ?>_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_t_jdw_krj_def_scan_keluar" class="form-group t_jdw_krj_def_scan_keluar">

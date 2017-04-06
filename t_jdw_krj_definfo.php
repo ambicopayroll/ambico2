@@ -77,13 +77,13 @@ class ct_jdw_krj_def extends cTable {
 		$this->fields['jk_id'] = &$this->jk_id;
 
 		// scan_masuk
-		$this->scan_masuk = new cField('t_jdw_krj_def', 't_jdw_krj_def', 'x_scan_masuk', 'scan_masuk', '`scan_masuk`', ew_CastDateFieldForLike('`scan_masuk`', 0, "DB"), 135, 0, FALSE, '`scan_masuk`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->scan_masuk = new cField('t_jdw_krj_def', 't_jdw_krj_def', 'x_scan_masuk', 'scan_masuk', '`scan_masuk`', ew_CastDateFieldForLike('`scan_masuk`', 1, "DB"), 135, 1, FALSE, '`scan_masuk`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->scan_masuk->Sortable = TRUE; // Allow sort
 		$this->scan_masuk->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
 		$this->fields['scan_masuk'] = &$this->scan_masuk;
 
 		// scan_keluar
-		$this->scan_keluar = new cField('t_jdw_krj_def', 't_jdw_krj_def', 'x_scan_keluar', 'scan_keluar', '`scan_keluar`', ew_CastDateFieldForLike('`scan_keluar`', 0, "DB"), 135, 0, FALSE, '`scan_keluar`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->scan_keluar = new cField('t_jdw_krj_def', 't_jdw_krj_def', 'x_scan_keluar', 'scan_keluar', '`scan_keluar`', ew_CastDateFieldForLike('`scan_keluar`', 1, "DB"), 135, 1, FALSE, '`scan_keluar`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->scan_keluar->Sortable = TRUE; // Allow sort
 		$this->scan_keluar->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
 		$this->fields['scan_keluar'] = &$this->scan_keluar;
@@ -807,12 +807,12 @@ class ct_jdw_krj_def extends cTable {
 
 		// scan_masuk
 		$this->scan_masuk->ViewValue = $this->scan_masuk->CurrentValue;
-		$this->scan_masuk->ViewValue = ew_FormatDateTime($this->scan_masuk->ViewValue, 0);
+		$this->scan_masuk->ViewValue = ew_FormatDateTime($this->scan_masuk->ViewValue, 1);
 		$this->scan_masuk->ViewCustomAttributes = "";
 
 		// scan_keluar
 		$this->scan_keluar->ViewValue = $this->scan_keluar->CurrentValue;
-		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 0);
+		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 1);
 		$this->scan_keluar->ViewCustomAttributes = "";
 
 		// jdw_id

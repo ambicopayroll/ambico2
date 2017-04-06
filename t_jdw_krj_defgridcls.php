@@ -1210,12 +1210,12 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		$this->jk_id->setOldValue($objForm->GetValue("o_jk_id"));
 		if (!$this->scan_masuk->FldIsDetailKey) {
 			$this->scan_masuk->setFormValue($objForm->GetValue("x_scan_masuk"));
-			$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 0);
+			$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1);
 		}
 		$this->scan_masuk->setOldValue($objForm->GetValue("o_scan_masuk"));
 		if (!$this->scan_keluar->FldIsDetailKey) {
 			$this->scan_keluar->setFormValue($objForm->GetValue("x_scan_keluar"));
-			$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 0);
+			$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1);
 		}
 		$this->scan_keluar->setOldValue($objForm->GetValue("o_scan_keluar"));
 	}
@@ -1230,9 +1230,9 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		$this->tgl->CurrentValue = ew_UnFormatDateTime($this->tgl->CurrentValue, 0);
 		$this->jk_id->CurrentValue = $this->jk_id->FormValue;
 		$this->scan_masuk->CurrentValue = $this->scan_masuk->FormValue;
-		$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 0);
+		$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1);
 		$this->scan_keluar->CurrentValue = $this->scan_keluar->FormValue;
-		$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 0);
+		$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1);
 	}
 
 	// Load recordset
@@ -1438,12 +1438,12 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 
 		// scan_masuk
 		$this->scan_masuk->ViewValue = $this->scan_masuk->CurrentValue;
-		$this->scan_masuk->ViewValue = ew_FormatDateTime($this->scan_masuk->ViewValue, 0);
+		$this->scan_masuk->ViewValue = ew_FormatDateTime($this->scan_masuk->ViewValue, 1);
 		$this->scan_masuk->ViewCustomAttributes = "";
 
 		// scan_keluar
 		$this->scan_keluar->ViewValue = $this->scan_keluar->CurrentValue;
-		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 0);
+		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 1);
 		$this->scan_keluar->ViewCustomAttributes = "";
 
 			// jdw_id
@@ -1902,10 +1902,10 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, $this->jk_id->ReadOnly);
 
 			// scan_masuk
-			$this->scan_masuk->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 0), NULL, $this->scan_masuk->ReadOnly);
+			$this->scan_masuk->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1), NULL, $this->scan_masuk->ReadOnly);
 
 			// scan_keluar
-			$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 0), NULL, $this->scan_keluar->ReadOnly);
+			$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1), NULL, $this->scan_keluar->ReadOnly);
 
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
@@ -1965,10 +1965,10 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, FALSE);
 
 		// scan_masuk
-		$this->scan_masuk->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 0), NULL, FALSE);
+		$this->scan_masuk->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1), NULL, FALSE);
 
 		// scan_keluar
-		$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 0), NULL, FALSE);
+		$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1), NULL, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
