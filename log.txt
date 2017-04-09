@@ -8,3 +8,14 @@ yang perlu ditanyakan ::
 - create crosstab di phpreportmaker, yang diambil adalah tabel t_jdw_krj_def
 - tabel t_jdw_krj_def ditambahi field scan_masuk dan scan_keluar
 
+10:26 AM 4/7/2017
+- acuan untuk menentukan 5 hk atau 6 hk :: sementara dari jadwal default tiap2 pegawai
+- check ::	punya jadwal di periode yang diinput ? misal 26-02-2017 s.d. 04-03-2017
+			misal punya :: maka check ke laporan rekonsiliasi (tabel t_jdw_krj_def), apakah si pegawai masuk atau tidak ?
+			cara check masuk atau tidak :: dilihat data field scan_masuk dan scan_keluar
+			apabila ada data di scan_masuk dan scan_keluar :: maka si pegawai dianggap masuk dan dihitung gajinya pada hari tersebut
+			
+
+11:18 AM 4/7/2017
+- perlu dibuatkan pengisian jadwal untuk "sekaligus banyak pegawai"
+
