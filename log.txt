@@ -19,3 +19,6 @@ yang perlu ditanyakan ::
 11:18 AM 4/7/2017
 - perlu dibuatkan pengisian jadwal untuk "sekaligus banyak pegawai"
 
+
+4:55 PM 4/10/2017
+- penentuan 6 hk atau 5 hk :: apakah bisa dari jam kerja ?
