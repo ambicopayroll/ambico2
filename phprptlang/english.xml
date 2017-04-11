@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/4/6" version="10.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/4/11" version="10.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -355,9 +355,6 @@
     </menu>
     <menu id="75">
       <phrase id="menutext" value="Laporan Scan Finger" />
-    </menu>
-    <menu id="66">
-      <phrase id="menutext" value="kartu scanlog" />
     </menu>
     <menu id="67">
       <phrase id="menutext" value="t jdw krj def" />
@@ -2133,33 +2130,6 @@
       </field>
       <field id="lastupdate_user">
         <phrase id="fldcaption" value="lastupdate user" />
-      </field>
-    </table>
-    <table id="kartu_scanlog">
-      <phrase id="tblcaption" value="kartu scanlog" />
-      <field id="ks_id">
-        <phrase id="fldcaption" value="ks id" />
-      </field>
-      <field id="pegawai_id">
-        <phrase id="fldcaption" value="pegawai id" />
-      </field>
-      <field id="dow">
-        <phrase id="fldcaption" value="dow" />
-      </field>
-      <field id="scan_tgl">
-        <phrase id="fldcaption" value="scan tgl" />
-      </field>
-      <field id="scan_jam_1">
-        <phrase id="fldcaption" value="scan jam 1" />
-      </field>
-      <field id="scan_jam_2">
-        <phrase id="fldcaption" value="scan jam 2" />
-      </field>
-      <field id="scan_jam_3">
-        <phrase id="fldcaption" value="scan jam 3" />
-      </field>
-      <field id="scan_jam_4">
-        <phrase id="fldcaption" value="scan jam 4" />
       </field>
     </table>
     <table id="t_jdw_krj_def">

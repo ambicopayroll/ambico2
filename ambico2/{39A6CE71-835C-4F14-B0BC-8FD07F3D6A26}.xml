@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2017/04/06" author="e.World Technology Ltd.">
-  <project id="{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}" file="D:\xampp\htdocs\ambico2\ambico2.prp" name="ambico2" product="PHPReportMaker" version="10.0" datetime="2017/04/06 23:25:06" languagefolder="phprptlang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2017/04/11" author="e.World Technology Ltd.">
+  <project id="{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}" file="D:\xampp\htdocs\ambico2\ambico2.prp" name="ambico2" product="PHPReportMaker" version="10.0" datetime="2017/04/11 09:37:16" languagefolder="phprptlang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="att_log" name="att_log" caption="att log" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="audittrail" name="audittrail" caption="audittrail" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="cuti_normatif" name="cuti_normatif" caption="cuti normatif" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -63,7 +63,6 @@
     <table id="zx_jns_krd" name="zx_jns_krd" caption="zx jns krd" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="zx_kredit_d" name="zx_kredit_d" caption="zx kredit d" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="zx_kredit_m" name="zx_kredit_m" caption="zx kredit m" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="kartu_scanlog" name="kartu_scanlog" caption="kartu scanlog" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t_jdw_krj_def" name="t_jdw_krj_def" caption="t jdw krj def" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t_jdw_krj_peg" name="t_jdw_krj_peg" caption="t jdw krj peg" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t_jk" name="t_jk" caption="t jk" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />

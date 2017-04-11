@@ -286,8 +286,6 @@ class ct_jdw_krj_peg_delete extends ct_jdw_krj_peg {
 			$Security->UserID_Loaded();
 		}
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->jdw_id->SetVisibility();
-		$this->jdw_id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->pegawai_id->SetVisibility();
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
@@ -583,11 +581,6 @@ class ct_jdw_krj_peg_delete extends ct_jdw_krj_peg {
 		}
 		}
 		$this->jk_id->ViewCustomAttributes = "";
-
-			// jdw_id
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-			$this->jdw_id->TooltipValue = "";
 
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
@@ -923,9 +916,6 @@ $t_jdw_krj_peg_delete->ShowMessage();
 <?php echo $t_jdw_krj_peg->TableCustomInnerHtml ?>
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($t_jdw_krj_peg->jdw_id->Visible) { // jdw_id ?>
-		<th><span id="elh_t_jdw_krj_peg_jdw_id" class="t_jdw_krj_peg_jdw_id"><?php echo $t_jdw_krj_peg->jdw_id->FldCaption() ?></span></th>
-<?php } ?>
 <?php if ($t_jdw_krj_peg->pegawai_id->Visible) { // pegawai_id ?>
 		<th><span id="elh_t_jdw_krj_peg_pegawai_id" class="t_jdw_krj_peg_pegawai_id"><?php echo $t_jdw_krj_peg->pegawai_id->FldCaption() ?></span></th>
 <?php } ?>
@@ -959,14 +949,6 @@ while (!$t_jdw_krj_peg_delete->Recordset->EOF) {
 	$t_jdw_krj_peg_delete->RenderRow();
 ?>
 	<tr<?php echo $t_jdw_krj_peg->RowAttributes() ?>>
-<?php if ($t_jdw_krj_peg->jdw_id->Visible) { // jdw_id ?>
-		<td<?php echo $t_jdw_krj_peg->jdw_id->CellAttributes() ?>>
-<span id="el<?php echo $t_jdw_krj_peg_delete->RowCnt ?>_t_jdw_krj_peg_jdw_id" class="t_jdw_krj_peg_jdw_id">
-<span<?php echo $t_jdw_krj_peg->jdw_id->ViewAttributes() ?>>
-<?php echo $t_jdw_krj_peg->jdw_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($t_jdw_krj_peg->pegawai_id->Visible) { // pegawai_id ?>
 		<td<?php echo $t_jdw_krj_peg->pegawai_id->CellAttributes() ?>>
 <span id="el<?php echo $t_jdw_krj_peg_delete->RowCnt ?>_t_jdw_krj_peg_pegawai_id" class="t_jdw_krj_peg_pegawai_id">

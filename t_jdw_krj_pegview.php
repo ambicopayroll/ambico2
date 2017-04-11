@@ -387,8 +387,6 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->jdw_id->SetVisibility();
-		$this->jdw_id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->pegawai_id->SetVisibility();
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
@@ -832,11 +830,6 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 		}
 		}
 		$this->jk_id->ViewCustomAttributes = "";
-
-			// jdw_id
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-			$this->jdw_id->TooltipValue = "";
 
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
@@ -1417,17 +1410,6 @@ $t_jdw_krj_peg_view->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <table class="table table-bordered table-striped ewViewTable">
-<?php if ($t_jdw_krj_peg->jdw_id->Visible) { // jdw_id ?>
-	<tr id="r_jdw_id">
-		<td><span id="elh_t_jdw_krj_peg_jdw_id"><?php echo $t_jdw_krj_peg->jdw_id->FldCaption() ?></span></td>
-		<td data-name="jdw_id"<?php echo $t_jdw_krj_peg->jdw_id->CellAttributes() ?>>
-<span id="el_t_jdw_krj_peg_jdw_id">
-<span<?php echo $t_jdw_krj_peg->jdw_id->ViewAttributes() ?>>
-<?php echo $t_jdw_krj_peg->jdw_id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 <?php if ($t_jdw_krj_peg->pegawai_id->Visible) { // pegawai_id ?>
 	<tr id="r_pegawai_id">
 		<td><span id="elh_t_jdw_krj_peg_pegawai_id"><?php echo $t_jdw_krj_peg->pegawai_id->FldCaption() ?></span></td>

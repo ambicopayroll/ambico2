@@ -417,8 +417,6 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->jdw_id->SetVisibility();
-		$this->jdw_id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->pegawai_id->SetVisibility();
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
@@ -1495,7 +1493,6 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->jdw_id, $bCtrl); // jdw_id
 			$this->UpdateSort($this->pegawai_id, $bCtrl); // pegawai_id
 			$this->UpdateSort($this->tgl1, $bCtrl); // tgl1
 			$this->UpdateSort($this->tgl2, $bCtrl); // tgl2
@@ -1543,7 +1540,6 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
 				$this->setSessionOrderByList($sOrderBy);
-				$this->jdw_id->setSort("");
 				$this->pegawai_id->setSort("");
 				$this->tgl1->setSort("");
 				$this->tgl2->setSort("");
@@ -2074,8 +2070,6 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 
 	// Load default values
 	function LoadDefaultValues() {
-		$this->jdw_id->CurrentValue = NULL;
-		$this->jdw_id->OldValue = $this->jdw_id->CurrentValue;
 		$this->pegawai_id->CurrentValue = NULL;
 		$this->pegawai_id->OldValue = $this->pegawai_id->CurrentValue;
 		$this->tgl1->CurrentValue = NULL;
@@ -2123,8 +2117,6 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 
 		// Load from form
 		global $objForm;
-		if (!$this->jdw_id->FldIsDetailKey && $this->CurrentAction <> "gridadd" && $this->CurrentAction <> "add")
-			$this->jdw_id->setFormValue($objForm->GetValue("x_jdw_id"));
 		if (!$this->pegawai_id->FldIsDetailKey) {
 			$this->pegawai_id->setFormValue($objForm->GetValue("x_pegawai_id"));
 		}
@@ -2143,6 +2135,8 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
 		}
 		$this->jk_id->setOldValue($objForm->GetValue("o_jk_id"));
+		if (!$this->jdw_id->FldIsDetailKey && $this->CurrentAction <> "gridadd" && $this->CurrentAction <> "add")
+			$this->jdw_id->setFormValue($objForm->GetValue("x_jdw_id"));
 	}
 
 	// Restore form values
@@ -2357,11 +2351,6 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
-			// jdw_id
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-			$this->jdw_id->TooltipValue = "";
-
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
@@ -2383,9 +2372,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
-			// jdw_id
 			// pegawai_id
-
 			$this->pegawai_id->EditAttrs["class"] = "form-control";
 			$this->pegawai_id->EditCustomAttributes = "";
 			if ($this->pegawai_id->getSessionValue() <> "") {
@@ -2480,12 +2467,8 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->EditValue = $arwrk;
 
 			// Add refer script
-			// jdw_id
-
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-
 			// pegawai_id
+
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
 
@@ -2501,12 +2484,6 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
-
-			// jdw_id
-			$this->jdw_id->EditAttrs["class"] = "form-control";
-			$this->jdw_id->EditCustomAttributes = "";
-			$this->jdw_id->EditValue = $this->jdw_id->CurrentValue;
-			$this->jdw_id->ViewCustomAttributes = "";
 
 			// pegawai_id
 			$this->pegawai_id->EditAttrs["class"] = "form-control";
@@ -2603,12 +2580,8 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->EditValue = $arwrk;
 
 			// Edit refer script
-			// jdw_id
-
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-
 			// pegawai_id
+
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
 
@@ -2624,12 +2597,6 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_SEARCH) { // Search row
-
-			// jdw_id
-			$this->jdw_id->EditAttrs["class"] = "form-control";
-			$this->jdw_id->EditCustomAttributes = "";
-			$this->jdw_id->EditValue = ew_HtmlEncode($this->jdw_id->AdvancedSearch->SearchValue);
-			$this->jdw_id->PlaceHolder = ew_RemoveHtml($this->jdw_id->FldCaption());
 
 			// pegawai_id
 			$this->pegawai_id->EditAttrs["class"] = "form-control";
@@ -3924,15 +3891,6 @@ $t_jdw_krj_peg_list->RenderListOptions();
 // Render list options (header, left)
 $t_jdw_krj_peg_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($t_jdw_krj_peg->jdw_id->Visible) { // jdw_id ?>
-	<?php if ($t_jdw_krj_peg->SortUrl($t_jdw_krj_peg->jdw_id) == "") { ?>
-		<th data-name="jdw_id"><div id="elh_t_jdw_krj_peg_jdw_id" class="t_jdw_krj_peg_jdw_id"><div class="ewTableHeaderCaption"><?php echo $t_jdw_krj_peg->jdw_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="jdw_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t_jdw_krj_peg->SortUrl($t_jdw_krj_peg->jdw_id) ?>',2);"><div id="elh_t_jdw_krj_peg_jdw_id" class="t_jdw_krj_peg_jdw_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t_jdw_krj_peg->jdw_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t_jdw_krj_peg->jdw_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t_jdw_krj_peg->jdw_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
 <?php if ($t_jdw_krj_peg->pegawai_id->Visible) { // pegawai_id ?>
 	<?php if ($t_jdw_krj_peg->SortUrl($t_jdw_krj_peg->pegawai_id) == "") { ?>
 		<th data-name="pegawai_id"><div id="elh_t_jdw_krj_peg_pegawai_id" class="t_jdw_krj_peg_pegawai_id"><div class="ewTableHeaderCaption"><?php echo $t_jdw_krj_peg->pegawai_id->FldCaption() ?></div></div></th>
@@ -4006,11 +3964,6 @@ $t_jdw_krj_peg_list->ListOptions->Render("header", "right");
 // Render list options (body, left)
 $t_jdw_krj_peg_list->ListOptions->Render("body", "left", $t_jdw_krj_peg_list->RowCnt);
 ?>
-	<?php if ($t_jdw_krj_peg->jdw_id->Visible) { // jdw_id ?>
-		<td data-name="jdw_id">
-<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->OldValue) ?>">
-</td>
-	<?php } ?>
 	<?php if ($t_jdw_krj_peg->pegawai_id->Visible) { // pegawai_id ?>
 		<td data-name="pegawai_id">
 <?php if ($t_jdw_krj_peg->pegawai_id->getSessionValue() <> "") { ?>
@@ -4205,26 +4158,6 @@ while ($t_jdw_krj_peg_list->RecCnt < $t_jdw_krj_peg_list->StopRec) {
 // Render list options (body, left)
 $t_jdw_krj_peg_list->ListOptions->Render("body", "left", $t_jdw_krj_peg_list->RowCnt);
 ?>
-	<?php if ($t_jdw_krj_peg->jdw_id->Visible) { // jdw_id ?>
-		<td data-name="jdw_id"<?php echo $t_jdw_krj_peg->jdw_id->CellAttributes() ?>>
-<?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->OldValue) ?>">
-<?php } ?>
-<?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t_jdw_krj_peg_list->RowCnt ?>_t_jdw_krj_peg_jdw_id" class="form-group t_jdw_krj_peg_jdw_id">
-<span<?php echo $t_jdw_krj_peg->jdw_id->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $t_jdw_krj_peg->jdw_id->EditValue ?></p></span>
-</span>
-<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" id="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->CurrentValue) ?>">
-<?php } ?>
-<?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t_jdw_krj_peg_list->RowCnt ?>_t_jdw_krj_peg_jdw_id" class="t_jdw_krj_peg_jdw_id">
-<span<?php echo $t_jdw_krj_peg->jdw_id->ViewAttributes() ?>>
-<?php echo $t_jdw_krj_peg->jdw_id->ListViewValue() ?></span>
-</span>
-<?php } ?>
-<a id="<?php echo $t_jdw_krj_peg_list->PageObjName . "_row_" . $t_jdw_krj_peg_list->RowCnt ?>"></a></td>
-	<?php } ?>
 	<?php if ($t_jdw_krj_peg->pegawai_id->Visible) { // pegawai_id ?>
 		<td data-name="pegawai_id"<?php echo $t_jdw_krj_peg->pegawai_id->CellAttributes() ?>>
 <?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_ADD) { // Add record ?>
@@ -4288,8 +4221,15 @@ ft_jdw_krj_peglist.CreateAutoSuggest({"id":"x<?php echo $t_jdw_krj_peg_list->Row
 <?php echo $t_jdw_krj_peg->pegawai_id->ListViewValue() ?></span>
 </span>
 <?php } ?>
-</td>
+<a id="<?php echo $t_jdw_krj_peg_list->PageObjName . "_row_" . $t_jdw_krj_peg_list->RowCnt ?>"></a></td>
 	<?php } ?>
+<?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" id="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->CurrentValue) ?>">
+<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->OldValue) ?>">
+<?php } ?>
+<?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_EDIT || $t_jdw_krj_peg->CurrentMode == "edit") { ?>
+<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" id="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->CurrentValue) ?>">
+<?php } ?>
 	<?php if ($t_jdw_krj_peg->tgl1->Visible) { // tgl1 ?>
 		<td data-name="tgl1"<?php echo $t_jdw_krj_peg->tgl1->CellAttributes() ?>>
 <?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_ADD) { // Add record ?>
@@ -4425,11 +4365,6 @@ ft_jdw_krj_peglist.UpdateOpts(<?php echo $t_jdw_krj_peg_list->RowIndex ?>);
 // Render list options (body, left)
 $t_jdw_krj_peg_list->ListOptions->Render("body", "left", $t_jdw_krj_peg_list->RowIndex);
 ?>
-	<?php if ($t_jdw_krj_peg->jdw_id->Visible) { // jdw_id ?>
-		<td data-name="jdw_id">
-<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->OldValue) ?>">
-</td>
-	<?php } ?>
 	<?php if ($t_jdw_krj_peg->pegawai_id->Visible) { // pegawai_id ?>
 		<td data-name="pegawai_id">
 <?php if ($t_jdw_krj_peg->pegawai_id->getSessionValue() <> "") { ?>

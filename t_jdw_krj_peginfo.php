@@ -922,7 +922,6 @@ class ct_jdw_krj_peg extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->jdw_id->Exportable) $Doc->ExportCaption($this->jdw_id);
 					if ($this->pegawai_id->Exportable) $Doc->ExportCaption($this->pegawai_id);
 					if ($this->tgl1->Exportable) $Doc->ExportCaption($this->tgl1);
 					if ($this->tgl2->Exportable) $Doc->ExportCaption($this->tgl2);
@@ -964,7 +963,6 @@ class ct_jdw_krj_peg extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->jdw_id->Exportable) $Doc->ExportField($this->jdw_id);
 						if ($this->pegawai_id->Exportable) $Doc->ExportField($this->pegawai_id);
 						if ($this->tgl1->Exportable) $Doc->ExportField($this->tgl1);
 						if ($this->tgl2->Exportable) $Doc->ExportField($this->tgl2);

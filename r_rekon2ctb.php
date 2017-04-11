@@ -293,7 +293,6 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		$gsEmailContentType = @$_POST["contenttype"]; // Get email content type
 
 		// Setup placeholder
-		$this->pegawai_nama->PlaceHolder = $this->pegawai_nama->FldCaption();
 		$this->tgl->PlaceHolder = $this->tgl->FldCaption();
 
 		// Setup export options
@@ -1198,7 +1197,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		} elseif (@$_GET["cmd"] == "reset") {
 
 			// Load default values
-			$this->SetSessionFilterValues($this->pegawai_nama->SearchValue, $this->pegawai_nama->SearchOperator, $this->pegawai_nama->SearchCondition, $this->pegawai_nama->SearchValue2, $this->pegawai_nama->SearchOperator2, 'pegawai_nama'); // Field pegawai_nama
+			$this->SetSessionDropDownValue($this->pegawai_nama->DropDownValue, $this->pegawai_nama->SearchOperator, 'pegawai_nama'); // Field pegawai_nama
 			$this->SetSessionFilterValues($this->tgl->SearchValue, $this->tgl->SearchOperator, $this->tgl->SearchCondition, $this->tgl->SearchValue2, $this->tgl->SearchOperator2, 'tgl'); // Field tgl
 
 			//$bSetupFilter = TRUE; // No need to set up, just use default
@@ -1206,7 +1205,9 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 			$bRestoreSession = !$this->SearchCommand;
 
 			// Field pegawai_nama
-			if ($this->GetFilterValues($this->pegawai_nama)) {
+			if ($this->GetDropDownValue($this->pegawai_nama)) {
+				$bSetupFilter = TRUE;
+			} elseif ($this->pegawai_nama->DropDownValue <> EWR_INIT_VALUE && !isset($_SESSION['sv_r_rekon2_pegawai_nama'])) {
 				$bSetupFilter = TRUE;
 			}
 
@@ -1222,7 +1223,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 		// Restore session
 		if ($bRestoreSession) {
-			$this->GetSessionFilterValues($this->pegawai_nama); // Field pegawai_nama
+			$this->GetSessionDropDownValue($this->pegawai_nama); // Field pegawai_nama
 			$this->GetSessionFilterValues($this->tgl); // Field tgl
 		}
 
@@ -1230,16 +1231,19 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		$this->Page_FilterValidated();
 
 		// Build SQL
-		$this->BuildExtendedFilter($this->pegawai_nama, $sFilter, FALSE, TRUE); // Field pegawai_nama
+		$this->BuildDropDownFilter($this->pegawai_nama, $sFilter, $this->pegawai_nama->SearchOperator, FALSE, TRUE); // Field pegawai_nama
 		$this->BuildExtendedFilter($this->tgl, $sFilter, FALSE, TRUE); // Field tgl
 
 		// Save parms to session
-		$this->SetSessionFilterValues($this->pegawai_nama->SearchValue, $this->pegawai_nama->SearchOperator, $this->pegawai_nama->SearchCondition, $this->pegawai_nama->SearchValue2, $this->pegawai_nama->SearchOperator2, 'pegawai_nama'); // Field pegawai_nama
+		$this->SetSessionDropDownValue($this->pegawai_nama->DropDownValue, $this->pegawai_nama->SearchOperator, 'pegawai_nama'); // Field pegawai_nama
 		$this->SetSessionFilterValues($this->tgl->SearchValue, $this->tgl->SearchOperator, $this->tgl->SearchCondition, $this->tgl->SearchValue2, $this->tgl->SearchOperator2, 'tgl'); // Field tgl
 
 		// Setup filter
 		if ($bSetupFilter) {
 		}
+
+		// Field pegawai_nama
+		ewr_LoadDropDownList($this->pegawai_nama->DropDownList, $this->pegawai_nama->DropDownValue);
 		return $sFilter;
 	}
 
@@ -1547,6 +1551,10 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		/**
 		* Set up default values for non Text filters
 		*/
+
+		// Field pegawai_nama
+		$this->pegawai_nama->DefaultDropDownValue = EWR_INIT_VALUE;
+		if (!$this->SearchCommand) $this->pegawai_nama->DropDownValue = $this->pegawai_nama->DefaultDropDownValue;
 		/**
 		* Set up default values for extended filters
 		* function SetDefaultExtFilter(&$fld, $so1, $sv1, $sc, $so2, $sv2)
@@ -1559,10 +1567,6 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		* $sv2 - Default ext filter value 2 (if operator 2 is enabled)
 		*/
 
-		// Field pegawai_nama
-		$this->SetDefaultExtFilter($this->pegawai_nama, "=", NULL, 'AND', "=", NULL);
-		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->pegawai_nama);
-
 		// Field tgl
 		$this->SetDefaultExtFilter($this->tgl, "BETWEEN", NULL, 'AND', "=", NULL);
 		if (!$this->SearchCommand) $this->ApplyDefaultExtFilter($this->tgl);
@@ -1574,8 +1578,8 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 	// Check if filter applied
 	function CheckFilter() {
 
-		// Check pegawai_nama text filter
-		if ($this->TextFilterApplied($this->pegawai_nama))
+		// Check pegawai_nama extended filter
+		if ($this->NonTextFilterApplied($this->pegawai_nama))
 			return TRUE;
 
 		// Check tgl text filter
@@ -1594,7 +1598,7 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 		// Field pegawai_nama
 		$sExtWrk = "";
 		$sWrk = "";
-		$this->BuildExtendedFilter($this->pegawai_nama, $sExtWrk);
+		$this->BuildDropDownFilter($this->pegawai_nama, $sExtWrk, $this->pegawai_nama->SearchOperator);
 		$sFilter = "";
 		if ($sExtWrk <> "")
 			$sFilter .= "<span class=\"ewFilterValue\">$sExtWrk</span>";
@@ -1638,13 +1642,11 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 		// Field pegawai_nama
 		$sWrk = "";
-		if ($this->pegawai_nama->SearchValue <> "" || $this->pegawai_nama->SearchValue2 <> "") {
-			$sWrk = "\"sv_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchValue) . "\"," .
-				"\"so_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchOperator) . "\"," .
-				"\"sc_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchCondition) . "\"," .
-				"\"sv2_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchValue2) . "\"," .
-				"\"so2_pegawai_nama\":\"" . ewr_JsEncode2($this->pegawai_nama->SearchOperator2) . "\"";
-		}
+		$sWrk = ($this->pegawai_nama->DropDownValue <> EWR_INIT_VALUE) ? $this->pegawai_nama->DropDownValue : "";
+		if (is_array($sWrk))
+			$sWrk = implode("||", $sWrk);
+		if ($sWrk <> "")
+			$sWrk = "\"sv_pegawai_nama\":\"" . ewr_JsEncode2($sWrk) . "\"";
 		if ($sWrk <> "") {
 			if ($sFilterList <> "") $sFilterList .= ",";
 			$sFilterList .= $sWrk;
@@ -1688,14 +1690,15 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 
 		// Field pegawai_nama
 		$bRestoreFilter = FALSE;
-		if (array_key_exists("sv_pegawai_nama", $filter) || array_key_exists("so_pegawai_nama", $filter) ||
-			array_key_exists("sc_pegawai_nama", $filter) ||
-			array_key_exists("sv2_pegawai_nama", $filter) || array_key_exists("so2_pegawai_nama", $filter)) {
-			$this->SetSessionFilterValues(@$filter["sv_pegawai_nama"], @$filter["so_pegawai_nama"], @$filter["sc_pegawai_nama"], @$filter["sv2_pegawai_nama"], @$filter["so2_pegawai_nama"], "pegawai_nama");
+		if (array_key_exists("sv_pegawai_nama", $filter)) {
+			$sWrk = $filter["sv_pegawai_nama"];
+			if (strpos($sWrk, "||") !== FALSE)
+				$sWrk = explode("||", $sWrk);
+			$this->SetSessionDropDownValue($sWrk, @$filter["so_pegawai_nama"], "pegawai_nama");
 			$bRestoreFilter = TRUE;
 		}
 		if (!$bRestoreFilter) { // Clear filter
-			$this->SetSessionFilterValues("", "=", "AND", "", "=", "pegawai_nama");
+			$this->SetSessionDropDownValue(EWR_INIT_VALUE, "", "pegawai_nama");
 		}
 
 		// Field tgl
@@ -2104,6 +2107,7 @@ fr_rekon2crosstab.ValidateRequired = false; // No JavaScript validation
 <?php } ?>
 
 // Use Ajax
+fr_rekon2crosstab.Lists["sv_pegawai_nama"] = {"LinkField":"sv_pegawai_nama","Ajax":true,"DisplayFields":["sv_pegawai_nama","","",""],"ParentFields":[],"FilterFields":[],"Options":[],"Template":""};
 </script>
 <?php } ?>
 <?php if ($Page->Export == "" && !$Page->DrillDown) { ?>
@@ -2171,11 +2175,13 @@ if (!$Page->DrillDownInPanel) {
 <div id="r_1" class="ewRow">
 <div id="c_pegawai_nama" class="ewCell form-group">
 	<label for="sv_pegawai_nama" class="ewSearchCaption ewLabel"><?php echo $Page->pegawai_nama->FldCaption() ?></label>
-	<span class="ewSearchOperator"><?php echo $ReportLanguage->Phrase("="); ?><input type="hidden" name="so_pegawai_nama" id="so_pegawai_nama" value="="></span>
-	<span class="control-group ewSearchField">
-<?php ewr_PrependClass($Page->pegawai_nama->EditAttrs["class"], "form-control"); // PR8 ?>
-<input type="text" data-table="r_rekon2" data-field="x_pegawai_nama" id="sv_pegawai_nama" name="sv_pegawai_nama" size="30" maxlength="255" placeholder="<?php echo $Page->pegawai_nama->PlaceHolder ?>" value="<?php echo ewr_HtmlEncode($Page->pegawai_nama->SearchValue) ?>"<?php echo $Page->pegawai_nama->EditAttributes() ?>>
+	<span class="ewSearchField">
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_sv_pegawai_nama"><?php echo (strval(ewr_FilterDropDownValue($Page->pegawai_nama)) == "" ? $ReportLanguage->Phrase("PleaseSelect") : ewr_FilterDropDownValue($Page->pegawai_nama)); ?></span>
 </span>
+<button type="button" title="<?php echo ewr_HtmlEncode(str_replace("%s", ewr_RemoveHtml($Page->pegawai_nama->FldCaption()), $ReportLanguage->Phrase("LookupLink", TRUE))) ?>" onclick="ewr_ModalLookupShow({lnk:this,el:'sv_pegawai_nama',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="r_rekon2" data-field="x_pegawai_nama" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $Page->pegawai_nama->DisplayValueSeparatorAttribute() ?>" name="sv_pegawai_nama" id="sv_pegawai_nama" value="<?php echo ewr_FilterDropDownValue($Page->pegawai_nama) ?>"<?php echo $Page->pegawai_nama->EditAttributes() ?>>
+<input type="hidden" name="s_sv_pegawai_nama" id="s_sv_pegawai_nama" value="<?php echo $Page->pegawai_nama->LookupFilterQuery() ?>"></span>
 </div>
 </div>
 <div id="r_2" class="ewRow">

@@ -289,8 +289,6 @@ class ct_jdw_krj_peg_edit extends ct_jdw_krj_peg {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->jdw_id->SetVisibility();
-		$this->jdw_id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->pegawai_id->SetVisibility();
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
@@ -549,8 +547,6 @@ class ct_jdw_krj_peg_edit extends ct_jdw_krj_peg {
 
 		// Load from form
 		global $objForm;
-		if (!$this->jdw_id->FldIsDetailKey)
-			$this->jdw_id->setFormValue($objForm->GetValue("x_jdw_id"));
 		if (!$this->pegawai_id->FldIsDetailKey) {
 			$this->pegawai_id->setFormValue($objForm->GetValue("x_pegawai_id"));
 		}
@@ -565,6 +561,8 @@ class ct_jdw_krj_peg_edit extends ct_jdw_krj_peg {
 		if (!$this->jk_id->FldIsDetailKey) {
 			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
 		}
+		if (!$this->jdw_id->FldIsDetailKey)
+			$this->jdw_id->setFormValue($objForm->GetValue("x_jdw_id"));
 	}
 
 	// Restore form values
@@ -750,11 +748,6 @@ class ct_jdw_krj_peg_edit extends ct_jdw_krj_peg {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
-			// jdw_id
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-			$this->jdw_id->TooltipValue = "";
-
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
@@ -775,12 +768,6 @@ class ct_jdw_krj_peg_edit extends ct_jdw_krj_peg {
 			$this->jk_id->HrefValue = "";
 			$this->jk_id->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
-
-			// jdw_id
-			$this->jdw_id->EditAttrs["class"] = "form-control";
-			$this->jdw_id->EditCustomAttributes = "";
-			$this->jdw_id->EditValue = $this->jdw_id->CurrentValue;
-			$this->jdw_id->ViewCustomAttributes = "";
 
 			// pegawai_id
 			$this->pegawai_id->EditAttrs["class"] = "form-control";
@@ -876,12 +863,8 @@ class ct_jdw_krj_peg_edit extends ct_jdw_krj_peg {
 			$this->jk_id->EditValue = $arwrk;
 
 			// Edit refer script
-			// jdw_id
-
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-
 			// pegawai_id
+
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
 
@@ -1394,18 +1377,6 @@ $t_jdw_krj_peg_edit->ShowMessage();
 <input type="hidden" name="fk_pegawai_id" value="<?php echo $t_jdw_krj_peg->pegawai_id->getSessionValue() ?>">
 <?php } ?>
 <div>
-<?php if ($t_jdw_krj_peg->jdw_id->Visible) { // jdw_id ?>
-	<div id="r_jdw_id" class="form-group">
-		<label id="elh_t_jdw_krj_peg_jdw_id" class="col-sm-2 control-label ewLabel"><?php echo $t_jdw_krj_peg->jdw_id->FldCaption() ?></label>
-		<div class="col-sm-10"><div<?php echo $t_jdw_krj_peg->jdw_id->CellAttributes() ?>>
-<span id="el_t_jdw_krj_peg_jdw_id">
-<span<?php echo $t_jdw_krj_peg->jdw_id->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $t_jdw_krj_peg->jdw_id->EditValue ?></p></span>
-</span>
-<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="x_jdw_id" id="x_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->CurrentValue) ?>">
-<?php echo $t_jdw_krj_peg->jdw_id->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
 <?php if ($t_jdw_krj_peg->pegawai_id->Visible) { // pegawai_id ?>
 	<div id="r_pegawai_id" class="form-group">
 		<label id="elh_t_jdw_krj_peg_pegawai_id" class="col-sm-2 control-label ewLabel"><?php echo $t_jdw_krj_peg->pegawai_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
@@ -1484,6 +1455,7 @@ ew_CreateCalendar("ft_jdw_krj_pegedit", "x_tgl2", 0);
 	</div>
 <?php } ?>
 </div>
+<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jdw_id" name="x_jdw_id" id="x_jdw_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jdw_id->CurrentValue) ?>">
 <?php if (!$t_jdw_krj_peg_edit->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">

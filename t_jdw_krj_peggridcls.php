@@ -312,8 +312,6 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 
 		// Set up list options
 		$this->SetupListOptions();
-		$this->jdw_id->SetVisibility();
-		$this->jdw_id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->pegawai_id->SetVisibility();
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
@@ -1171,8 +1169,6 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 
 	// Load default values
 	function LoadDefaultValues() {
-		$this->jdw_id->CurrentValue = NULL;
-		$this->jdw_id->OldValue = $this->jdw_id->CurrentValue;
 		$this->pegawai_id->CurrentValue = NULL;
 		$this->pegawai_id->OldValue = $this->pegawai_id->CurrentValue;
 		$this->tgl1->CurrentValue = NULL;
@@ -1189,8 +1185,6 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		// Load from form
 		global $objForm;
 		$objForm->FormName = $this->FormName;
-		if (!$this->jdw_id->FldIsDetailKey && $this->CurrentAction <> "gridadd" && $this->CurrentAction <> "add")
-			$this->jdw_id->setFormValue($objForm->GetValue("x_jdw_id"));
 		if (!$this->pegawai_id->FldIsDetailKey) {
 			$this->pegawai_id->setFormValue($objForm->GetValue("x_pegawai_id"));
 		}
@@ -1209,6 +1203,8 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
 		}
 		$this->jk_id->setOldValue($objForm->GetValue("o_jk_id"));
+		if (!$this->jdw_id->FldIsDetailKey && $this->CurrentAction <> "gridadd" && $this->CurrentAction <> "add")
+			$this->jdw_id->setFormValue($objForm->GetValue("x_jdw_id"));
 	}
 
 	// Restore form values
@@ -1427,11 +1423,6 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
-			// jdw_id
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-			$this->jdw_id->TooltipValue = "";
-
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
@@ -1453,9 +1444,7 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
-			// jdw_id
 			// pegawai_id
-
 			$this->pegawai_id->EditAttrs["class"] = "form-control";
 			$this->pegawai_id->EditCustomAttributes = "";
 			if ($this->pegawai_id->getSessionValue() <> "") {
@@ -1550,12 +1539,8 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->EditValue = $arwrk;
 
 			// Add refer script
-			// jdw_id
-
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-
 			// pegawai_id
+
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
 
@@ -1571,12 +1556,6 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
-
-			// jdw_id
-			$this->jdw_id->EditAttrs["class"] = "form-control";
-			$this->jdw_id->EditCustomAttributes = "";
-			$this->jdw_id->EditValue = $this->jdw_id->CurrentValue;
-			$this->jdw_id->ViewCustomAttributes = "";
 
 			// pegawai_id
 			$this->pegawai_id->EditAttrs["class"] = "form-control";
@@ -1673,12 +1652,8 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->EditValue = $arwrk;
 
 			// Edit refer script
-			// jdw_id
-
-			$this->jdw_id->LinkCustomAttributes = "";
-			$this->jdw_id->HrefValue = "";
-
 			// pegawai_id
+
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
 
