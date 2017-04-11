@@ -2273,7 +2273,7 @@
         <phrase id="fldcaption" value="Jadwal" />
       </field>
       <field id="gol_hk">
-        <phrase id="fldcaption" value="hk" />
+        <phrase id="fldcaption" value="Jml. Hari Kerja" />
       </field>
     </table>
     <table id="v_att_log">

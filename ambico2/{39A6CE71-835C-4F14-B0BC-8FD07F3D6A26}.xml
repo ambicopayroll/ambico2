@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <configuration date="2017/04/12" author="e.World Technology Ltd.">
-  <project id="{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}" file="D:\xampp\htdocs\ambico2\ambico2.prp" name="ambico2" product="PHPReportMaker" version="10.0" datetime="2017/04/12 01:06:00" languagefolder="phprptlang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+  <project id="{39A6CE71-835C-4F14-B0BC-8FD07F3D6A26}" file="D:\xampp\htdocs\ambico2\ambico2.prp" name="ambico2" product="PHPReportMaker" version="10.0" datetime="2017/04/12 01:10:26" languagefolder="phprptlang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="att_log" name="att_log" caption="att log" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="audittrail" name="audittrail" caption="audittrail" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="cuti_normatif" name="cuti_normatif" caption="cuti normatif" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
