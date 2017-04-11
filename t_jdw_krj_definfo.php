@@ -281,7 +281,7 @@ class ct_jdw_krj_def extends cTable {
 	var $_SqlOrderBy = "";
 
 	function getSqlOrderBy() { // Order By
-		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`tgl` ASC";
+		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`pegawai_id` ASC,`tgl` ASC";
 	}
 
 	function SqlOrderBy() { // For backward compatibility

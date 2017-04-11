@@ -904,6 +904,7 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			if ($this->getSqlOrderBy() <> "") {
 				$sOrderBy = $this->getSqlOrderBy();
 				$this->setSessionOrderBy($sOrderBy);
+				$this->pegawai_id->setSort("ASC");
 				$this->tgl->setSort("ASC");
 			}
 		}
