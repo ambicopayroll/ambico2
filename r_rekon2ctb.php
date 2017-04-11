@@ -1039,13 +1039,22 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 			$smry = &$this->SummaryFields[1];
 			$scvcnt = count($smry->SummaryCurrentValue);
 			for ($i = 0; $i < $scvcnt; $i++) {
-				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
+				$smry->SummaryViewValue[$i] = $smry->SummaryCurrentValue[$i];
 				$smry->SummaryViewAttrs[$i]["style"] = "";
 				$this->SummaryCellAttrs[$i]["class"] = ($this->RowTotalType == EWR_ROWTOTAL_GROUP) ? "ewRptGrpSummary" . $this->RowGroupLevel : "";
 			}
 
 			// Set up summary values
 			$smry = &$this->SummaryFields[2];
+			$scvcnt = count($smry->SummaryCurrentValue);
+			for ($i = 0; $i < $scvcnt; $i++) {
+				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
+				$smry->SummaryViewAttrs[$i]["style"] = "";
+				$this->SummaryCellAttrs[$i]["class"] = ($this->RowTotalType == EWR_ROWTOTAL_GROUP) ? "ewRptGrpSummary" . $this->RowGroupLevel : "";
+			}
+
+			// Set up summary values
+			$smry = &$this->SummaryFields[3];
 			$scvcnt = count($smry->SummaryCurrentValue);
 			for ($i = 0; $i < $scvcnt; $i++) {
 				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
@@ -1076,13 +1085,22 @@ class crr_rekon2_crosstab extends crr_rekon2 {
 			$smry = &$this->SummaryFields[1];
 			$scvcnt = count($smry->SummaryCurrentValue);
 			for ($i = 0; $i < $scvcnt; $i++) {
-				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
+				$smry->SummaryViewValue[$i] = $smry->SummaryCurrentValue[$i];
 				$smry->SummaryViewAttrs[$i]["style"] = "";
 				$this->SummaryCellAttrs[$i]["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
 			}
 
 			// Set up summary values
 			$smry = &$this->SummaryFields[2];
+			$scvcnt = count($smry->SummaryCurrentValue);
+			for ($i = 0; $i < $scvcnt; $i++) {
+				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);
+				$smry->SummaryViewAttrs[$i]["style"] = "";
+				$this->SummaryCellAttrs[$i]["class"] = ($this->RecCount % 2 <> 1) ? "ewTableAltRow" : "ewTableRow";
+			}
+
+			// Set up summary values
+			$smry = &$this->SummaryFields[3];
 			$scvcnt = count($smry->SummaryCurrentValue);
 			for ($i = 0; $i < $scvcnt; $i++) {
 				$smry->SummaryViewValue[$i] = ewr_FormatDateTime($smry->SummaryCurrentValue[$i], 1);

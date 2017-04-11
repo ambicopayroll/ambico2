@@ -18,6 +18,7 @@ class crr_rekon2 extends crTableCrosstab {
 	var $pegawai_nip;
 	var $jk_nm;
 	var $jk_kd;
+	var $gol_hk;
 
 	//
 	// Table class constructor
@@ -125,6 +126,15 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->jk_kd->DateFilter = "";
 		$this->jk_kd->SqlSelect = "";
 		$this->jk_kd->SqlOrderBy = "";
+
+		// gol_hk
+		$this->gol_hk = new crField('r_rekon2', 'r_rekon2', 'x_gol_hk', 'gol_hk', '`gol_hk`', 16, EWR_DATATYPE_NUMBER, -1);
+		$this->gol_hk->Sortable = TRUE; // Allow sort
+		$this->gol_hk->FldDefaultErrMsg = $ReportLanguage->Phrase("IncorrectInteger");
+		$this->fields['gol_hk'] = &$this->gol_hk;
+		$this->gol_hk->DateFilter = "";
+		$this->gol_hk->SqlSelect = "";
+		$this->gol_hk->SqlOrderBy = "";
 	}
 
 	// Set Field Visibility
@@ -432,7 +442,7 @@ class crr_rekon2 extends crTableCrosstab {
 		// 2nd dimension = no of distinct values
 
 		$nGrps = 1;
-		$this->SummaryFields[0] = new crSummaryField('x_jk_kd', 'jk_kd', '`jk_kd`', 'MAX');
+		$this->SummaryFields[0] = new crSummaryField('x_gol_hk', 'gol_hk', '`gol_hk`', 'MAX');
 		$this->SummaryFields[0]->SummaryCaption = $ReportLanguage->Phrase("RptMax");
 		$this->SummaryFields[0]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
 		$this->SummaryFields[0]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);
@@ -440,7 +450,7 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->SummaryFields[0]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[0]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[0]->SummaryInitValue = NULL;
-		$this->SummaryFields[1] = new crSummaryField('x_scan_masuk', 'scan_masuk', '`scan_masuk`', 'MAX');
+		$this->SummaryFields[1] = new crSummaryField('x_jk_kd', 'jk_kd', '`jk_kd`', 'MAX');
 		$this->SummaryFields[1]->SummaryCaption = $ReportLanguage->Phrase("RptMax");
 		$this->SummaryFields[1]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
 		$this->SummaryFields[1]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);
@@ -448,7 +458,7 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->SummaryFields[1]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[1]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[1]->SummaryInitValue = NULL;
-		$this->SummaryFields[2] = new crSummaryField('x_scan_keluar', 'scan_keluar', '`scan_keluar`', 'MAX');
+		$this->SummaryFields[2] = new crSummaryField('x_scan_masuk', 'scan_masuk', '`scan_masuk`', 'MAX');
 		$this->SummaryFields[2]->SummaryCaption = $ReportLanguage->Phrase("RptMax");
 		$this->SummaryFields[2]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
 		$this->SummaryFields[2]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);
@@ -456,6 +466,14 @@ class crr_rekon2 extends crTableCrosstab {
 		$this->SummaryFields[2]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[2]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
 		$this->SummaryFields[2]->SummaryInitValue = NULL;
+		$this->SummaryFields[3] = new crSummaryField('x_scan_keluar', 'scan_keluar', '`scan_keluar`', 'MAX');
+		$this->SummaryFields[3]->SummaryCaption = $ReportLanguage->Phrase("RptMax");
+		$this->SummaryFields[3]->SummaryVal = &ewr_InitArray($this->ColCount+1, NULL);
+		$this->SummaryFields[3]->SummaryValCnt = &ewr_InitArray($this->ColCount+1, NULL);
+		$this->SummaryFields[3]->SummaryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[3]->SummarySmry = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[3]->SummarySmryCnt = &ewr_Init2DArray($this->ColCount+1, $nGrps+1, NULL);
+		$this->SummaryFields[3]->SummaryInitValue = NULL;
 
 		// Update crosstab sql
 		$sSqlFlds = "";
