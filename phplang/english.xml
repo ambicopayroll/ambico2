@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/4/11" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/4/12" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -2646,6 +2646,9 @@
       <field id="jk_id">
         <phrase id="fldcaption" value="Jam Kerja" />
       </field>
+      <field id="hk">
+        <phrase id="fldcaption" value="Jml. Hari Kerja" />
+      </field>
     </table>
     <table id="t_jdw_krj_def">
       <phrase id="tblcaption" value="Jadwal Kerja Pegawai Default" />
@@ -2666,6 +2669,9 @@
       </field>
       <field id="scan_keluar">
         <phrase id="fldcaption" value="Scan Keluar" />
+      </field>
+      <field id="hk">
+        <phrase id="fldcaption" value="Jml. Hari Kerja" />
       </field>
     </table>
     <table id="generate__php">

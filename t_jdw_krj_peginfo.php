@@ -18,6 +18,7 @@ class ct_jdw_krj_peg extends cTable {
 	var $tgl1;
 	var $tgl2;
 	var $jk_id;
+	var $hk;
 
 	//
 	// Table class constructor
@@ -80,6 +81,12 @@ class ct_jdw_krj_peg extends cTable {
 		$this->jk_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->jk_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['jk_id'] = &$this->jk_id;
+
+		// hk
+		$this->hk = new cField('t_jdw_krj_peg', 't_jdw_krj_peg', 'x_hk', 'hk', '`hk`', '`hk`', 16, -1, FALSE, '`hk`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->hk->Sortable = TRUE; // Allow sort
+		$this->hk->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['hk'] = &$this->hk;
 	}
 
 	// Set Field Visibility
@@ -716,6 +723,7 @@ class ct_jdw_krj_peg extends cTable {
 		$this->tgl1->setDbValue($rs->fields('tgl1'));
 		$this->tgl2->setDbValue($rs->fields('tgl2'));
 		$this->jk_id->setDbValue($rs->fields('jk_id'));
+		$this->hk->setDbValue($rs->fields('hk'));
 	}
 
 	// Render list row values
@@ -731,6 +739,7 @@ class ct_jdw_krj_peg extends cTable {
 		// tgl1
 		// tgl2
 		// jk_id
+		// hk
 		// jdw_id
 
 		$this->jdw_id->ViewValue = $this->jdw_id->CurrentValue;
@@ -801,6 +810,10 @@ class ct_jdw_krj_peg extends cTable {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
+		// hk
+		$this->hk->ViewValue = $this->hk->CurrentValue;
+		$this->hk->ViewCustomAttributes = "";
+
 		// jdw_id
 		$this->jdw_id->LinkCustomAttributes = "";
 		$this->jdw_id->HrefValue = "";
@@ -825,6 +838,11 @@ class ct_jdw_krj_peg extends cTable {
 		$this->jk_id->LinkCustomAttributes = "";
 		$this->jk_id->HrefValue = "";
 		$this->jk_id->TooltipValue = "";
+
+		// hk
+		$this->hk->LinkCustomAttributes = "";
+		$this->hk->HrefValue = "";
+		$this->hk->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -895,6 +913,12 @@ class ct_jdw_krj_peg extends cTable {
 		$this->jk_id->EditAttrs["class"] = "form-control";
 		$this->jk_id->EditCustomAttributes = "";
 
+		// hk
+		$this->hk->EditAttrs["class"] = "form-control";
+		$this->hk->EditCustomAttributes = "";
+		$this->hk->EditValue = $this->hk->CurrentValue;
+		$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -926,12 +950,14 @@ class ct_jdw_krj_peg extends cTable {
 					if ($this->tgl1->Exportable) $Doc->ExportCaption($this->tgl1);
 					if ($this->tgl2->Exportable) $Doc->ExportCaption($this->tgl2);
 					if ($this->jk_id->Exportable) $Doc->ExportCaption($this->jk_id);
+					if ($this->hk->Exportable) $Doc->ExportCaption($this->hk);
 				} else {
 					if ($this->jdw_id->Exportable) $Doc->ExportCaption($this->jdw_id);
 					if ($this->pegawai_id->Exportable) $Doc->ExportCaption($this->pegawai_id);
 					if ($this->tgl1->Exportable) $Doc->ExportCaption($this->tgl1);
 					if ($this->tgl2->Exportable) $Doc->ExportCaption($this->tgl2);
 					if ($this->jk_id->Exportable) $Doc->ExportCaption($this->jk_id);
+					if ($this->hk->Exportable) $Doc->ExportCaption($this->hk);
 				}
 				$Doc->EndExportRow();
 			}
@@ -967,12 +993,14 @@ class ct_jdw_krj_peg extends cTable {
 						if ($this->tgl1->Exportable) $Doc->ExportField($this->tgl1);
 						if ($this->tgl2->Exportable) $Doc->ExportField($this->tgl2);
 						if ($this->jk_id->Exportable) $Doc->ExportField($this->jk_id);
+						if ($this->hk->Exportable) $Doc->ExportField($this->hk);
 					} else {
 						if ($this->jdw_id->Exportable) $Doc->ExportField($this->jdw_id);
 						if ($this->pegawai_id->Exportable) $Doc->ExportField($this->pegawai_id);
 						if ($this->tgl1->Exportable) $Doc->ExportField($this->tgl1);
 						if ($this->tgl2->Exportable) $Doc->ExportField($this->tgl2);
 						if ($this->jk_id->Exportable) $Doc->ExportField($this->jk_id);
+						if ($this->hk->Exportable) $Doc->ExportField($this->hk);
 					}
 					$Doc->EndExportRow();
 				}

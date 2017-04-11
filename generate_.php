@@ -320,6 +320,7 @@ Page_Rendering();
 			}
 			else {
 			?>
+				<p>Jadwal Pegawai yang sudah ter-create akan terhapus setelah tanggal create</p>
 				<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Generate</button>
 			<?php
 			}

@@ -421,6 +421,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
 		$this->jk_id->SetVisibility();
+		$this->hk->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -1188,6 +1189,8 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			return FALSE;
 		if ($objForm->HasValue("x_jk_id") && $objForm->HasValue("o_jk_id") && $this->jk_id->CurrentValue <> $this->jk_id->OldValue)
 			return FALSE;
+		if ($objForm->HasValue("x_hk") && $objForm->HasValue("o_hk") && $this->hk->CurrentValue <> $this->hk->OldValue)
+			return FALSE;
 		return TRUE;
 	}
 
@@ -1277,6 +1280,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$sFilterList = ew_Concat($sFilterList, $this->tgl1->AdvancedSearch->ToJSON(), ","); // Field tgl1
 		$sFilterList = ew_Concat($sFilterList, $this->tgl2->AdvancedSearch->ToJSON(), ","); // Field tgl2
 		$sFilterList = ew_Concat($sFilterList, $this->jk_id->AdvancedSearch->ToJSON(), ","); // Field jk_id
+		$sFilterList = ew_Concat($sFilterList, $this->hk->AdvancedSearch->ToJSON(), ","); // Field hk
 		$sFilterList = preg_replace('/,$/', "", $sFilterList);
 
 		// Return filter list in json
@@ -1356,6 +1360,14 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->jk_id->AdvancedSearch->SearchValue2 = @$filter["y_jk_id"];
 		$this->jk_id->AdvancedSearch->SearchOperator2 = @$filter["w_jk_id"];
 		$this->jk_id->AdvancedSearch->Save();
+
+		// Field hk
+		$this->hk->AdvancedSearch->SearchValue = @$filter["x_hk"];
+		$this->hk->AdvancedSearch->SearchOperator = @$filter["z_hk"];
+		$this->hk->AdvancedSearch->SearchCondition = @$filter["v_hk"];
+		$this->hk->AdvancedSearch->SearchValue2 = @$filter["y_hk"];
+		$this->hk->AdvancedSearch->SearchOperator2 = @$filter["w_hk"];
+		$this->hk->AdvancedSearch->Save();
 	}
 
 	// Advanced search WHERE clause based on QueryString
@@ -1368,6 +1380,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->BuildSearchSql($sWhere, $this->tgl1, $Default, FALSE); // tgl1
 		$this->BuildSearchSql($sWhere, $this->tgl2, $Default, FALSE); // tgl2
 		$this->BuildSearchSql($sWhere, $this->jk_id, $Default, FALSE); // jk_id
+		$this->BuildSearchSql($sWhere, $this->hk, $Default, FALSE); // hk
 
 		// Set up search parm
 		if (!$Default && $sWhere <> "") {
@@ -1379,6 +1392,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->tgl1->AdvancedSearch->Save(); // tgl1
 			$this->tgl2->AdvancedSearch->Save(); // tgl2
 			$this->jk_id->AdvancedSearch->Save(); // jk_id
+			$this->hk->AdvancedSearch->Save(); // hk
 		}
 		return $sWhere;
 	}
@@ -1443,6 +1457,8 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			return TRUE;
 		if ($this->jk_id->AdvancedSearch->IssetSession())
 			return TRUE;
+		if ($this->hk->AdvancedSearch->IssetSession())
+			return TRUE;
 		return FALSE;
 	}
 
@@ -1469,6 +1485,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->tgl1->AdvancedSearch->UnsetSession();
 		$this->tgl2->AdvancedSearch->UnsetSession();
 		$this->jk_id->AdvancedSearch->UnsetSession();
+		$this->hk->AdvancedSearch->UnsetSession();
 	}
 
 	// Restore all search parameters
@@ -1481,6 +1498,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->tgl1->AdvancedSearch->Load();
 		$this->tgl2->AdvancedSearch->Load();
 		$this->jk_id->AdvancedSearch->Load();
+		$this->hk->AdvancedSearch->Load();
 	}
 
 	// Set up sort parameters
@@ -1497,6 +1515,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->UpdateSort($this->tgl1, $bCtrl); // tgl1
 			$this->UpdateSort($this->tgl2, $bCtrl); // tgl2
 			$this->UpdateSort($this->jk_id, $bCtrl); // jk_id
+			$this->UpdateSort($this->hk, $bCtrl); // hk
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1544,6 +1563,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 				$this->tgl1->setSort("");
 				$this->tgl2->setSort("");
 				$this->jk_id->setSort("");
+				$this->hk->setSort("");
 			}
 
 			// Reset start position
@@ -2078,6 +2098,8 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->tgl2->OldValue = $this->tgl2->CurrentValue;
 		$this->jk_id->CurrentValue = NULL;
 		$this->jk_id->OldValue = $this->jk_id->CurrentValue;
+		$this->hk->CurrentValue = NULL;
+		$this->hk->OldValue = $this->hk->CurrentValue;
 	}
 
 	// Load search values for validation
@@ -2110,6 +2132,11 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->jk_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_jk_id"]);
 		if ($this->jk_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->jk_id->AdvancedSearch->SearchOperator = @$_GET["z_jk_id"];
+
+		// hk
+		$this->hk->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_hk"]);
+		if ($this->hk->AdvancedSearch->SearchValue <> "") $this->Command = "search";
+		$this->hk->AdvancedSearch->SearchOperator = @$_GET["z_hk"];
 	}
 
 	// Load form values
@@ -2135,6 +2162,10 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
 		}
 		$this->jk_id->setOldValue($objForm->GetValue("o_jk_id"));
+		if (!$this->hk->FldIsDetailKey) {
+			$this->hk->setFormValue($objForm->GetValue("x_hk"));
+		}
+		$this->hk->setOldValue($objForm->GetValue("o_hk"));
 		if (!$this->jdw_id->FldIsDetailKey && $this->CurrentAction <> "gridadd" && $this->CurrentAction <> "add")
 			$this->jdw_id->setFormValue($objForm->GetValue("x_jdw_id"));
 	}
@@ -2150,6 +2181,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->tgl2->CurrentValue = $this->tgl2->FormValue;
 		$this->tgl2->CurrentValue = ew_UnFormatDateTime($this->tgl2->CurrentValue, 0);
 		$this->jk_id->CurrentValue = $this->jk_id->FormValue;
+		$this->hk->CurrentValue = $this->hk->FormValue;
 	}
 
 	// Load recordset
@@ -2222,6 +2254,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		} else {
 			$this->jk_id->VirtualValue = ""; // Clear value
 		}
+		$this->hk->setDbValue($rs->fields('hk'));
 	}
 
 	// Load DbValue from recordset
@@ -2233,6 +2266,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->tgl1->DbValue = $row['tgl1'];
 		$this->tgl2->DbValue = $row['tgl2'];
 		$this->jk_id->DbValue = $row['jk_id'];
+		$this->hk->DbValue = $row['hk'];
 	}
 
 	// Load old record
@@ -2279,6 +2313,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		// tgl1
 		// tgl2
 		// jk_id
+		// hk
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -2351,6 +2386,10 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
+		// hk
+		$this->hk->ViewValue = $this->hk->CurrentValue;
+		$this->hk->ViewCustomAttributes = "";
+
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
@@ -2370,6 +2409,11 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
 			$this->jk_id->TooltipValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
+			$this->hk->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
 			// pegawai_id
@@ -2466,6 +2510,12 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			if ($rswrk) $rswrk->Close();
 			$this->jk_id->EditValue = $arwrk;
 
+			// hk
+			$this->hk->EditAttrs["class"] = "form-control";
+			$this->hk->EditCustomAttributes = "";
+			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
+			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+
 			// Add refer script
 			// pegawai_id
 
@@ -2483,6 +2533,10 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			// jk_id
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
 			// pegawai_id
@@ -2579,6 +2633,12 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			if ($rswrk) $rswrk->Close();
 			$this->jk_id->EditValue = $arwrk;
 
+			// hk
+			$this->hk->EditAttrs["class"] = "form-control";
+			$this->hk->EditCustomAttributes = "";
+			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
+			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+
 			// Edit refer script
 			// pegawai_id
 
@@ -2596,6 +2656,10 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			// jk_id
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_SEARCH) { // Search row
 
 			// pegawai_id
@@ -2621,6 +2685,12 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			$this->jk_id->EditCustomAttributes = "";
 			$this->jk_id->EditValue = ew_HtmlEncode($this->jk_id->AdvancedSearch->SearchValue);
 			$this->jk_id->PlaceHolder = ew_RemoveHtml($this->jk_id->FldCaption());
+
+			// hk
+			$this->hk->EditAttrs["class"] = "form-control";
+			$this->hk->EditCustomAttributes = "";
+			$this->hk->EditValue = ew_HtmlEncode($this->hk->AdvancedSearch->SearchValue);
+			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD ||
 			$this->RowType == EW_ROWTYPE_EDIT ||
@@ -2680,6 +2750,12 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		}
 		if (!$this->jk_id->FldIsDetailKey && !is_null($this->jk_id->FormValue) && $this->jk_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->jk_id->FldCaption(), $this->jk_id->ReqErrMsg));
+		}
+		if (!$this->hk->FldIsDetailKey && !is_null($this->hk->FormValue) && $this->hk->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->hk->FldCaption(), $this->hk->ReqErrMsg));
+		}
+		if (!ew_CheckInteger($this->hk->FormValue)) {
+			ew_AddMessage($gsFormError, $this->hk->FldErrMsg());
 		}
 
 		// Return validate result
@@ -2811,6 +2887,9 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 			// jk_id
 			$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, $this->jk_id->ReadOnly);
 
+			// hk
+			$this->hk->SetDbValueDef($rsnew, $this->hk->CurrentValue, 0, $this->hk->ReadOnly);
+
 			// Check referential integrity for master table 'pegawai'
 			$bValidMasterRecord = TRUE;
 			$sMasterFilter = $this->SqlMasterFilter_pegawai();
@@ -2908,6 +2987,9 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		// jk_id
 		$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, FALSE);
 
+		// hk
+		$this->hk->SetDbValueDef($rsnew, $this->hk->CurrentValue, 0, FALSE);
+
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
 		$bInsertRow = $this->Row_Inserting($rs, $rsnew);
@@ -2945,6 +3027,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->tgl1->AdvancedSearch->Load();
 		$this->tgl2->AdvancedSearch->Load();
 		$this->jk_id->AdvancedSearch->Load();
+		$this->hk->AdvancedSearch->Load();
 	}
 
 	// Set up export options
@@ -3220,6 +3303,7 @@ class ct_jdw_krj_peg_list extends ct_jdw_krj_peg {
 		$this->AddSearchQueryString($sQry, $this->tgl1); // tgl1
 		$this->AddSearchQueryString($sQry, $this->tgl2); // tgl2
 		$this->AddSearchQueryString($sQry, $this->jk_id); // jk_id
+		$this->AddSearchQueryString($sQry, $this->hk); // hk
 
 		// Build QueryString for pager
 		$sQry .= "&" . EW_TABLE_REC_PER_PAGE . "=" . urlencode($this->getRecordsPerPage()) . "&" . EW_TABLE_START_REC . "=" . urlencode($this->getStartRecordNumber());
@@ -3585,6 +3669,12 @@ ft_jdw_krj_peglist.Validate = function() {
 			elm = this.GetElements("x" + infix + "_jk_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdw_krj_peg->jk_id->FldCaption(), $t_jdw_krj_peg->jk_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_hk");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdw_krj_peg->hk->FldCaption(), $t_jdw_krj_peg->hk->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_hk");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_peg->hk->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -3605,6 +3695,7 @@ ft_jdw_krj_peglist.EmptyRow = function(infix) {
 	if (ew_ValueChanged(fobj, infix, "tgl1", false)) return false;
 	if (ew_ValueChanged(fobj, infix, "tgl2", false)) return false;
 	if (ew_ValueChanged(fobj, infix, "jk_id", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "hk", false)) return false;
 	return true;
 }
 
@@ -3927,6 +4018,15 @@ $t_jdw_krj_peg_list->ListOptions->Render("header", "left");
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
+<?php if ($t_jdw_krj_peg->hk->Visible) { // hk ?>
+	<?php if ($t_jdw_krj_peg->SortUrl($t_jdw_krj_peg->hk) == "") { ?>
+		<th data-name="hk"><div id="elh_t_jdw_krj_peg_hk" class="t_jdw_krj_peg_hk"><div class="ewTableHeaderCaption"><?php echo $t_jdw_krj_peg->hk->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="hk"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t_jdw_krj_peg->SortUrl($t_jdw_krj_peg->hk) ?>',2);"><div id="elh_t_jdw_krj_peg_hk" class="t_jdw_krj_peg_hk">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t_jdw_krj_peg->hk->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t_jdw_krj_peg->hk->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t_jdw_krj_peg->hk->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+        </div></div></th>
+	<?php } ?>
+<?php } ?>		
 <?php
 
 // Render list options (header, right)
@@ -4031,6 +4131,14 @@ ew_CreateCalendar("ft_jdw_krj_peglist", "x<?php echo $t_jdw_krj_peg_list->RowInd
 <input type="hidden" name="s_x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jk_id" id="s_x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jk_id" value="<?php echo $t_jdw_krj_peg->jk_id->LookupFilterQuery() ?>">
 </span>
 <input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jk_id" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jk_id" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jk_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jk_id->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t_jdw_krj_peg->hk->Visible) { // hk ?>
+		<td data-name="hk">
+<span id="el<?php echo $t_jdw_krj_peg_list->RowCnt ?>_t_jdw_krj_peg_hk" class="form-group t_jdw_krj_peg_hk">
+<input type="text" data-table="t_jdw_krj_peg" data-field="x_hk" name="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->hk->EditValue ?>"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_hk" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->OldValue) ?>">
 </td>
 	<?php } ?>
 <?php
@@ -4323,6 +4431,27 @@ ew_CreateCalendar("ft_jdw_krj_peglist", "x<?php echo $t_jdw_krj_peg_list->RowInd
 <?php } ?>
 </td>
 	<?php } ?>
+	<?php if ($t_jdw_krj_peg->hk->Visible) { // hk ?>
+		<td data-name="hk"<?php echo $t_jdw_krj_peg->hk->CellAttributes() ?>>
+<?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t_jdw_krj_peg_list->RowCnt ?>_t_jdw_krj_peg_hk" class="form-group t_jdw_krj_peg_hk">
+<input type="text" data-table="t_jdw_krj_peg" data-field="x_hk" name="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->hk->EditValue ?>"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_hk" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->OldValue) ?>">
+<?php } ?>
+<?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t_jdw_krj_peg_list->RowCnt ?>_t_jdw_krj_peg_hk" class="form-group t_jdw_krj_peg_hk">
+<input type="text" data-table="t_jdw_krj_peg" data-field="x_hk" name="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->hk->EditValue ?>"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t_jdw_krj_peg_list->RowCnt ?>_t_jdw_krj_peg_hk" class="t_jdw_krj_peg_hk">
+<span<?php echo $t_jdw_krj_peg->hk->ViewAttributes() ?>>
+<?php echo $t_jdw_krj_peg->hk->ListViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
 <?php
 
 // Render list options (body, right)
@@ -4432,6 +4561,14 @@ ew_CreateCalendar("ft_jdw_krj_peglist", "x<?php echo $t_jdw_krj_peg_list->RowInd
 <input type="hidden" name="s_x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jk_id" id="s_x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jk_id" value="<?php echo $t_jdw_krj_peg->jk_id->LookupFilterQuery() ?>">
 </span>
 <input type="hidden" data-table="t_jdw_krj_peg" data-field="x_jk_id" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jk_id" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_jk_id" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->jk_id->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t_jdw_krj_peg->hk->Visible) { // hk ?>
+		<td data-name="hk">
+<span id="el$rowindex$_t_jdw_krj_peg_hk" class="form-group t_jdw_krj_peg_hk">
+<input type="text" data-table="t_jdw_krj_peg" data-field="x_hk" name="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->hk->EditValue ?>"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t_jdw_krj_peg" data-field="x_hk" name="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" id="o<?php echo $t_jdw_krj_peg_list->RowIndex ?>_hk" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->OldValue) ?>">
 </td>
 	<?php } ?>
 <?php

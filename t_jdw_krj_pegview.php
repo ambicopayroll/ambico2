@@ -391,6 +391,7 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
 		$this->jk_id->SetVisibility();
+		$this->hk->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -725,6 +726,7 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 		} else {
 			$this->jk_id->VirtualValue = ""; // Clear value
 		}
+		$this->hk->setDbValue($rs->fields('hk'));
 	}
 
 	// Load DbValue from recordset
@@ -736,6 +738,7 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 		$this->tgl1->DbValue = $row['tgl1'];
 		$this->tgl2->DbValue = $row['tgl2'];
 		$this->jk_id->DbValue = $row['jk_id'];
+		$this->hk->DbValue = $row['hk'];
 	}
 
 	// Render row values based on field settings
@@ -759,6 +762,7 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 		// tgl1
 		// tgl2
 		// jk_id
+		// hk
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -831,6 +835,10 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
+		// hk
+		$this->hk->ViewValue = $this->hk->CurrentValue;
+		$this->hk->ViewCustomAttributes = "";
+
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
@@ -850,6 +858,11 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
 			$this->jk_id->TooltipValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
+			$this->hk->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1450,6 +1463,17 @@ $t_jdw_krj_peg_view->ShowMessage();
 <span id="el_t_jdw_krj_peg_jk_id">
 <span<?php echo $t_jdw_krj_peg->jk_id->ViewAttributes() ?>>
 <?php echo $t_jdw_krj_peg->jk_id->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t_jdw_krj_peg->hk->Visible) { // hk ?>
+	<tr id="r_hk">
+		<td><span id="elh_t_jdw_krj_peg_hk"><?php echo $t_jdw_krj_peg->hk->FldCaption() ?></span></td>
+		<td data-name="hk"<?php echo $t_jdw_krj_peg->hk->CellAttributes() ?>>
+<span id="el_t_jdw_krj_peg_hk">
+<span<?php echo $t_jdw_krj_peg->hk->ViewAttributes() ?>>
+<?php echo $t_jdw_krj_peg->hk->ViewValue ?></span>
 </span>
 </td>
 	</tr>

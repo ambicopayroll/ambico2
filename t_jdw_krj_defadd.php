@@ -294,6 +294,7 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 		$this->jk_id->SetVisibility();
 		$this->scan_masuk->SetVisibility();
 		$this->scan_keluar->SetVisibility();
+		$this->hk->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -493,6 +494,8 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 		$this->scan_masuk->OldValue = $this->scan_masuk->CurrentValue;
 		$this->scan_keluar->CurrentValue = NULL;
 		$this->scan_keluar->OldValue = $this->scan_keluar->CurrentValue;
+		$this->hk->CurrentValue = NULL;
+		$this->hk->OldValue = $this->hk->CurrentValue;
 	}
 
 	// Load form values
@@ -518,6 +521,9 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 			$this->scan_keluar->setFormValue($objForm->GetValue("x_scan_keluar"));
 			$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1);
 		}
+		if (!$this->hk->FldIsDetailKey) {
+			$this->hk->setFormValue($objForm->GetValue("x_hk"));
+		}
 	}
 
 	// Restore form values
@@ -532,6 +538,7 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 		$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1);
 		$this->scan_keluar->CurrentValue = $this->scan_keluar->FormValue;
 		$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1);
+		$this->hk->CurrentValue = $this->hk->FormValue;
 	}
 
 	// Load row based on key values
@@ -579,6 +586,7 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 		}
 		$this->scan_masuk->setDbValue($rs->fields('scan_masuk'));
 		$this->scan_keluar->setDbValue($rs->fields('scan_keluar'));
+		$this->hk->setDbValue($rs->fields('hk'));
 	}
 
 	// Load DbValue from recordset
@@ -591,6 +599,7 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 		$this->jk_id->DbValue = $row['jk_id'];
 		$this->scan_masuk->DbValue = $row['scan_masuk'];
 		$this->scan_keluar->DbValue = $row['scan_keluar'];
+		$this->hk->DbValue = $row['hk'];
 	}
 
 	// Load old record
@@ -632,6 +641,7 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 		// jk_id
 		// scan_masuk
 		// scan_keluar
+		// hk
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -709,6 +719,10 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 1);
 		$this->scan_keluar->ViewCustomAttributes = "";
 
+		// hk
+		$this->hk->ViewValue = $this->hk->CurrentValue;
+		$this->hk->ViewCustomAttributes = "";
+
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
@@ -733,6 +747,11 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 			$this->scan_keluar->LinkCustomAttributes = "";
 			$this->scan_keluar->HrefValue = "";
 			$this->scan_keluar->TooltipValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
+			$this->hk->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
 			// pegawai_id
@@ -834,6 +853,12 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 			$this->scan_keluar->EditValue = ew_HtmlEncode(ew_FormatDateTime($this->scan_keluar->CurrentValue, 8));
 			$this->scan_keluar->PlaceHolder = ew_RemoveHtml($this->scan_keluar->FldCaption());
 
+			// hk
+			$this->hk->EditAttrs["class"] = "form-control";
+			$this->hk->EditCustomAttributes = "";
+			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
+			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+
 			// Add refer script
 			// pegawai_id
 
@@ -855,6 +880,10 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 			// scan_keluar
 			$this->scan_keluar->LinkCustomAttributes = "";
 			$this->scan_keluar->HrefValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD ||
 			$this->RowType == EW_ROWTYPE_EDIT ||
@@ -895,6 +924,12 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 		if (!ew_CheckDateDef($this->scan_keluar->FormValue)) {
 			ew_AddMessage($gsFormError, $this->scan_keluar->FldErrMsg());
 		}
+		if (!$this->hk->FldIsDetailKey && !is_null($this->hk->FormValue) && $this->hk->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->hk->FldCaption(), $this->hk->ReqErrMsg));
+		}
+		if (!ew_CheckInteger($this->hk->FormValue)) {
+			ew_AddMessage($gsFormError, $this->hk->FldErrMsg());
+		}
 
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
@@ -933,6 +968,9 @@ class ct_jdw_krj_def_add extends ct_jdw_krj_def {
 
 		// scan_keluar
 		$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1), NULL, FALSE);
+
+		// hk
+		$this->hk->SetDbValueDef($rsnew, $this->hk->CurrentValue, 0, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
@@ -1213,6 +1251,12 @@ ft_jdw_krj_defadd.Validate = function() {
 			elm = this.GetElements("x" + infix + "_scan_keluar");
 			if (elm && !ew_CheckDateDef(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_def->scan_keluar->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_hk");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdw_krj_def->hk->FldCaption(), $t_jdw_krj_def->hk->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_hk");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_def->hk->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1360,6 +1404,16 @@ ew_CreateCalendar("ft_jdw_krj_defadd", "x_tgl", 0);
 <input type="text" data-table="t_jdw_krj_def" data-field="x_scan_keluar" data-format="1" name="x_scan_keluar" id="x_scan_keluar" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->scan_keluar->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->scan_keluar->EditValue ?>"<?php echo $t_jdw_krj_def->scan_keluar->EditAttributes() ?>>
 </span>
 <?php echo $t_jdw_krj_def->scan_keluar->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t_jdw_krj_def->hk->Visible) { // hk ?>
+	<div id="r_hk" class="form-group">
+		<label id="elh_t_jdw_krj_def_hk" for="x_hk" class="col-sm-2 control-label ewLabel"><?php echo $t_jdw_krj_def->hk->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="col-sm-10"><div<?php echo $t_jdw_krj_def->hk->CellAttributes() ?>>
+<span id="el_t_jdw_krj_def_hk">
+<input type="text" data-table="t_jdw_krj_def" data-field="x_hk" name="x_hk" id="x_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_def->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_def->hk->EditValue ?>"<?php echo $t_jdw_krj_def->hk->EditAttributes() ?>>
+</span>
+<?php echo $t_jdw_krj_def->hk->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div>

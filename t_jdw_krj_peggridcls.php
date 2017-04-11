@@ -316,6 +316,7 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
 		$this->jk_id->SetVisibility();
+		$this->hk->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -810,6 +811,8 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			return FALSE;
 		if ($objForm->HasValue("x_jk_id") && $objForm->HasValue("o_jk_id") && $this->jk_id->CurrentValue <> $this->jk_id->OldValue)
 			return FALSE;
+		if ($objForm->HasValue("x_hk") && $objForm->HasValue("o_hk") && $this->hk->CurrentValue <> $this->hk->OldValue)
+			return FALSE;
 		return TRUE;
 	}
 
@@ -1177,6 +1180,8 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		$this->tgl2->OldValue = $this->tgl2->CurrentValue;
 		$this->jk_id->CurrentValue = NULL;
 		$this->jk_id->OldValue = $this->jk_id->CurrentValue;
+		$this->hk->CurrentValue = NULL;
+		$this->hk->OldValue = $this->hk->CurrentValue;
 	}
 
 	// Load form values
@@ -1203,6 +1208,10 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->setFormValue($objForm->GetValue("x_jk_id"));
 		}
 		$this->jk_id->setOldValue($objForm->GetValue("o_jk_id"));
+		if (!$this->hk->FldIsDetailKey) {
+			$this->hk->setFormValue($objForm->GetValue("x_hk"));
+		}
+		$this->hk->setOldValue($objForm->GetValue("o_hk"));
 		if (!$this->jdw_id->FldIsDetailKey && $this->CurrentAction <> "gridadd" && $this->CurrentAction <> "add")
 			$this->jdw_id->setFormValue($objForm->GetValue("x_jdw_id"));
 	}
@@ -1218,6 +1227,7 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		$this->tgl2->CurrentValue = $this->tgl2->FormValue;
 		$this->tgl2->CurrentValue = ew_UnFormatDateTime($this->tgl2->CurrentValue, 0);
 		$this->jk_id->CurrentValue = $this->jk_id->FormValue;
+		$this->hk->CurrentValue = $this->hk->FormValue;
 	}
 
 	// Load recordset
@@ -1290,6 +1300,7 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		} else {
 			$this->jk_id->VirtualValue = ""; // Clear value
 		}
+		$this->hk->setDbValue($rs->fields('hk'));
 	}
 
 	// Load DbValue from recordset
@@ -1301,6 +1312,7 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		$this->tgl1->DbValue = $row['tgl1'];
 		$this->tgl2->DbValue = $row['tgl2'];
 		$this->jk_id->DbValue = $row['jk_id'];
+		$this->hk->DbValue = $row['hk'];
 	}
 
 	// Load old record
@@ -1351,6 +1363,7 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		// tgl1
 		// tgl2
 		// jk_id
+		// hk
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -1423,6 +1436,10 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
+		// hk
+		$this->hk->ViewValue = $this->hk->CurrentValue;
+		$this->hk->ViewCustomAttributes = "";
+
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
@@ -1442,6 +1459,11 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
 			$this->jk_id->TooltipValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
+			$this->hk->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
 			// pegawai_id
@@ -1538,6 +1560,12 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			if ($rswrk) $rswrk->Close();
 			$this->jk_id->EditValue = $arwrk;
 
+			// hk
+			$this->hk->EditAttrs["class"] = "form-control";
+			$this->hk->EditCustomAttributes = "";
+			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
+			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+
 			// Add refer script
 			// pegawai_id
 
@@ -1555,6 +1583,10 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			// jk_id
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
 			// pegawai_id
@@ -1651,6 +1683,12 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			if ($rswrk) $rswrk->Close();
 			$this->jk_id->EditValue = $arwrk;
 
+			// hk
+			$this->hk->EditAttrs["class"] = "form-control";
+			$this->hk->EditCustomAttributes = "";
+			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
+			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+
 			// Edit refer script
 			// pegawai_id
 
@@ -1668,6 +1706,10 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			// jk_id
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD ||
 			$this->RowType == EW_ROWTYPE_EDIT ||
@@ -1701,6 +1743,12 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		}
 		if (!$this->jk_id->FldIsDetailKey && !is_null($this->jk_id->FormValue) && $this->jk_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->jk_id->FldCaption(), $this->jk_id->ReqErrMsg));
+		}
+		if (!$this->hk->FldIsDetailKey && !is_null($this->hk->FormValue) && $this->hk->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->hk->FldCaption(), $this->hk->ReqErrMsg));
+		}
+		if (!ew_CheckInteger($this->hk->FormValue)) {
+			ew_AddMessage($gsFormError, $this->hk->FldErrMsg());
 		}
 
 		// Return validate result
@@ -1832,6 +1880,9 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			// jk_id
 			$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, $this->jk_id->ReadOnly);
 
+			// hk
+			$this->hk->SetDbValueDef($rsnew, $this->hk->CurrentValue, 0, $this->hk->ReadOnly);
+
 			// Check referential integrity for master table 'pegawai'
 			$bValidMasterRecord = TRUE;
 			$sMasterFilter = $this->SqlMasterFilter_pegawai();
@@ -1933,6 +1984,9 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 
 		// jk_id
 		$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, FALSE);
+
+		// hk
+		$this->hk->SetDbValueDef($rsnew, $this->hk->CurrentValue, 0, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;

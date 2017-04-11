@@ -1,12 +1,12 @@
-6:30 PM 4/4/2017
-yang perlu ditanyakan ::
-1. saat pergantian shift :: di mana saja ada hari libur ?
+12:02 AM 4/12/2017
+- tambah field di tabel t_jdw_krj_peg, nama field hk (tinyint)
+- tambah field di tabel t_jdw_krj_def, nama field hk (tinyint)
 
+4:55 PM 4/10/2017
+- penentuan 6 hk atau 5 hk :: apakah bisa dari jam kerja ?
 
-2:40 PM 4/5/2017
-- lengkapi tabel t_jdw_krj_def dengan data scan_log
-- create crosstab di phpreportmaker, yang diambil adalah tabel t_jdw_krj_def
-- tabel t_jdw_krj_def ditambahi field scan_masuk dan scan_keluar
+11:18 AM 4/7/2017
+- perlu dibuatkan pengisian jadwal untuk "sekaligus banyak pegawai"
 
 10:26 AM 4/7/2017
 - acuan untuk menentukan 5 hk atau 6 hk :: sementara dari jadwal default tiap2 pegawai
@@ -15,10 +15,11 @@ yang perlu ditanyakan ::
 			cara check masuk atau tidak :: dilihat data field scan_masuk dan scan_keluar
 			apabila ada data di scan_masuk dan scan_keluar :: maka si pegawai dianggap masuk dan dihitung gajinya pada hari tersebut
 			
+2:40 PM 4/5/2017
+- lengkapi tabel t_jdw_krj_def dengan data scan_log
+- create crosstab di phpreportmaker, yang diambil adalah tabel t_jdw_krj_def
+- tabel t_jdw_krj_def ditambahi field scan_masuk dan scan_keluar
 
-11:18 AM 4/7/2017
-- perlu dibuatkan pengisian jadwal untuk "sekaligus banyak pegawai"
-
-
-4:55 PM 4/10/2017
-- penentuan 6 hk atau 5 hk :: apakah bisa dari jam kerja ?
+6:30 PM 4/4/2017
+yang perlu ditanyakan ::
+1. saat pergantian shift :: di mana saja ada hari libur ?

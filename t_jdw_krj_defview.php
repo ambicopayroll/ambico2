@@ -394,6 +394,7 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		$this->jk_id->SetVisibility();
 		$this->scan_masuk->SetVisibility();
 		$this->scan_keluar->SetVisibility();
+		$this->hk->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -729,6 +730,7 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		}
 		$this->scan_masuk->setDbValue($rs->fields('scan_masuk'));
 		$this->scan_keluar->setDbValue($rs->fields('scan_keluar'));
+		$this->hk->setDbValue($rs->fields('hk'));
 	}
 
 	// Load DbValue from recordset
@@ -741,6 +743,7 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		$this->jk_id->DbValue = $row['jk_id'];
 		$this->scan_masuk->DbValue = $row['scan_masuk'];
 		$this->scan_keluar->DbValue = $row['scan_keluar'];
+		$this->hk->DbValue = $row['hk'];
 	}
 
 	// Render row values based on field settings
@@ -765,6 +768,7 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		// jk_id
 		// scan_masuk
 		// scan_keluar
+		// hk
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -842,6 +846,10 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 1);
 		$this->scan_keluar->ViewCustomAttributes = "";
 
+		// hk
+		$this->hk->ViewValue = $this->hk->CurrentValue;
+		$this->hk->ViewCustomAttributes = "";
+
 			// jdw_id
 			$this->jdw_id->LinkCustomAttributes = "";
 			$this->jdw_id->HrefValue = "";
@@ -871,6 +879,11 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 			$this->scan_keluar->LinkCustomAttributes = "";
 			$this->scan_keluar->HrefValue = "";
 			$this->scan_keluar->TooltipValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
+			$this->hk->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1493,6 +1506,17 @@ $t_jdw_krj_def_view->ShowMessage();
 <span id="el_t_jdw_krj_def_scan_keluar">
 <span<?php echo $t_jdw_krj_def->scan_keluar->ViewAttributes() ?>>
 <?php echo $t_jdw_krj_def->scan_keluar->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t_jdw_krj_def->hk->Visible) { // hk ?>
+	<tr id="r_hk">
+		<td><span id="elh_t_jdw_krj_def_hk"><?php echo $t_jdw_krj_def->hk->FldCaption() ?></span></td>
+		<td data-name="hk"<?php echo $t_jdw_krj_def->hk->CellAttributes() ?>>
+<span id="el_t_jdw_krj_def_hk">
+<span<?php echo $t_jdw_krj_def->hk->ViewAttributes() ?>>
+<?php echo $t_jdw_krj_def->hk->ViewValue ?></span>
 </span>
 </td>
 	</tr>

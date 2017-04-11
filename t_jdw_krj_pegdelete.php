@@ -290,6 +290,7 @@ class ct_jdw_krj_peg_delete extends ct_jdw_krj_peg {
 		$this->tgl1->SetVisibility();
 		$this->tgl2->SetVisibility();
 		$this->jk_id->SetVisibility();
+		$this->hk->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -482,6 +483,7 @@ class ct_jdw_krj_peg_delete extends ct_jdw_krj_peg {
 		} else {
 			$this->jk_id->VirtualValue = ""; // Clear value
 		}
+		$this->hk->setDbValue($rs->fields('hk'));
 	}
 
 	// Load DbValue from recordset
@@ -493,6 +495,7 @@ class ct_jdw_krj_peg_delete extends ct_jdw_krj_peg {
 		$this->tgl1->DbValue = $row['tgl1'];
 		$this->tgl2->DbValue = $row['tgl2'];
 		$this->jk_id->DbValue = $row['jk_id'];
+		$this->hk->DbValue = $row['hk'];
 	}
 
 	// Render row values based on field settings
@@ -510,6 +513,7 @@ class ct_jdw_krj_peg_delete extends ct_jdw_krj_peg {
 		// tgl1
 		// tgl2
 		// jk_id
+		// hk
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -582,6 +586,10 @@ class ct_jdw_krj_peg_delete extends ct_jdw_krj_peg {
 		}
 		$this->jk_id->ViewCustomAttributes = "";
 
+		// hk
+		$this->hk->ViewValue = $this->hk->CurrentValue;
+		$this->hk->ViewCustomAttributes = "";
+
 			// pegawai_id
 			$this->pegawai_id->LinkCustomAttributes = "";
 			$this->pegawai_id->HrefValue = "";
@@ -601,6 +609,11 @@ class ct_jdw_krj_peg_delete extends ct_jdw_krj_peg {
 			$this->jk_id->LinkCustomAttributes = "";
 			$this->jk_id->HrefValue = "";
 			$this->jk_id->TooltipValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
+			$this->hk->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -928,6 +941,9 @@ $t_jdw_krj_peg_delete->ShowMessage();
 <?php if ($t_jdw_krj_peg->jk_id->Visible) { // jk_id ?>
 		<th><span id="elh_t_jdw_krj_peg_jk_id" class="t_jdw_krj_peg_jk_id"><?php echo $t_jdw_krj_peg->jk_id->FldCaption() ?></span></th>
 <?php } ?>
+<?php if ($t_jdw_krj_peg->hk->Visible) { // hk ?>
+		<th><span id="elh_t_jdw_krj_peg_hk" class="t_jdw_krj_peg_hk"><?php echo $t_jdw_krj_peg->hk->FldCaption() ?></span></th>
+<?php } ?>
 	</tr>
 	</thead>
 	<tbody>
@@ -978,6 +994,14 @@ while (!$t_jdw_krj_peg_delete->Recordset->EOF) {
 <span id="el<?php echo $t_jdw_krj_peg_delete->RowCnt ?>_t_jdw_krj_peg_jk_id" class="t_jdw_krj_peg_jk_id">
 <span<?php echo $t_jdw_krj_peg->jk_id->ViewAttributes() ?>>
 <?php echo $t_jdw_krj_peg->jk_id->ListViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($t_jdw_krj_peg->hk->Visible) { // hk ?>
+		<td<?php echo $t_jdw_krj_peg->hk->CellAttributes() ?>>
+<span id="el<?php echo $t_jdw_krj_peg_delete->RowCnt ?>_t_jdw_krj_peg_hk" class="t_jdw_krj_peg_hk">
+<span<?php echo $t_jdw_krj_peg->hk->ViewAttributes() ?>>
+<?php echo $t_jdw_krj_peg->hk->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

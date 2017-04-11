@@ -319,6 +319,7 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		$this->jk_id->SetVisibility();
 		$this->scan_masuk->SetVisibility();
 		$this->scan_keluar->SetVisibility();
+		$this->hk->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -815,6 +816,8 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			return FALSE;
 		if ($objForm->HasValue("x_scan_keluar") && $objForm->HasValue("o_scan_keluar") && $this->scan_keluar->CurrentValue <> $this->scan_keluar->OldValue)
 			return FALSE;
+		if ($objForm->HasValue("x_hk") && $objForm->HasValue("o_hk") && $this->hk->CurrentValue <> $this->hk->OldValue)
+			return FALSE;
 		return TRUE;
 	}
 
@@ -1186,6 +1189,8 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		$this->scan_masuk->OldValue = $this->scan_masuk->CurrentValue;
 		$this->scan_keluar->CurrentValue = NULL;
 		$this->scan_keluar->OldValue = $this->scan_keluar->CurrentValue;
+		$this->hk->CurrentValue = NULL;
+		$this->hk->OldValue = $this->hk->CurrentValue;
 	}
 
 	// Load form values
@@ -1219,6 +1224,10 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1);
 		}
 		$this->scan_keluar->setOldValue($objForm->GetValue("o_scan_keluar"));
+		if (!$this->hk->FldIsDetailKey) {
+			$this->hk->setFormValue($objForm->GetValue("x_hk"));
+		}
+		$this->hk->setOldValue($objForm->GetValue("o_hk"));
 	}
 
 	// Restore form values
@@ -1234,6 +1243,7 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		$this->scan_masuk->CurrentValue = ew_UnFormatDateTime($this->scan_masuk->CurrentValue, 1);
 		$this->scan_keluar->CurrentValue = $this->scan_keluar->FormValue;
 		$this->scan_keluar->CurrentValue = ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1);
+		$this->hk->CurrentValue = $this->hk->FormValue;
 	}
 
 	// Load recordset
@@ -1307,6 +1317,7 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		}
 		$this->scan_masuk->setDbValue($rs->fields('scan_masuk'));
 		$this->scan_keluar->setDbValue($rs->fields('scan_keluar'));
+		$this->hk->setDbValue($rs->fields('hk'));
 	}
 
 	// Load DbValue from recordset
@@ -1319,6 +1330,7 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		$this->jk_id->DbValue = $row['jk_id'];
 		$this->scan_masuk->DbValue = $row['scan_masuk'];
 		$this->scan_keluar->DbValue = $row['scan_keluar'];
+		$this->hk->DbValue = $row['hk'];
 	}
 
 	// Load old record
@@ -1370,6 +1382,7 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		// jk_id
 		// scan_masuk
 		// scan_keluar
+		// hk
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -1447,6 +1460,10 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 1);
 		$this->scan_keluar->ViewCustomAttributes = "";
 
+		// hk
+		$this->hk->ViewValue = $this->hk->CurrentValue;
+		$this->hk->ViewCustomAttributes = "";
+
 			// jdw_id
 			$this->jdw_id->LinkCustomAttributes = "";
 			$this->jdw_id->HrefValue = "";
@@ -1476,6 +1493,11 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			$this->scan_keluar->LinkCustomAttributes = "";
 			$this->scan_keluar->HrefValue = "";
 			$this->scan_keluar->TooltipValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
+			$this->hk->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
 			// jdw_id
@@ -1580,6 +1602,12 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			$this->scan_keluar->EditValue = ew_HtmlEncode(ew_FormatDateTime($this->scan_keluar->CurrentValue, 8));
 			$this->scan_keluar->PlaceHolder = ew_RemoveHtml($this->scan_keluar->FldCaption());
 
+			// hk
+			$this->hk->EditAttrs["class"] = "form-control";
+			$this->hk->EditCustomAttributes = "";
+			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
+			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+
 			// Add refer script
 			// jdw_id
 
@@ -1605,6 +1633,10 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			// scan_keluar
 			$this->scan_keluar->LinkCustomAttributes = "";
 			$this->scan_keluar->HrefValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
 			// jdw_id
@@ -1713,6 +1745,12 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			$this->scan_keluar->EditValue = ew_HtmlEncode(ew_FormatDateTime($this->scan_keluar->CurrentValue, 8));
 			$this->scan_keluar->PlaceHolder = ew_RemoveHtml($this->scan_keluar->FldCaption());
 
+			// hk
+			$this->hk->EditAttrs["class"] = "form-control";
+			$this->hk->EditCustomAttributes = "";
+			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
+			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+
 			// Edit refer script
 			// jdw_id
 
@@ -1738,6 +1776,10 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			// scan_keluar
 			$this->scan_keluar->LinkCustomAttributes = "";
 			$this->scan_keluar->HrefValue = "";
+
+			// hk
+			$this->hk->LinkCustomAttributes = "";
+			$this->hk->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD ||
 			$this->RowType == EW_ROWTYPE_EDIT ||
@@ -1774,6 +1816,12 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 		}
 		if (!ew_CheckDateDef($this->scan_keluar->FormValue)) {
 			ew_AddMessage($gsFormError, $this->scan_keluar->FldErrMsg());
+		}
+		if (!$this->hk->FldIsDetailKey && !is_null($this->hk->FormValue) && $this->hk->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->hk->FldCaption(), $this->hk->ReqErrMsg));
+		}
+		if (!ew_CheckInteger($this->hk->FormValue)) {
+			ew_AddMessage($gsFormError, $this->hk->FldErrMsg());
 		}
 
 		// Return validate result
@@ -1908,6 +1956,9 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 			// scan_keluar
 			$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1), NULL, $this->scan_keluar->ReadOnly);
 
+			// hk
+			$this->hk->SetDbValueDef($rsnew, $this->hk->CurrentValue, 0, $this->hk->ReadOnly);
+
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
 			if ($bUpdateRow) {
@@ -1970,6 +2021,9 @@ class ct_jdw_krj_def_grid extends ct_jdw_krj_def {
 
 		// scan_keluar
 		$this->scan_keluar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->scan_keluar->CurrentValue, 1), NULL, FALSE);
+
+		// hk
+		$this->hk->SetDbValueDef($rsnew, $this->hk->CurrentValue, 0, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
