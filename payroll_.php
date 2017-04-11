@@ -311,23 +311,31 @@ Page_Rendering();
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<html>
-	<body>
-		<form action="generate.php">
-			<?php
-			if ($_GET["ok"] == "1") {
-				echo "Selesai";
-			}
-			else {
-			?>
-				<p>Jadwal Pegawai yang sudah ter-create akan terhapus setelah tanggal create</p>
-				<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Generate</button>
-			<?php
-			}
-			?>
-		</form>
-	</body>
-</html>
+<form id="myform" name="myform" class="form-horizontal" method="post" action="payroll.php">
+	<div id="r_start" class="form-group">
+		<label for="start" class="col-sm-2 control-label ewLabel">Date Start</label>
+		<div class="col-sm-10">
+		  <span id="el_calendar_start">
+		  <input type="text" name="start" data-field="start" data-format="5" size="20" class="form-control" id="start">
+		  <script type="text/javascript">
+			ew_CreateCalendar("myform", "start", 5);
+		  </script>
+		  </span>
+		</div>
+	</div>
+	<div id="r_end" class="form-group">
+		<label for="end" class="col-sm-2 control-label ewLabel">Date End</label>
+		<div class="col-sm-10">
+		  <span id="el_calendar_end">
+		  <input type="text" name="end" data-field="end" data-format="5" size="20" class="form-control" id="end">
+		  <script type="text/javascript">
+			ew_CreateCalendar("myform", "end", 5);
+		  </script>
+		  </span>
+		</div>
+	</div>
+	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Submit</button>
+</form>
 <?php if (EW_DEBUG_ENABLED) echo ew_DebugMsg(); ?>
 <?php include_once "footer.php" ?>
 <?php

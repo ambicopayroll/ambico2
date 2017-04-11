@@ -2715,6 +2715,9 @@
       <field id="jk_kd">
         <phrase id="fldcaption" value="jk kd" />
       </field>
+      <field id="gol_hk">
+        <phrase id="fldcaption" value="hk" />
+      </field>
     </table>
     <table id="v_att_log">
       <phrase id="tblcaption" value="v att log" />
