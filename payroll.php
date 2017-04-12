@@ -10,7 +10,9 @@ if ($_SERVER["HTTP_HOST"] == "localhost" ) { // testing on local PC
 	$conn->Connect('mysql.idhostinger.com','u945388674_ambic','M457r1P 81','u945388674_ambic');
 }
 
-$rs = $conn->Execute('select * from t_jdw_krj_peg order by pegawai_id, tgl1');
+echo "under progress ... ";
+
+/*$rs = $conn->Execute('select * from t_jdw_krj_peg order by pegawai_id, tgl1');
 
 while (!$rs->EOF) {
 	$mpegawai_id = $rs->fields["pegawai_id"];
@@ -42,6 +44,6 @@ while (!$rs->EOF) {
 $rs->Close();
 $conn->Close();
 
-header("location: ./generate_.php?ok=1");
+header("location: ./generate_.php?ok=1");*/
 
 ?>

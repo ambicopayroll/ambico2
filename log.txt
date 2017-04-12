@@ -1,12 +1,38 @@
+11:31 AM 4/12/2017
+- perlu dibuatkan status pegawai, antara bulanan dan bukan bulanan
+
+
+
+1:24 AM 4/12/2017
+- dibuatkan field baru untuk flag menentukan ::
+	- terlambat
+	- tidak masuk
+	- ijin terlambat
+	- cuti
+	- libur
+	digunakan untuk perhitungan gaji
+	
+- diupayakan untuk tidak bergantung pada tabel yang sama saat generate tabel jadwal default dan generate rekonsiliasi
+- dibuatkan tabel gaji harian, mirip dengan tabel jadwal kerja default, per hari sudah bisa dihitung upah nya, karena ada flag,
+	misal :: terlambat, tidak masuk, cuti, libur, lembur, dll
+
+
+
 12:02 AM 4/12/2017
 - tambah field di tabel t_jdw_krj_peg, nama field hk (tinyint)
 - tambah field di tabel t_jdw_krj_def, nama field hk (tinyint)
 
+
+
 4:55 PM 4/10/2017
 - penentuan 6 hk atau 5 hk :: apakah bisa dari jam kerja ?
 
+
+
 11:18 AM 4/7/2017
 - perlu dibuatkan pengisian jadwal untuk "sekaligus banyak pegawai"
+
+
 
 10:26 AM 4/7/2017
 - acuan untuk menentukan 5 hk atau 6 hk :: sementara dari jadwal default tiap2 pegawai
@@ -14,11 +40,15 @@
 			misal punya :: maka check ke laporan rekonsiliasi (tabel t_jdw_krj_def), apakah si pegawai masuk atau tidak ?
 			cara check masuk atau tidak :: dilihat data field scan_masuk dan scan_keluar
 			apabila ada data di scan_masuk dan scan_keluar :: maka si pegawai dianggap masuk dan dihitung gajinya pada hari tersebut
+
+
 			
 2:40 PM 4/5/2017
 - lengkapi tabel t_jdw_krj_def dengan data scan_log
 - create crosstab di phpreportmaker, yang diambil adalah tabel t_jdw_krj_def
 - tabel t_jdw_krj_def ditambahi field scan_masuk dan scan_keluar
+
+
 
 6:30 PM 4/4/2017
 yang perlu ditanyakan ::

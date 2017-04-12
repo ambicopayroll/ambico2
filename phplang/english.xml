@@ -586,6 +586,9 @@
     <menu id="64">
       <phrase id="menutext" value="Dashboard" />
     </menu>
+    <menu id="22">
+      <phrase id="menutext" value="Jadwal Kerja" />
+    </menu>
     <menu id="10084">
       <phrase id="menutext" value="v att log" />
     </menu>
@@ -599,46 +602,40 @@
       <phrase id="menutext" value="Laporan Scan Finger" />
     </menu>
     <menu id="10080">
-      <phrase id="menutext" value="Generate Rekonsiliasi Absensi" />
+      <phrase id="menutext" value="Generate Rekonsiliasi" />
     </menu>
     <menu id="10073">
       <phrase id="menutext" value="Scan Log" />
     </menu>
     <menu id="10081">
-      <phrase id="menutext" value="Laporan Rekonsiliasi Absensi" />
+      <phrase id="menutext" value="Laporan Rekonsiliasi" />
+    </menu>
+    <menu id="18">
+      <phrase id="menutext" value="Jam Kerja" />
     </menu>
     <menu id="128">
       <phrase id="menutext" value="Pegawai" />
     </menu>
     <menu id="29">
-      <phrase id="menutext" value="Pegawai" />
+      <phrase id="menutext" value="Master Pegawai" />
+    </menu>
+    <menu id="10072">
+      <phrase id="menutext" value="Master Jam Kerja" />
     </menu>
     <menu id="10077">
-      <phrase id="menutext" value="Jadwal Kerja Pegawai" />
+      <phrase id="menutext" value="Master Jadwal Kerja" />
     </menu>
     <menu id="10079">
       <phrase id="menutext" value="Generate Jadwal Kerja" />
     </menu>
     <menu id="10078">
-      <phrase id="menutext" value="Jadwal Kerja Pegawai Default" />
-    </menu>
-    <menu id="10083">
-      <phrase id="menutext" value="v rekon" />
-    </menu>
-    <menu id="63">
-      <phrase id="menutext" value="Pengaturan" />
-    </menu>
-    <menu id="22">
-      <phrase id="menutext" value="Jadwal Kerja" />
-    </menu>
-    <menu id="10072">
-      <phrase id="menutext" value="Jam Kerja" />
-    </menu>
-    <menu id="18">
-      <phrase id="menutext" value="Jam Kerja" />
+      <phrase id="menutext" value="Jadwal Kerja Default" />
     </menu>
     <menu id="19">
       <phrase id="menutext" value="Jam Kerja Extra" />
+    </menu>
+    <menu id="10083">
+      <phrase id="menutext" value="v rekon" />
     </menu>
     <menu id="10085">
       <phrase id="menutext" value="Payroll" />
