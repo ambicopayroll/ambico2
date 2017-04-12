@@ -323,6 +323,10 @@ class cpembagian2 extends cTable {
 		$conn = &$this->Connection();
 		$bInsert = $conn->Execute($this->InsertSQL($rs));
 		if ($bInsert) {
+
+			// Get insert id if necessary
+			$this->pembagian2_id->setDbValue($conn->Insert_ID());
+			$rs['pembagian2_id'] = $this->pembagian2_id->DbValue;
 			if ($this->AuditTrailOnAdd)
 				$this->WriteAuditTrailOnAdd($rs);
 		}

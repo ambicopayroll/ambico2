@@ -502,6 +502,11 @@ class cpegawai_delete extends cpegawai {
 			$this->pembagian2_id->VirtualValue = ""; // Clear value
 		}
 		$this->pembagian3_id->setDbValue($rs->fields('pembagian3_id'));
+		if (array_key_exists('EV__pembagian3_id', $rs->fields)) {
+			$this->pembagian3_id->VirtualValue = $rs->fields('EV__pembagian3_id'); // Set up virtual field value
+		} else {
+			$this->pembagian3_id->VirtualValue = ""; // Clear value
+		}
 		$this->tgl_mulai_kerja->setDbValue($rs->fields('tgl_mulai_kerja'));
 		$this->tgl_resign->setDbValue($rs->fields('tgl_resign'));
 		$this->gender->setDbValue($rs->fields('gender'));
@@ -680,7 +685,31 @@ class cpegawai_delete extends cpegawai {
 		$this->pembagian2_id->ViewCustomAttributes = "";
 
 		// pembagian3_id
-		$this->pembagian3_id->ViewValue = $this->pembagian3_id->CurrentValue;
+		if ($this->pembagian3_id->VirtualValue <> "") {
+			$this->pembagian3_id->ViewValue = $this->pembagian3_id->VirtualValue;
+		} else {
+			$this->pembagian3_id->ViewValue = $this->pembagian3_id->CurrentValue;
+		if (strval($this->pembagian3_id->CurrentValue) <> "") {
+			$sFilterWrk = "`pembagian3_id`" . ew_SearchString("=", $this->pembagian3_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `pembagian3_id`, `pembagian3_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian3`";
+		$sWhereWrk = "";
+		$this->pembagian3_id->LookupFilters = array("dx1" => '`pembagian3_nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->pembagian3_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->pembagian3_id->ViewValue = $this->pembagian3_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->pembagian3_id->ViewValue = $this->pembagian3_id->CurrentValue;
+			}
+		} else {
+			$this->pembagian3_id->ViewValue = NULL;
+		}
+		}
 		$this->pembagian3_id->ViewCustomAttributes = "";
 
 		// tgl_mulai_kerja
@@ -1050,6 +1079,7 @@ fpegawaidelete.ValidateRequired = false;
 // Dynamic selection lists
 fpegawaidelete.Lists["x_pembagian1_id"] = {"LinkField":"x_pembagian1_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pembagian1_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pembagian1"};
 fpegawaidelete.Lists["x_pembagian2_id"] = {"LinkField":"x_pembagian2_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pembagian2_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pembagian2"};
+fpegawaidelete.Lists["x_pembagian3_id"] = {"LinkField":"x_pembagian3_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pembagian3_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pembagian3"};
 
 // Form object for search
 </script>

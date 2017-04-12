@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/4/12" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/4/13" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -619,6 +619,9 @@
     <menu id="32">
       <phrase id="menutext" value="Master Departemen" />
     </menu>
+    <menu id="33">
+      <phrase id="menutext" value="Master Status Pegawai" />
+    </menu>
     <menu id="10072">
       <phrase id="menutext" value="Master Jam Kerja" />
     </menu>
@@ -631,11 +634,11 @@
     <menu id="10078">
       <phrase id="menutext" value="Jadwal Kerja Default" />
     </menu>
-    <menu id="10084">
-      <phrase id="menutext" value="v att log" />
-    </menu>
     <menu id="10085">
       <phrase id="menutext" value="Payroll" />
+    </menu>
+    <menu id="10084">
+      <phrase id="menutext" value="v att log" />
     </menu>
     <menu id="18">
       <phrase id="menutext" value="Jam Kerja" />
@@ -720,9 +723,6 @@
     </menu>
     <menu id="30">
       <phrase id="menutext" value="Detil Pegawai" />
-    </menu>
-    <menu id="33">
-      <phrase id="menutext" value="pembagian 3" />
     </menu>
     <menu id="34">
       <phrase id="menutext" value="pendidikan" />
@@ -1735,7 +1735,7 @@
         <phrase id="fldcaption" value="Departemen" />
       </field>
       <field id="pembagian3_id">
-        <phrase id="fldcaption" value="pembagian 3 id" />
+        <phrase id="fldcaption" value="Status Pegawai" />
       </field>
       <field id="tgl_mulai_kerja">
         <phrase id="fldcaption" value="tgl mulai kerja" />
@@ -1804,7 +1804,7 @@
         <phrase id="fldcaption" value="ID" />
       </field>
       <field id="pembagian1_nama">
-        <phrase id="fldcaption" value="Nama" />
+        <phrase id="fldcaption" value="Jabatan" />
       </field>
       <field id="pembagian1_ket">
         <phrase id="fldcaption" value="Keterangan" />
@@ -1813,25 +1813,25 @@
     <table id="pembagian2">
       <phrase id="tblcaption" value="Master Departemen" />
       <field id="pembagian2_id">
-        <phrase id="fldcaption" value="pembagian 2 id" />
+        <phrase id="fldcaption" value="ID" />
       </field>
       <field id="pembagian2_nama">
-        <phrase id="fldcaption" value="pembagian 2 nama" />
+        <phrase id="fldcaption" value="Departemen" />
       </field>
       <field id="pembagian2_ket">
-        <phrase id="fldcaption" value="pembagian 2 ket" />
+        <phrase id="fldcaption" value="Keterangan" />
       </field>
     </table>
     <table id="pembagian3">
-      <phrase id="tblcaption" value="pembagian 3" />
+      <phrase id="tblcaption" value="Master Status Pegawai" />
       <field id="pembagian3_id">
-        <phrase id="fldcaption" value="pembagian 3 id" />
+        <phrase id="fldcaption" value="ID" />
       </field>
       <field id="pembagian3_nama">
-        <phrase id="fldcaption" value="pembagian 3 nama" />
+        <phrase id="fldcaption" value="Status Pegawai" />
       </field>
       <field id="pembagian3_ket">
-        <phrase id="fldcaption" value="pembagian 3 ket" />
+        <phrase id="fldcaption" value="Keterangan" />
       </field>
     </table>
     <table id="pendidikan">

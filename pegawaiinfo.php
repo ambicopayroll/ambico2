@@ -138,7 +138,7 @@ class cpegawai extends cTable {
 		$this->fields['pembagian2_id'] = &$this->pembagian2_id;
 
 		// pembagian3_id
-		$this->pembagian3_id = new cField('pegawai', 'pegawai', 'x_pembagian3_id', 'pembagian3_id', '`pembagian3_id`', '`pembagian3_id`', 3, -1, FALSE, '`pembagian3_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->pembagian3_id = new cField('pegawai', 'pegawai', 'x_pembagian3_id', 'pembagian3_id', '`pembagian3_id`', '`pembagian3_id`', 3, -1, FALSE, '`EV__pembagian3_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
 		$this->pembagian3_id->Sortable = TRUE; // Allow sort
 		$this->pembagian3_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['pembagian3_id'] = &$this->pembagian3_id;
@@ -309,7 +309,7 @@ class cpegawai extends cTable {
 	function getSqlSelectList() { // Select for List page
 		$select = "";
 		$select = "SELECT * FROM (" .
-			"SELECT *, (SELECT `pembagian1_nama` FROM `pembagian1` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`pembagian1_id` = `pegawai`.`pembagian1_id` LIMIT 1) AS `EV__pembagian1_id`, (SELECT `pembagian2_nama` FROM `pembagian2` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`pembagian2_id` = `pegawai`.`pembagian2_id` LIMIT 1) AS `EV__pembagian2_id` FROM `pegawai`" .
+			"SELECT *, (SELECT `pembagian1_nama` FROM `pembagian1` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`pembagian1_id` = `pegawai`.`pembagian1_id` LIMIT 1) AS `EV__pembagian1_id`, (SELECT `pembagian2_nama` FROM `pembagian2` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`pembagian2_id` = `pegawai`.`pembagian2_id` LIMIT 1) AS `EV__pembagian2_id`, (SELECT `pembagian3_nama` FROM `pembagian3` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`pembagian3_id` = `pegawai`.`pembagian3_id` LIMIT 1) AS `EV__pembagian3_id` FROM `pegawai`" .
 			") `EW_TMP_TABLE`";
 		return ($this->_SqlSelectList <> "") ? $this->_SqlSelectList : $select;
 	}
@@ -468,6 +468,12 @@ class cpegawai extends cTable {
 			strpos($sWhere, " " . $this->pembagian2_id->FldVirtualExpression . " ") !== FALSE)
 			return TRUE;
 		if (strpos($sOrderBy, " " . $this->pembagian2_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if ($this->pembagian3_id->AdvancedSearch->SearchValue <> "" ||
+			$this->pembagian3_id->AdvancedSearch->SearchValue2 <> "" ||
+			strpos($sWhere, " " . $this->pembagian3_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if (strpos($sOrderBy, " " . $this->pembagian3_id->FldVirtualExpression . " ") !== FALSE)
 			return TRUE;
 		return FALSE;
 	}
@@ -988,7 +994,31 @@ class cpegawai extends cTable {
 		$this->pembagian2_id->ViewCustomAttributes = "";
 
 		// pembagian3_id
-		$this->pembagian3_id->ViewValue = $this->pembagian3_id->CurrentValue;
+		if ($this->pembagian3_id->VirtualValue <> "") {
+			$this->pembagian3_id->ViewValue = $this->pembagian3_id->VirtualValue;
+		} else {
+			$this->pembagian3_id->ViewValue = $this->pembagian3_id->CurrentValue;
+		if (strval($this->pembagian3_id->CurrentValue) <> "") {
+			$sFilterWrk = "`pembagian3_id`" . ew_SearchString("=", $this->pembagian3_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `pembagian3_id`, `pembagian3_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian3`";
+		$sWhereWrk = "";
+		$this->pembagian3_id->LookupFilters = array("dx1" => '`pembagian3_nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->pembagian3_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->pembagian3_id->ViewValue = $this->pembagian3_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->pembagian3_id->ViewValue = $this->pembagian3_id->CurrentValue;
+			}
+		} else {
+			$this->pembagian3_id->ViewValue = NULL;
+		}
+		}
 		$this->pembagian3_id->ViewCustomAttributes = "";
 
 		// tgl_mulai_kerja

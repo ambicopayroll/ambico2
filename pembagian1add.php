@@ -490,15 +490,12 @@ class cpembagian1_add extends cpembagian1 {
 		if (!$this->pembagian1_ket->FldIsDetailKey) {
 			$this->pembagian1_ket->setFormValue($objForm->GetValue("x_pembagian1_ket"));
 		}
-		if (!$this->pembagian1_id->FldIsDetailKey)
-			$this->pembagian1_id->setFormValue($objForm->GetValue("x_pembagian1_id"));
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
 		$this->LoadOldRecord();
-		$this->pembagian1_id->CurrentValue = $this->pembagian1_id->FormValue;
 		$this->pembagian1_nama->CurrentValue = $this->pembagian1_nama->FormValue;
 		$this->pembagian1_ket->CurrentValue = $this->pembagian1_ket->FormValue;
 	}
@@ -684,24 +681,6 @@ class cpembagian1_add extends cpembagian1 {
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
 		$bInsertRow = $this->Row_Inserting($rs, $rsnew);
-
-		// Check if key value entered
-		if ($bInsertRow && $this->ValidateKey && strval($rsnew['pembagian1_id']) == "") {
-			$this->setFailureMessage($Language->Phrase("InvalidKeyValue"));
-			$bInsertRow = FALSE;
-		}
-
-		// Check for duplicate key
-		if ($bInsertRow && $this->ValidateKey) {
-			$sFilter = $this->KeyFilter();
-			$rsChk = $this->LoadRs($sFilter);
-			if ($rsChk && !$rsChk->EOF) {
-				$sKeyErrMsg = str_replace("%f", $sFilter, $Language->Phrase("DupKey"));
-				$this->setFailureMessage($sKeyErrMsg);
-				$rsChk->Close();
-				$bInsertRow = FALSE;
-			}
-		}
 		if ($bInsertRow) {
 			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 			$AddRow = $this->Insert($rsnew);

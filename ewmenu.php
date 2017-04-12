@@ -13,6 +13,7 @@ $RootMenu->AddMenuItem(128, "mci_Pegawai", $Language->MenuPhrase("128", "MenuTex
 $RootMenu->AddMenuItem(29, "mi_pegawai", $Language->MenuPhrase("29", "MenuText"), "pegawailist.php", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}pegawai'), FALSE, FALSE);
 $RootMenu->AddMenuItem(31, "mi_pembagian1", $Language->MenuPhrase("31", "MenuText"), "pembagian1list.php", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}pembagian1'), FALSE, FALSE);
 $RootMenu->AddMenuItem(32, "mi_pembagian2", $Language->MenuPhrase("32", "MenuText"), "pembagian2list.php", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}pembagian2'), FALSE, FALSE);
+$RootMenu->AddMenuItem(33, "mi_pembagian3", $Language->MenuPhrase("33", "MenuText"), "pembagian3list.php", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}pembagian3'), FALSE, FALSE);
 $RootMenu->AddMenuItem(10072, "mi_t_jk", $Language->MenuPhrase("10072", "MenuText"), "t_jklist.php", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}t_jk'), FALSE, FALSE);
 $RootMenu->AddMenuItem(10077, "mi_t_jdw_krj_peg", $Language->MenuPhrase("10077", "MenuText"), "t_jdw_krj_peglist.php?cmd=resetall", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}t_jdw_krj_peg'), FALSE, FALSE);
 $RootMenu->AddMenuItem(10079, "mi_generate__php", $Language->MenuPhrase("10079", "MenuText"), "generate_.php", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}generate_.php'), FALSE, TRUE);

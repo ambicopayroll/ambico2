@@ -410,7 +410,6 @@ class cpembagian2_list extends cpembagian2 {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->pembagian2_id->SetVisibility();
 		$this->pembagian2_nama->SetVisibility();
 		$this->pembagian2_ket->SetVisibility();
 
@@ -1009,7 +1008,6 @@ class cpembagian2_list extends cpembagian2 {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->pembagian2_id, $bCtrl); // pembagian2_id
 			$this->UpdateSort($this->pembagian2_nama, $bCtrl); // pembagian2_nama
 			$this->UpdateSort($this->pembagian2_ket, $bCtrl); // pembagian2_ket
 			$this->setStartRecordNumber(1); // Reset start position
@@ -1044,7 +1042,6 @@ class cpembagian2_list extends cpembagian2 {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->pembagian2_id->setSort("");
 				$this->pembagian2_nama->setSort("");
 				$this->pembagian2_ket->setSort("");
 			}
@@ -1568,11 +1565,6 @@ class cpembagian2_list extends cpembagian2 {
 		// pembagian2_ket
 		$this->pembagian2_ket->ViewValue = $this->pembagian2_ket->CurrentValue;
 		$this->pembagian2_ket->ViewCustomAttributes = "";
-
-			// pembagian2_id
-			$this->pembagian2_id->LinkCustomAttributes = "";
-			$this->pembagian2_id->HrefValue = "";
-			$this->pembagian2_id->TooltipValue = "";
 
 			// pembagian2_nama
 			$this->pembagian2_nama->LinkCustomAttributes = "";
@@ -2240,15 +2232,6 @@ $pembagian2_list->RenderListOptions();
 // Render list options (header, left)
 $pembagian2_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($pembagian2->pembagian2_id->Visible) { // pembagian2_id ?>
-	<?php if ($pembagian2->SortUrl($pembagian2->pembagian2_id) == "") { ?>
-		<th data-name="pembagian2_id"><div id="elh_pembagian2_pembagian2_id" class="pembagian2_pembagian2_id"><div class="ewTableHeaderCaption"><?php echo $pembagian2->pembagian2_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="pembagian2_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $pembagian2->SortUrl($pembagian2->pembagian2_id) ?>',2);"><div id="elh_pembagian2_pembagian2_id" class="pembagian2_pembagian2_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $pembagian2->pembagian2_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($pembagian2->pembagian2_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($pembagian2->pembagian2_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
 <?php if ($pembagian2->pembagian2_nama->Visible) { // pembagian2_nama ?>
 	<?php if ($pembagian2->SortUrl($pembagian2->pembagian2_nama) == "") { ?>
 		<th data-name="pembagian2_nama"><div id="elh_pembagian2_pembagian2_nama" class="pembagian2_pembagian2_nama"><div class="ewTableHeaderCaption"><?php echo $pembagian2->pembagian2_nama->FldCaption() ?></div></div></th>
@@ -2332,21 +2315,13 @@ while ($pembagian2_list->RecCnt < $pembagian2_list->StopRec) {
 // Render list options (body, left)
 $pembagian2_list->ListOptions->Render("body", "left", $pembagian2_list->RowCnt);
 ?>
-	<?php if ($pembagian2->pembagian2_id->Visible) { // pembagian2_id ?>
-		<td data-name="pembagian2_id"<?php echo $pembagian2->pembagian2_id->CellAttributes() ?>>
-<span id="el<?php echo $pembagian2_list->RowCnt ?>_pembagian2_pembagian2_id" class="pembagian2_pembagian2_id">
-<span<?php echo $pembagian2->pembagian2_id->ViewAttributes() ?>>
-<?php echo $pembagian2->pembagian2_id->ListViewValue() ?></span>
-</span>
-<a id="<?php echo $pembagian2_list->PageObjName . "_row_" . $pembagian2_list->RowCnt ?>"></a></td>
-	<?php } ?>
 	<?php if ($pembagian2->pembagian2_nama->Visible) { // pembagian2_nama ?>
 		<td data-name="pembagian2_nama"<?php echo $pembagian2->pembagian2_nama->CellAttributes() ?>>
 <span id="el<?php echo $pembagian2_list->RowCnt ?>_pembagian2_pembagian2_nama" class="pembagian2_pembagian2_nama">
 <span<?php echo $pembagian2->pembagian2_nama->ViewAttributes() ?>>
 <?php echo $pembagian2->pembagian2_nama->ListViewValue() ?></span>
 </span>
-</td>
+<a id="<?php echo $pembagian2_list->PageObjName . "_row_" . $pembagian2_list->RowCnt ?>"></a></td>
 	<?php } ?>
 	<?php if ($pembagian2->pembagian2_ket->Visible) { // pembagian2_ket ?>
 		<td data-name="pembagian2_ket"<?php echo $pembagian2->pembagian2_ket->CellAttributes() ?>>

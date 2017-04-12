@@ -286,6 +286,7 @@ class cpembagian3_add extends cpembagian3 {
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
 		$this->pembagian3_id->SetVisibility();
+		$this->pembagian3_id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->pembagian3_nama->SetVisibility();
 		$this->pembagian3_ket->SetVisibility();
 
@@ -486,9 +487,6 @@ class cpembagian3_add extends cpembagian3 {
 
 		// Load from form
 		global $objForm;
-		if (!$this->pembagian3_id->FldIsDetailKey) {
-			$this->pembagian3_id->setFormValue($objForm->GetValue("x_pembagian3_id"));
-		}
 		if (!$this->pembagian3_nama->FldIsDetailKey) {
 			$this->pembagian3_nama->setFormValue($objForm->GetValue("x_pembagian3_nama"));
 		}
@@ -501,7 +499,6 @@ class cpembagian3_add extends cpembagian3 {
 	function RestoreFormValues() {
 		global $objForm;
 		$this->LoadOldRecord();
-		$this->pembagian3_id->CurrentValue = $this->pembagian3_id->FormValue;
 		$this->pembagian3_nama->CurrentValue = $this->pembagian3_nama->FormValue;
 		$this->pembagian3_ket->CurrentValue = $this->pembagian3_ket->FormValue;
 	}
@@ -617,12 +614,8 @@ class cpembagian3_add extends cpembagian3 {
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
 			// pembagian3_id
-			$this->pembagian3_id->EditAttrs["class"] = "form-control";
-			$this->pembagian3_id->EditCustomAttributes = "";
-			$this->pembagian3_id->EditValue = ew_HtmlEncode($this->pembagian3_id->CurrentValue);
-			$this->pembagian3_id->PlaceHolder = ew_RemoveHtml($this->pembagian3_id->FldCaption());
-
 			// pembagian3_nama
+
 			$this->pembagian3_nama->EditAttrs["class"] = "form-control";
 			$this->pembagian3_nama->EditCustomAttributes = "";
 			$this->pembagian3_nama->EditValue = ew_HtmlEncode($this->pembagian3_nama->CurrentValue);
@@ -669,9 +662,6 @@ class cpembagian3_add extends cpembagian3 {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->pembagian3_id->FldIsDetailKey && !is_null($this->pembagian3_id->FormValue) && $this->pembagian3_id->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->pembagian3_id->FldCaption(), $this->pembagian3_id->ReqErrMsg));
-		}
 		if (!ew_CheckInteger($this->pembagian3_id->FormValue)) {
 			ew_AddMessage($gsFormError, $this->pembagian3_id->FldErrMsg());
 		}
@@ -699,9 +689,6 @@ class cpembagian3_add extends cpembagian3 {
 		}
 		$rsnew = array();
 
-		// pembagian3_id
-		$this->pembagian3_id->SetDbValueDef($rsnew, $this->pembagian3_id->CurrentValue, 0, strval($this->pembagian3_id->CurrentValue) == "");
-
 		// pembagian3_nama
 		$this->pembagian3_nama->SetDbValueDef($rsnew, $this->pembagian3_nama->CurrentValue, NULL, FALSE);
 
@@ -711,24 +698,6 @@ class cpembagian3_add extends cpembagian3 {
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
 		$bInsertRow = $this->Row_Inserting($rs, $rsnew);
-
-		// Check if key value entered
-		if ($bInsertRow && $this->ValidateKey && strval($rsnew['pembagian3_id']) == "") {
-			$this->setFailureMessage($Language->Phrase("InvalidKeyValue"));
-			$bInsertRow = FALSE;
-		}
-
-		// Check for duplicate key
-		if ($bInsertRow && $this->ValidateKey) {
-			$sFilter = $this->KeyFilter();
-			$rsChk = $this->LoadRs($sFilter);
-			if ($rsChk && !$rsChk->EOF) {
-				$sKeyErrMsg = str_replace("%f", $sFilter, $Language->Phrase("DupKey"));
-				$this->setFailureMessage($sKeyErrMsg);
-				$rsChk->Close();
-				$bInsertRow = FALSE;
-			}
-		}
 		if ($bInsertRow) {
 			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 			$AddRow = $this->Insert($rsnew);
@@ -891,9 +860,6 @@ fpembagian3add.Validate = function() {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
 			elm = this.GetElements("x" + infix + "_pembagian3_id");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $pembagian3->pembagian3_id->FldCaption(), $pembagian3->pembagian3_id->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_pembagian3_id");
 			if (elm && !ew_CheckInteger(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($pembagian3->pembagian3_id->FldErrMsg()) ?>");
 
@@ -959,12 +925,8 @@ $pembagian3_add->ShowMessage();
 <div>
 <?php if ($pembagian3->pembagian3_id->Visible) { // pembagian3_id ?>
 	<div id="r_pembagian3_id" class="form-group">
-		<label id="elh_pembagian3_pembagian3_id" for="x_pembagian3_id" class="col-sm-2 control-label ewLabel"><?php echo $pembagian3->pembagian3_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $pembagian3->pembagian3_id->CellAttributes() ?>>
-<span id="el_pembagian3_pembagian3_id">
-<input type="text" data-table="pembagian3" data-field="x_pembagian3_id" name="x_pembagian3_id" id="x_pembagian3_id" size="30" placeholder="<?php echo ew_HtmlEncode($pembagian3->pembagian3_id->getPlaceHolder()) ?>" value="<?php echo $pembagian3->pembagian3_id->EditValue ?>"<?php echo $pembagian3->pembagian3_id->EditAttributes() ?>>
-</span>
-<?php echo $pembagian3->pembagian3_id->CustomMsg ?></div></div>
+		<label id="elh_pembagian3_pembagian3_id" for="x_pembagian3_id" class="col-sm-2 control-label ewLabel"><?php echo $pembagian3->pembagian3_id->FldCaption() ?></label>
+		<div class="col-sm-10"><div<?php echo $pembagian3->pembagian3_id->CellAttributes() ?>><?php echo $pembagian3->pembagian3_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 <?php if ($pembagian3->pembagian3_nama->Visible) { // pembagian3_nama ?>

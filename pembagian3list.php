@@ -410,7 +410,6 @@ class cpembagian3_list extends cpembagian3 {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->pembagian3_id->SetVisibility();
 		$this->pembagian3_nama->SetVisibility();
 		$this->pembagian3_ket->SetVisibility();
 
@@ -512,7 +511,7 @@ class cpembagian3_list extends cpembagian3 {
 	var $ListActions; // List actions
 	var $SelectedCount = 0;
 	var $SelectedIndex = 0;
-	var $DisplayRecs = 20;
+	var $DisplayRecs = 50;
 	var $StartRec;
 	var $StopRec;
 	var $TotalRecs = 0;
@@ -564,6 +563,9 @@ class cpembagian3_list extends cpembagian3 {
 			// Process list action first
 			if ($this->ProcessListAction()) // Ajax request
 				$this->Page_Terminate();
+
+			// Set up records per page
+			$this->SetUpDisplayRecs();
 
 			// Handle reset command
 			$this->ResetCmd();
@@ -623,7 +625,7 @@ class cpembagian3_list extends cpembagian3 {
 		if ($this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 20; // Load default
+			$this->DisplayRecs = 50; // Load default
 		}
 
 		// Load Sorting Order
@@ -685,6 +687,27 @@ class cpembagian3_list extends cpembagian3 {
 
 		// Search options
 		$this->SetupSearchOptions();
+	}
+
+	// Set up number of records displayed per page
+	function SetUpDisplayRecs() {
+		$sWrk = @$_GET[EW_TABLE_REC_PER_PAGE];
+		if ($sWrk <> "") {
+			if (is_numeric($sWrk)) {
+				$this->DisplayRecs = intval($sWrk);
+			} else {
+				if (strtolower($sWrk) == "all") { // Display all records
+					$this->DisplayRecs = -1;
+				} else {
+					$this->DisplayRecs = 50; // Non-numeric, load default
+				}
+			}
+			$this->setRecordsPerPage($this->DisplayRecs); // Save to Session
+
+			// Reset start position
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
+		}
 	}
 
 	// Build filter for all keys
@@ -985,7 +1008,6 @@ class cpembagian3_list extends cpembagian3 {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->pembagian3_id, $bCtrl); // pembagian3_id
 			$this->UpdateSort($this->pembagian3_nama, $bCtrl); // pembagian3_nama
 			$this->UpdateSort($this->pembagian3_ket, $bCtrl); // pembagian3_ket
 			$this->setStartRecordNumber(1); // Reset start position
@@ -1020,7 +1042,6 @@ class cpembagian3_list extends cpembagian3 {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->pembagian3_id->setSort("");
 				$this->pembagian3_nama->setSort("");
 				$this->pembagian3_ket->setSort("");
 			}
@@ -1038,52 +1059,55 @@ class cpembagian3_list extends cpembagian3 {
 		// Add group option item
 		$item = &$this->ListOptions->Add($this->ListOptions->GroupOptionName);
 		$item->Body = "";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
 		// "view"
 		$item = &$this->ListOptions->Add("view");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanView();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "edit"
 		$item = &$this->ListOptions->Add("edit");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanEdit();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// "copy"
 		$item = &$this->ListOptions->Add("copy");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanAdd();
-		$item->OnLeft = FALSE;
-
-		// "delete"
-		$item = &$this->ListOptions->Add("delete");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanDelete();
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 
 		// List actions
 		$item = &$this->ListOptions->Add("listactions");
 		$item->CssStyle = "white-space: nowrap;";
-		$item->OnLeft = FALSE;
+		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 		$item->ShowInDropDown = FALSE;
 
 		// "checkbox"
 		$item = &$this->ListOptions->Add("checkbox");
-		$item->Visible = FALSE;
-		$item->OnLeft = FALSE;
+		$item->Visible = $Security->CanDelete();
+		$item->OnLeft = TRUE;
 		$item->Header = "<input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew_SelectAllKey(this);\">";
+		$item->MoveTo(0);
+		$item->ShowInDropDown = FALSE;
+		$item->ShowInButtonGroup = FALSE;
+
+		// "sequence"
+		$item = &$this->ListOptions->Add("sequence");
+		$item->CssStyle = "white-space: nowrap;";
+		$item->Visible = TRUE;
+		$item->OnLeft = TRUE; // Always on left
 		$item->ShowInDropDown = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 
 		// Drop down button for ListOptions
 		$this->ListOptions->UseImageAndText = TRUE;
-		$this->ListOptions->UseDropDownButton = FALSE;
+		$this->ListOptions->UseDropDownButton = TRUE;
 		$this->ListOptions->DropDownButtonPhrase = $Language->Phrase("ButtonListOptions");
 		$this->ListOptions->UseButtonGroup = FALSE;
 		if ($this->ListOptions->UseButtonGroup && ew_IsMobile())
@@ -1101,6 +1125,10 @@ class cpembagian3_list extends cpembagian3 {
 	function RenderListOptions() {
 		global $Security, $Language, $objForm;
 		$this->ListOptions->LoadDefault();
+
+		// "sequence"
+		$oListOpt = &$this->ListOptions->Items["sequence"];
+		$oListOpt->Body = ew_FormatSeqNo($this->RecCnt);
 
 		// "view"
 		$oListOpt = &$this->ListOptions->Items["view"];
@@ -1128,13 +1156,6 @@ class cpembagian3_list extends cpembagian3 {
 		} else {
 			$oListOpt->Body = "";
 		}
-
-		// "delete"
-		$oListOpt = &$this->ListOptions->Items["delete"];
-		if ($Security->CanDelete())
-			$oListOpt->Body = "<a class=\"ewRowLink ewDelete\"" . "" . " title=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("DeleteLink") . "</a>";
-		else
-			$oListOpt->Body = "";
 
 		// Set up list action buttons
 		$oListOpt = &$this->ListOptions->GetItem("listactions");
@@ -1187,10 +1208,15 @@ class cpembagian3_list extends cpembagian3 {
 		$item->Visible = ($this->AddUrl <> "" && $Security->CanAdd());
 		$option = $options["action"];
 
+		// Add multi delete
+		$item = &$option->Add("multidelete");
+		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.fpembagian3list,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Visible = ($Security->CanDelete());
+
 		// Set up options default
 		foreach ($options as &$option) {
 			$option->UseImageAndText = TRUE;
-			$option->UseDropDownButton = FALSE;
+			$option->UseDropDownButton = TRUE;
 			$option->UseButtonGroup = TRUE;
 			$option->ButtonClass = "btn-sm"; // Class for button group
 			$item = &$option->Add($option->GroupOptionName);
@@ -1539,11 +1565,6 @@ class cpembagian3_list extends cpembagian3 {
 		// pembagian3_ket
 		$this->pembagian3_ket->ViewValue = $this->pembagian3_ket->CurrentValue;
 		$this->pembagian3_ket->ViewCustomAttributes = "";
-
-			// pembagian3_id
-			$this->pembagian3_id->LinkCustomAttributes = "";
-			$this->pembagian3_id->HrefValue = "";
-			$this->pembagian3_id->TooltipValue = "";
 
 			// pembagian3_nama
 			$this->pembagian3_nama->LinkCustomAttributes = "";
@@ -2078,6 +2099,13 @@ var CurrentSearchForm = fpembagian3listsrch = new ew_Form("fpembagian3listsrch")
 		else
 			$pembagian3_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
+
+	// Audit trail on search
+	if ($pembagian3_list->AuditTrailOnSearch && $pembagian3_list->Command == "search" && !$pembagian3_list->RestoreSearch) {
+		$searchparm = ew_ServerVar("QUERY_STRING");
+		$searchsql = $pembagian3_list->getSessionWhere();
+		$pembagian3_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
+	}
 $pembagian3_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
@@ -2115,6 +2143,73 @@ $pembagian3_list->ShowMessage();
 ?>
 <?php if ($pembagian3_list->TotalRecs > 0 || $pembagian3->CurrentAction <> "") { ?>
 <div class="panel panel-default ewGrid pembagian3">
+<?php if ($pembagian3->Export == "") { ?>
+<div class="panel-heading ewGridUpperPanel">
+<?php if ($pembagian3->CurrentAction <> "gridadd" && $pembagian3->CurrentAction <> "gridedit") { ?>
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($pembagian3_list->Pager)) $pembagian3_list->Pager = new cPrevNextPager($pembagian3_list->StartRec, $pembagian3_list->DisplayRecs, $pembagian3_list->TotalRecs) ?>
+<?php if ($pembagian3_list->Pager->RecordCount > 0 && $pembagian3_list->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($pembagian3_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $pembagian3_list->PageUrl() ?>start=<?php echo $pembagian3_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($pembagian3_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $pembagian3_list->PageUrl() ?>start=<?php echo $pembagian3_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $pembagian3_list->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($pembagian3_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $pembagian3_list->PageUrl() ?>start=<?php echo $pembagian3_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($pembagian3_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $pembagian3_list->PageUrl() ?>start=<?php echo $pembagian3_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $pembagian3_list->Pager->PageCount ?></span>
+</div>
+<div class="ewPager ewRec">
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $pembagian3_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $pembagian3_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $pembagian3_list->Pager->RecordCount ?></span>
+</div>
+<?php } ?>
+<?php if ($pembagian3_list->TotalRecs > 0 && (!EW_AUTO_HIDE_PAGE_SIZE_SELECTOR || $pembagian3_list->Pager->Visible)) { ?>
+<div class="ewPager">
+<input type="hidden" name="t" value="pembagian3">
+<select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
+<option value="50"<?php if ($pembagian3_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="ALL"<?php if ($pembagian3->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+</select>
+</div>
+<?php } ?>
+</form>
+<?php } ?>
+<div class="ewListOtherOptions">
+<?php
+	foreach ($pembagian3_list->OtherOptions as &$option)
+		$option->Render("body");
+?>
+</div>
+<div class="clearfix"></div>
+</div>
+<?php } ?>
 <form name="fpembagian3list" id="fpembagian3list" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($pembagian3_list->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $pembagian3_list->Token ?>">
@@ -2137,15 +2232,6 @@ $pembagian3_list->RenderListOptions();
 // Render list options (header, left)
 $pembagian3_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($pembagian3->pembagian3_id->Visible) { // pembagian3_id ?>
-	<?php if ($pembagian3->SortUrl($pembagian3->pembagian3_id) == "") { ?>
-		<th data-name="pembagian3_id"><div id="elh_pembagian3_pembagian3_id" class="pembagian3_pembagian3_id"><div class="ewTableHeaderCaption"><?php echo $pembagian3->pembagian3_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="pembagian3_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $pembagian3->SortUrl($pembagian3->pembagian3_id) ?>',2);"><div id="elh_pembagian3_pembagian3_id" class="pembagian3_pembagian3_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $pembagian3->pembagian3_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($pembagian3->pembagian3_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($pembagian3->pembagian3_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
 <?php if ($pembagian3->pembagian3_nama->Visible) { // pembagian3_nama ?>
 	<?php if ($pembagian3->SortUrl($pembagian3->pembagian3_nama) == "") { ?>
 		<th data-name="pembagian3_nama"><div id="elh_pembagian3_pembagian3_nama" class="pembagian3_pembagian3_nama"><div class="ewTableHeaderCaption"><?php echo $pembagian3->pembagian3_nama->FldCaption() ?></div></div></th>
@@ -2229,21 +2315,13 @@ while ($pembagian3_list->RecCnt < $pembagian3_list->StopRec) {
 // Render list options (body, left)
 $pembagian3_list->ListOptions->Render("body", "left", $pembagian3_list->RowCnt);
 ?>
-	<?php if ($pembagian3->pembagian3_id->Visible) { // pembagian3_id ?>
-		<td data-name="pembagian3_id"<?php echo $pembagian3->pembagian3_id->CellAttributes() ?>>
-<span id="el<?php echo $pembagian3_list->RowCnt ?>_pembagian3_pembagian3_id" class="pembagian3_pembagian3_id">
-<span<?php echo $pembagian3->pembagian3_id->ViewAttributes() ?>>
-<?php echo $pembagian3->pembagian3_id->ListViewValue() ?></span>
-</span>
-<a id="<?php echo $pembagian3_list->PageObjName . "_row_" . $pembagian3_list->RowCnt ?>"></a></td>
-	<?php } ?>
 	<?php if ($pembagian3->pembagian3_nama->Visible) { // pembagian3_nama ?>
 		<td data-name="pembagian3_nama"<?php echo $pembagian3->pembagian3_nama->CellAttributes() ?>>
 <span id="el<?php echo $pembagian3_list->RowCnt ?>_pembagian3_pembagian3_nama" class="pembagian3_pembagian3_nama">
 <span<?php echo $pembagian3->pembagian3_nama->ViewAttributes() ?>>
 <?php echo $pembagian3->pembagian3_nama->ListViewValue() ?></span>
 </span>
-</td>
+<a id="<?php echo $pembagian3_list->PageObjName . "_row_" . $pembagian3_list->RowCnt ?>"></a></td>
 	<?php } ?>
 	<?php if ($pembagian3->pembagian3_ket->Visible) { // pembagian3_ket ?>
 		<td data-name="pembagian3_ket"<?php echo $pembagian3->pembagian3_ket->CellAttributes() ?>>
@@ -2324,6 +2402,15 @@ if ($pembagian3_list->Recordset)
 </div>
 <div class="ewPager ewRec">
 	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $pembagian3_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $pembagian3_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $pembagian3_list->Pager->RecordCount ?></span>
+</div>
+<?php } ?>
+<?php if ($pembagian3_list->TotalRecs > 0 && (!EW_AUTO_HIDE_PAGE_SIZE_SELECTOR || $pembagian3_list->Pager->Visible)) { ?>
+<div class="ewPager">
+<input type="hidden" name="t" value="pembagian3">
+<select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
+<option value="50"<?php if ($pembagian3_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="ALL"<?php if ($pembagian3->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+</select>
 </div>
 <?php } ?>
 </form>

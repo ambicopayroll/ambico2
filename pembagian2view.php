@@ -384,6 +384,7 @@ class cpembagian2_view extends cpembagian2 {
 		// Setup export options
 		$this->SetupExportOptions();
 		$this->pembagian2_id->SetVisibility();
+		$this->pembagian2_id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->pembagian2_nama->SetVisibility();
 		$this->pembagian2_ket->SetVisibility();
 

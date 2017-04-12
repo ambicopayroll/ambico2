@@ -282,7 +282,6 @@ class cpembagian2_delete extends cpembagian2 {
 			$Security->UserID_Loaded();
 		}
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->pembagian2_id->SetVisibility();
 		$this->pembagian2_nama->SetVisibility();
 		$this->pembagian2_ket->SetVisibility();
 
@@ -500,11 +499,6 @@ class cpembagian2_delete extends cpembagian2 {
 		// pembagian2_ket
 		$this->pembagian2_ket->ViewValue = $this->pembagian2_ket->CurrentValue;
 		$this->pembagian2_ket->ViewCustomAttributes = "";
-
-			// pembagian2_id
-			$this->pembagian2_id->LinkCustomAttributes = "";
-			$this->pembagian2_id->HrefValue = "";
-			$this->pembagian2_id->TooltipValue = "";
 
 			// pembagian2_nama
 			$this->pembagian2_nama->LinkCustomAttributes = "";
@@ -768,9 +762,6 @@ $pembagian2_delete->ShowMessage();
 <?php echo $pembagian2->TableCustomInnerHtml ?>
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($pembagian2->pembagian2_id->Visible) { // pembagian2_id ?>
-		<th><span id="elh_pembagian2_pembagian2_id" class="pembagian2_pembagian2_id"><?php echo $pembagian2->pembagian2_id->FldCaption() ?></span></th>
-<?php } ?>
 <?php if ($pembagian2->pembagian2_nama->Visible) { // pembagian2_nama ?>
 		<th><span id="elh_pembagian2_pembagian2_nama" class="pembagian2_pembagian2_nama"><?php echo $pembagian2->pembagian2_nama->FldCaption() ?></span></th>
 <?php } ?>
@@ -798,14 +789,6 @@ while (!$pembagian2_delete->Recordset->EOF) {
 	$pembagian2_delete->RenderRow();
 ?>
 	<tr<?php echo $pembagian2->RowAttributes() ?>>
-<?php if ($pembagian2->pembagian2_id->Visible) { // pembagian2_id ?>
-		<td<?php echo $pembagian2->pembagian2_id->CellAttributes() ?>>
-<span id="el<?php echo $pembagian2_delete->RowCnt ?>_pembagian2_pembagian2_id" class="pembagian2_pembagian2_id">
-<span<?php echo $pembagian2->pembagian2_id->ViewAttributes() ?>>
-<?php echo $pembagian2->pembagian2_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($pembagian2->pembagian2_nama->Visible) { // pembagian2_nama ?>
 		<td<?php echo $pembagian2->pembagian2_nama->CellAttributes() ?>>
 <span id="el<?php echo $pembagian2_delete->RowCnt ?>_pembagian2_pembagian2_nama" class="pembagian2_pembagian2_nama">
