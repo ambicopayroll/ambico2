@@ -285,7 +285,6 @@ class cpembagian1_add extends cpembagian1 {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->pembagian1_id->SetVisibility();
 		$this->pembagian1_nama->SetVisibility();
 		$this->pembagian1_ket->SetVisibility();
 
@@ -474,7 +473,6 @@ class cpembagian1_add extends cpembagian1 {
 
 	// Load default values
 	function LoadDefaultValues() {
-		$this->pembagian1_id->CurrentValue = 0;
 		$this->pembagian1_nama->CurrentValue = NULL;
 		$this->pembagian1_nama->OldValue = $this->pembagian1_nama->CurrentValue;
 		$this->pembagian1_ket->CurrentValue = NULL;
@@ -486,15 +484,14 @@ class cpembagian1_add extends cpembagian1 {
 
 		// Load from form
 		global $objForm;
-		if (!$this->pembagian1_id->FldIsDetailKey) {
-			$this->pembagian1_id->setFormValue($objForm->GetValue("x_pembagian1_id"));
-		}
 		if (!$this->pembagian1_nama->FldIsDetailKey) {
 			$this->pembagian1_nama->setFormValue($objForm->GetValue("x_pembagian1_nama"));
 		}
 		if (!$this->pembagian1_ket->FldIsDetailKey) {
 			$this->pembagian1_ket->setFormValue($objForm->GetValue("x_pembagian1_ket"));
 		}
+		if (!$this->pembagian1_id->FldIsDetailKey)
+			$this->pembagian1_id->setFormValue($objForm->GetValue("x_pembagian1_id"));
 	}
 
 	// Restore form values
@@ -600,11 +597,6 @@ class cpembagian1_add extends cpembagian1 {
 		$this->pembagian1_ket->ViewValue = $this->pembagian1_ket->CurrentValue;
 		$this->pembagian1_ket->ViewCustomAttributes = "";
 
-			// pembagian1_id
-			$this->pembagian1_id->LinkCustomAttributes = "";
-			$this->pembagian1_id->HrefValue = "";
-			$this->pembagian1_id->TooltipValue = "";
-
 			// pembagian1_nama
 			$this->pembagian1_nama->LinkCustomAttributes = "";
 			$this->pembagian1_nama->HrefValue = "";
@@ -615,12 +607,6 @@ class cpembagian1_add extends cpembagian1 {
 			$this->pembagian1_ket->HrefValue = "";
 			$this->pembagian1_ket->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
-
-			// pembagian1_id
-			$this->pembagian1_id->EditAttrs["class"] = "form-control";
-			$this->pembagian1_id->EditCustomAttributes = "";
-			$this->pembagian1_id->EditValue = ew_HtmlEncode($this->pembagian1_id->CurrentValue);
-			$this->pembagian1_id->PlaceHolder = ew_RemoveHtml($this->pembagian1_id->FldCaption());
 
 			// pembagian1_nama
 			$this->pembagian1_nama->EditAttrs["class"] = "form-control";
@@ -635,12 +621,8 @@ class cpembagian1_add extends cpembagian1 {
 			$this->pembagian1_ket->PlaceHolder = ew_RemoveHtml($this->pembagian1_ket->FldCaption());
 
 			// Add refer script
-			// pembagian1_id
-
-			$this->pembagian1_id->LinkCustomAttributes = "";
-			$this->pembagian1_id->HrefValue = "";
-
 			// pembagian1_nama
+
 			$this->pembagian1_nama->LinkCustomAttributes = "";
 			$this->pembagian1_nama->HrefValue = "";
 
@@ -669,12 +651,6 @@ class cpembagian1_add extends cpembagian1 {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->pembagian1_id->FldIsDetailKey && !is_null($this->pembagian1_id->FormValue) && $this->pembagian1_id->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->pembagian1_id->FldCaption(), $this->pembagian1_id->ReqErrMsg));
-		}
-		if (!ew_CheckInteger($this->pembagian1_id->FormValue)) {
-			ew_AddMessage($gsFormError, $this->pembagian1_id->FldErrMsg());
-		}
 
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
@@ -698,9 +674,6 @@ class cpembagian1_add extends cpembagian1 {
 			$this->LoadDbValues($rsold);
 		}
 		$rsnew = array();
-
-		// pembagian1_id
-		$this->pembagian1_id->SetDbValueDef($rsnew, $this->pembagian1_id->CurrentValue, 0, strval($this->pembagian1_id->CurrentValue) == "");
 
 		// pembagian1_nama
 		$this->pembagian1_nama->SetDbValueDef($rsnew, $this->pembagian1_nama->CurrentValue, NULL, FALSE);
@@ -890,12 +863,6 @@ fpembagian1add.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_pembagian1_id");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $pembagian1->pembagian1_id->FldCaption(), $pembagian1->pembagian1_id->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_pembagian1_id");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($pembagian1->pembagian1_id->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -957,16 +924,6 @@ $pembagian1_add->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <div>
-<?php if ($pembagian1->pembagian1_id->Visible) { // pembagian1_id ?>
-	<div id="r_pembagian1_id" class="form-group">
-		<label id="elh_pembagian1_pembagian1_id" for="x_pembagian1_id" class="col-sm-2 control-label ewLabel"><?php echo $pembagian1->pembagian1_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $pembagian1->pembagian1_id->CellAttributes() ?>>
-<span id="el_pembagian1_pembagian1_id">
-<input type="text" data-table="pembagian1" data-field="x_pembagian1_id" name="x_pembagian1_id" id="x_pembagian1_id" size="30" placeholder="<?php echo ew_HtmlEncode($pembagian1->pembagian1_id->getPlaceHolder()) ?>" value="<?php echo $pembagian1->pembagian1_id->EditValue ?>"<?php echo $pembagian1->pembagian1_id->EditAttributes() ?>>
-</span>
-<?php echo $pembagian1->pembagian1_id->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
 <?php if ($pembagian1->pembagian1_nama->Visible) { // pembagian1_nama ?>
 	<div id="r_pembagian1_nama" class="form-group">
 		<label id="elh_pembagian1_pembagian1_nama" for="x_pembagian1_nama" class="col-sm-2 control-label ewLabel"><?php echo $pembagian1->pembagian1_nama->FldCaption() ?></label>

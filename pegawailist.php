@@ -1291,6 +1291,7 @@ class cpegawai_list extends cpegawai {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
+				$this->setSessionOrderByList($sOrderBy);
 				$this->pegawai_id->setSort("");
 				$this->pegawai_pin->setSort("");
 				$this->pegawai_nip->setSort("");
@@ -1874,7 +1875,7 @@ class cpegawai_list extends cpegawai {
 		if ($this->UseSelectLimit) {
 			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 			if ($dbtype == "MSSQL") {
-				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())));
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderByList())));
 			} else {
 				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset);
 			}
@@ -1929,7 +1930,17 @@ class cpegawai_list extends cpegawai {
 		$this->tempat_lahir->setDbValue($rs->fields('tempat_lahir'));
 		$this->tgl_lahir->setDbValue($rs->fields('tgl_lahir'));
 		$this->pembagian1_id->setDbValue($rs->fields('pembagian1_id'));
+		if (array_key_exists('EV__pembagian1_id', $rs->fields)) {
+			$this->pembagian1_id->VirtualValue = $rs->fields('EV__pembagian1_id'); // Set up virtual field value
+		} else {
+			$this->pembagian1_id->VirtualValue = ""; // Clear value
+		}
 		$this->pembagian2_id->setDbValue($rs->fields('pembagian2_id'));
+		if (array_key_exists('EV__pembagian2_id', $rs->fields)) {
+			$this->pembagian2_id->VirtualValue = $rs->fields('EV__pembagian2_id'); // Set up virtual field value
+		} else {
+			$this->pembagian2_id->VirtualValue = ""; // Clear value
+		}
 		$this->pembagian3_id->setDbValue($rs->fields('pembagian3_id'));
 		$this->tgl_mulai_kerja->setDbValue($rs->fields('tgl_mulai_kerja'));
 		$this->tgl_resign->setDbValue($rs->fields('tgl_resign'));
@@ -2082,11 +2093,59 @@ class cpegawai_list extends cpegawai {
 		$this->tgl_lahir->ViewCustomAttributes = "";
 
 		// pembagian1_id
-		$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+		if ($this->pembagian1_id->VirtualValue <> "") {
+			$this->pembagian1_id->ViewValue = $this->pembagian1_id->VirtualValue;
+		} else {
+			$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+		if (strval($this->pembagian1_id->CurrentValue) <> "") {
+			$sFilterWrk = "`pembagian1_id`" . ew_SearchString("=", $this->pembagian1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `pembagian1_id`, `pembagian1_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian1`";
+		$sWhereWrk = "";
+		$this->pembagian1_id->LookupFilters = array("dx1" => '`pembagian1_nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->pembagian1_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->pembagian1_id->ViewValue = $this->pembagian1_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+			}
+		} else {
+			$this->pembagian1_id->ViewValue = NULL;
+		}
+		}
 		$this->pembagian1_id->ViewCustomAttributes = "";
 
 		// pembagian2_id
-		$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+		if ($this->pembagian2_id->VirtualValue <> "") {
+			$this->pembagian2_id->ViewValue = $this->pembagian2_id->VirtualValue;
+		} else {
+			$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+		if (strval($this->pembagian2_id->CurrentValue) <> "") {
+			$sFilterWrk = "`pembagian2_id`" . ew_SearchString("=", $this->pembagian2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `pembagian2_id`, `pembagian2_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian2`";
+		$sWhereWrk = "";
+		$this->pembagian2_id->LookupFilters = array("dx1" => '`pembagian2_nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->pembagian2_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->pembagian2_id->ViewValue = $this->pembagian2_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+			}
+		} else {
+			$this->pembagian2_id->ViewValue = NULL;
+		}
+		}
 		$this->pembagian2_id->ViewCustomAttributes = "";
 
 		// pembagian3_id
@@ -2706,8 +2765,10 @@ fpegawailist.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-// Form object for search
+fpegawailist.Lists["x_pembagian1_id"] = {"LinkField":"x_pembagian1_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pembagian1_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pembagian1"};
+fpegawailist.Lists["x_pembagian2_id"] = {"LinkField":"x_pembagian2_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pembagian2_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pembagian2"};
 
+// Form object for search
 var CurrentSearchForm = fpegawailistsrch = new ew_Form("fpegawailistsrch");
 </script>
 <script type="text/javascript">

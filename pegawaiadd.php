@@ -723,7 +723,17 @@ class cpegawai_add extends cpegawai {
 		$this->tempat_lahir->setDbValue($rs->fields('tempat_lahir'));
 		$this->tgl_lahir->setDbValue($rs->fields('tgl_lahir'));
 		$this->pembagian1_id->setDbValue($rs->fields('pembagian1_id'));
+		if (array_key_exists('EV__pembagian1_id', $rs->fields)) {
+			$this->pembagian1_id->VirtualValue = $rs->fields('EV__pembagian1_id'); // Set up virtual field value
+		} else {
+			$this->pembagian1_id->VirtualValue = ""; // Clear value
+		}
 		$this->pembagian2_id->setDbValue($rs->fields('pembagian2_id'));
+		if (array_key_exists('EV__pembagian2_id', $rs->fields)) {
+			$this->pembagian2_id->VirtualValue = $rs->fields('EV__pembagian2_id'); // Set up virtual field value
+		} else {
+			$this->pembagian2_id->VirtualValue = ""; // Clear value
+		}
 		$this->pembagian3_id->setDbValue($rs->fields('pembagian3_id'));
 		$this->tgl_mulai_kerja->setDbValue($rs->fields('tgl_mulai_kerja'));
 		$this->tgl_resign->setDbValue($rs->fields('tgl_resign'));
@@ -870,11 +880,59 @@ class cpegawai_add extends cpegawai {
 		$this->tgl_lahir->ViewCustomAttributes = "";
 
 		// pembagian1_id
-		$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+		if ($this->pembagian1_id->VirtualValue <> "") {
+			$this->pembagian1_id->ViewValue = $this->pembagian1_id->VirtualValue;
+		} else {
+			$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+		if (strval($this->pembagian1_id->CurrentValue) <> "") {
+			$sFilterWrk = "`pembagian1_id`" . ew_SearchString("=", $this->pembagian1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `pembagian1_id`, `pembagian1_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian1`";
+		$sWhereWrk = "";
+		$this->pembagian1_id->LookupFilters = array("dx1" => '`pembagian1_nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->pembagian1_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->pembagian1_id->ViewValue = $this->pembagian1_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+			}
+		} else {
+			$this->pembagian1_id->ViewValue = NULL;
+		}
+		}
 		$this->pembagian1_id->ViewCustomAttributes = "";
 
 		// pembagian2_id
-		$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+		if ($this->pembagian2_id->VirtualValue <> "") {
+			$this->pembagian2_id->ViewValue = $this->pembagian2_id->VirtualValue;
+		} else {
+			$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+		if (strval($this->pembagian2_id->CurrentValue) <> "") {
+			$sFilterWrk = "`pembagian2_id`" . ew_SearchString("=", $this->pembagian2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `pembagian2_id`, `pembagian2_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian2`";
+		$sWhereWrk = "";
+		$this->pembagian2_id->LookupFilters = array("dx1" => '`pembagian2_nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->pembagian2_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->pembagian2_id->ViewValue = $this->pembagian2_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+			}
+		} else {
+			$this->pembagian2_id->ViewValue = NULL;
+		}
+		}
 		$this->pembagian2_id->ViewCustomAttributes = "";
 
 		// pembagian3_id
@@ -1106,12 +1164,52 @@ class cpegawai_add extends cpegawai {
 			$this->pembagian1_id->EditAttrs["class"] = "form-control";
 			$this->pembagian1_id->EditCustomAttributes = "";
 			$this->pembagian1_id->EditValue = ew_HtmlEncode($this->pembagian1_id->CurrentValue);
+			if (strval($this->pembagian1_id->CurrentValue) <> "") {
+				$sFilterWrk = "`pembagian1_id`" . ew_SearchString("=", $this->pembagian1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+			$sSqlWrk = "SELECT `pembagian1_id`, `pembagian1_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian1`";
+			$sWhereWrk = "";
+			$this->pembagian1_id->LookupFilters = array("dx1" => '`pembagian1_nama`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->pembagian1_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$this->pembagian1_id->EditValue = $this->pembagian1_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->pembagian1_id->EditValue = ew_HtmlEncode($this->pembagian1_id->CurrentValue);
+				}
+			} else {
+				$this->pembagian1_id->EditValue = NULL;
+			}
 			$this->pembagian1_id->PlaceHolder = ew_RemoveHtml($this->pembagian1_id->FldCaption());
 
 			// pembagian2_id
 			$this->pembagian2_id->EditAttrs["class"] = "form-control";
 			$this->pembagian2_id->EditCustomAttributes = "";
 			$this->pembagian2_id->EditValue = ew_HtmlEncode($this->pembagian2_id->CurrentValue);
+			if (strval($this->pembagian2_id->CurrentValue) <> "") {
+				$sFilterWrk = "`pembagian2_id`" . ew_SearchString("=", $this->pembagian2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+			$sSqlWrk = "SELECT `pembagian2_id`, `pembagian2_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian2`";
+			$sWhereWrk = "";
+			$this->pembagian2_id->LookupFilters = array("dx1" => '`pembagian2_nama`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->pembagian2_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$this->pembagian2_id->EditValue = $this->pembagian2_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->pembagian2_id->EditValue = ew_HtmlEncode($this->pembagian2_id->CurrentValue);
+				}
+			} else {
+				$this->pembagian2_id->EditValue = NULL;
+			}
 			$this->pembagian2_id->PlaceHolder = ew_RemoveHtml($this->pembagian2_id->FldCaption());
 
 			// pembagian3_id
@@ -1318,12 +1416,6 @@ class cpegawai_add extends cpegawai {
 		}
 		if (!ew_CheckShortEuroDate($this->tgl_lahir->FormValue)) {
 			ew_AddMessage($gsFormError, $this->tgl_lahir->FldErrMsg());
-		}
-		if (!ew_CheckInteger($this->pembagian1_id->FormValue)) {
-			ew_AddMessage($gsFormError, $this->pembagian1_id->FldErrMsg());
-		}
-		if (!ew_CheckInteger($this->pembagian2_id->FormValue)) {
-			ew_AddMessage($gsFormError, $this->pembagian2_id->FldErrMsg());
 		}
 		if (!ew_CheckInteger($this->pembagian3_id->FormValue)) {
 			ew_AddMessage($gsFormError, $this->pembagian3_id->FldErrMsg());
@@ -1617,6 +1709,30 @@ class cpegawai_add extends cpegawai {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		case "x_pembagian1_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `pembagian1_id` AS `LinkFld`, `pembagian1_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian1`";
+			$sWhereWrk = "{filter}";
+			$this->pembagian1_id->LookupFilters = array("dx1" => '`pembagian1_nama`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`pembagian1_id` = {filter_value}', "t0" => "3", "fn0" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->pembagian1_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_pembagian2_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `pembagian2_id` AS `LinkFld`, `pembagian2_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian2`";
+			$sWhereWrk = "{filter}";
+			$this->pembagian2_id->LookupFilters = array("dx1" => '`pembagian2_nama`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`pembagian2_id` = {filter_value}', "t0" => "3", "fn0" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->pembagian2_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 		}
 	}
 
@@ -1625,6 +1741,32 @@ class cpegawai_add extends cpegawai {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		case "x_pembagian1_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `pembagian1_id`, `pembagian1_nama` AS `DispFld` FROM `pembagian1`";
+			$sWhereWrk = "`pembagian1_nama` LIKE '{query_value}%'";
+			$this->pembagian1_id->LookupFilters = array("dx1" => '`pembagian1_nama`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->pembagian1_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$sSqlWrk .= " LIMIT " . EW_AUTO_SUGGEST_MAX_ENTRIES;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_pembagian2_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `pembagian2_id`, `pembagian2_nama` AS `DispFld` FROM `pembagian2`";
+			$sWhereWrk = "`pembagian2_nama` LIKE '{query_value}%'";
+			$this->pembagian2_id->LookupFilters = array("dx1" => '`pembagian2_nama`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->pembagian2_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$sSqlWrk .= " LIMIT " . EW_AUTO_SUGGEST_MAX_ENTRIES;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 		}
 	}
 
@@ -1766,12 +1908,6 @@ fpegawaiadd.Validate = function() {
 			elm = this.GetElements("x" + infix + "_tgl_lahir");
 			if (elm && !ew_CheckShortEuroDate(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($pegawai->tgl_lahir->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_pembagian1_id");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($pegawai->pembagian1_id->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_pembagian2_id");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($pegawai->pembagian2_id->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_pembagian3_id");
 			if (elm && !ew_CheckInteger(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($pegawai->pembagian3_id->FldErrMsg()) ?>");
@@ -1823,8 +1959,10 @@ fpegawaiadd.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-// Form object for search
+fpegawaiadd.Lists["x_pembagian1_id"] = {"LinkField":"x_pembagian1_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pembagian1_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pembagian1"};
+fpegawaiadd.Lists["x_pembagian2_id"] = {"LinkField":"x_pembagian2_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pembagian2_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pembagian2"};
 
+// Form object for search
 </script>
 <script type="text/javascript">
 
@@ -1968,20 +2106,48 @@ ew_CreateCalendar("fpegawaiadd", "x_tgl_lahir", 14);
 <?php } ?>
 <?php if ($pegawai->pembagian1_id->Visible) { // pembagian1_id ?>
 	<div id="r_pembagian1_id" class="form-group">
-		<label id="elh_pegawai_pembagian1_id" for="x_pembagian1_id" class="col-sm-2 control-label ewLabel"><?php echo $pegawai->pembagian1_id->FldCaption() ?></label>
+		<label id="elh_pegawai_pembagian1_id" class="col-sm-2 control-label ewLabel"><?php echo $pegawai->pembagian1_id->FldCaption() ?></label>
 		<div class="col-sm-10"><div<?php echo $pegawai->pembagian1_id->CellAttributes() ?>>
 <span id="el_pegawai_pembagian1_id">
-<input type="text" data-table="pegawai" data-field="x_pembagian1_id" name="x_pembagian1_id" id="x_pembagian1_id" size="30" placeholder="<?php echo ew_HtmlEncode($pegawai->pembagian1_id->getPlaceHolder()) ?>" value="<?php echo $pegawai->pembagian1_id->EditValue ?>"<?php echo $pegawai->pembagian1_id->EditAttributes() ?>>
+<?php
+$wrkonchange = trim(" " . @$pegawai->pembagian1_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$pegawai->pembagian1_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_pembagian1_id" style="white-space: nowrap; z-index: 8880">
+	<input type="text" name="sv_x_pembagian1_id" id="sv_x_pembagian1_id" value="<?php echo $pegawai->pembagian1_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($pegawai->pembagian1_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($pegawai->pembagian1_id->getPlaceHolder()) ?>"<?php echo $pegawai->pembagian1_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="pegawai" data-field="x_pembagian1_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $pegawai->pembagian1_id->DisplayValueSeparatorAttribute() ?>" name="x_pembagian1_id" id="x_pembagian1_id" value="<?php echo ew_HtmlEncode($pegawai->pembagian1_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x_pembagian1_id" id="q_x_pembagian1_id" value="<?php echo $pegawai->pembagian1_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+fpegawaiadd.CreateAutoSuggest({"id":"x_pembagian1_id","forceSelect":true});
+</script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($pegawai->pembagian1_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_pembagian1_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x_pembagian1_id" id="s_x_pembagian1_id" value="<?php echo $pegawai->pembagian1_id->LookupFilterQuery(false) ?>">
 </span>
 <?php echo $pegawai->pembagian1_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 <?php if ($pegawai->pembagian2_id->Visible) { // pembagian2_id ?>
 	<div id="r_pembagian2_id" class="form-group">
-		<label id="elh_pegawai_pembagian2_id" for="x_pembagian2_id" class="col-sm-2 control-label ewLabel"><?php echo $pegawai->pembagian2_id->FldCaption() ?></label>
+		<label id="elh_pegawai_pembagian2_id" class="col-sm-2 control-label ewLabel"><?php echo $pegawai->pembagian2_id->FldCaption() ?></label>
 		<div class="col-sm-10"><div<?php echo $pegawai->pembagian2_id->CellAttributes() ?>>
 <span id="el_pegawai_pembagian2_id">
-<input type="text" data-table="pegawai" data-field="x_pembagian2_id" name="x_pembagian2_id" id="x_pembagian2_id" size="30" placeholder="<?php echo ew_HtmlEncode($pegawai->pembagian2_id->getPlaceHolder()) ?>" value="<?php echo $pegawai->pembagian2_id->EditValue ?>"<?php echo $pegawai->pembagian2_id->EditAttributes() ?>>
+<?php
+$wrkonchange = trim(" " . @$pegawai->pembagian2_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$pegawai->pembagian2_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_pembagian2_id" style="white-space: nowrap; z-index: 8870">
+	<input type="text" name="sv_x_pembagian2_id" id="sv_x_pembagian2_id" value="<?php echo $pegawai->pembagian2_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($pegawai->pembagian2_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($pegawai->pembagian2_id->getPlaceHolder()) ?>"<?php echo $pegawai->pembagian2_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="pegawai" data-field="x_pembagian2_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $pegawai->pembagian2_id->DisplayValueSeparatorAttribute() ?>" name="x_pembagian2_id" id="x_pembagian2_id" value="<?php echo ew_HtmlEncode($pegawai->pembagian2_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x_pembagian2_id" id="q_x_pembagian2_id" value="<?php echo $pegawai->pembagian2_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+fpegawaiadd.CreateAutoSuggest({"id":"x_pembagian2_id","forceSelect":true});
+</script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($pegawai->pembagian2_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_pembagian2_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x_pembagian2_id" id="s_x_pembagian2_id" value="<?php echo $pegawai->pembagian2_id->LookupFilterQuery(false) ?>">
 </span>
 <?php echo $pegawai->pembagian2_id->CustomMsg ?></div></div>
 	</div>

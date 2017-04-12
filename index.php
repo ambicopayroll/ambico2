@@ -270,6 +270,10 @@ class cdefault {
 		$this->Page_Terminate("dashboard.php"); // Exit and go to default page
 		if ($Security->AllowList(CurrentProjectID() . 'pegawai'))
 			$this->Page_Terminate("pegawailist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'pembagian1'))
+			$this->Page_Terminate("pembagian1list.php");
+		if ($Security->AllowList(CurrentProjectID() . 'pembagian2'))
+			$this->Page_Terminate("pembagian2list.php");
 		if ($Security->AllowList(CurrentProjectID() . 't_jk'))
 			$this->Page_Terminate("t_jklist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't_jdw_krj_peg'))

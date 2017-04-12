@@ -126,13 +126,13 @@ class cpegawai extends cTable {
 		$this->fields['tgl_lahir'] = &$this->tgl_lahir;
 
 		// pembagian1_id
-		$this->pembagian1_id = new cField('pegawai', 'pegawai', 'x_pembagian1_id', 'pembagian1_id', '`pembagian1_id`', '`pembagian1_id`', 3, -1, FALSE, '`pembagian1_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->pembagian1_id = new cField('pegawai', 'pegawai', 'x_pembagian1_id', 'pembagian1_id', '`pembagian1_id`', '`pembagian1_id`', 3, -1, FALSE, '`EV__pembagian1_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
 		$this->pembagian1_id->Sortable = TRUE; // Allow sort
 		$this->pembagian1_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['pembagian1_id'] = &$this->pembagian1_id;
 
 		// pembagian2_id
-		$this->pembagian2_id = new cField('pegawai', 'pegawai', 'x_pembagian2_id', 'pembagian2_id', '`pembagian2_id`', '`pembagian2_id`', 3, -1, FALSE, '`pembagian2_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->pembagian2_id = new cField('pegawai', 'pegawai', 'x_pembagian2_id', 'pembagian2_id', '`pembagian2_id`', '`pembagian2_id`', 3, -1, FALSE, '`EV__pembagian2_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
 		$this->pembagian2_id->Sortable = TRUE; // Allow sort
 		$this->pembagian2_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['pembagian2_id'] = &$this->pembagian2_id;
@@ -222,9 +222,31 @@ class cpegawai extends cTable {
 			} else {
 				$this->setSessionOrderBy($sSortField . " " . $sThisSort); // Save to Session
 			}
+			$sSortFieldList = ($ofld->FldVirtualExpression <> "") ? $ofld->FldVirtualExpression : $sSortField;
+			if ($ctrl) {
+				$sOrderByList = $this->getSessionOrderByList();
+				if (strpos($sOrderByList, $sSortFieldList . " " . $sLastSort) !== FALSE) {
+					$sOrderByList = str_replace($sSortFieldList . " " . $sLastSort, $sSortFieldList . " " . $sThisSort, $sOrderByList);
+				} else {
+					if ($sOrderByList <> "") $sOrderByList .= ", ";
+					$sOrderByList .= $sSortFieldList . " " . $sThisSort;
+				}
+				$this->setSessionOrderByList($sOrderByList); // Save to Session
+			} else {
+				$this->setSessionOrderByList($sSortFieldList . " " . $sThisSort); // Save to Session
+			}
 		} else {
 			if (!$ctrl) $ofld->setSort("");
 		}
+	}
+
+	// Session ORDER BY for List page
+	function getSessionOrderByList() {
+		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_ORDER_BY_LIST];
+	}
+
+	function setSessionOrderByList($v) {
+		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_ORDER_BY_LIST] = $v;
 	}
 
 	// Current detail table name
@@ -281,6 +303,23 @@ class cpegawai extends cTable {
 
 	function setSqlSelect($v) {
 		$this->_SqlSelect = $v;
+	}
+	var $_SqlSelectList = "";
+
+	function getSqlSelectList() { // Select for List page
+		$select = "";
+		$select = "SELECT * FROM (" .
+			"SELECT *, (SELECT `pembagian1_nama` FROM `pembagian1` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`pembagian1_id` = `pegawai`.`pembagian1_id` LIMIT 1) AS `EV__pembagian1_id`, (SELECT `pembagian2_nama` FROM `pembagian2` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`pembagian2_id` = `pegawai`.`pembagian2_id` LIMIT 1) AS `EV__pembagian2_id` FROM `pegawai`" .
+			") `EW_TMP_TABLE`";
+		return ($this->_SqlSelectList <> "") ? $this->_SqlSelectList : $select;
+	}
+
+	function SqlSelectList() { // For backward compatibility
+		return $this->getSqlSelectList();
+	}
+
+	function setSqlSelectList($v) {
+		$this->_SqlSelectList = $v;
 	}
 	var $_SqlWhere = "";
 
@@ -393,15 +432,44 @@ class cpegawai extends cTable {
 		ew_AddFilter($sFilter, $this->CurrentFilter);
 		$sFilter = $this->ApplyUserIDFilters($sFilter);
 		$this->Recordset_Selecting($sFilter);
-		$sSort = $this->getSessionOrderBy();
-		return ew_BuildSelectSql($this->getSqlSelect(), $this->getSqlWhere(), $this->getSqlGroupBy(),
-			$this->getSqlHaving(), $this->getSqlOrderBy(), $sFilter, $sSort);
+		if ($this->UseVirtualFields()) {
+			$sSort = $this->getSessionOrderByList();
+			return ew_BuildSelectSql($this->getSqlSelectList(), $this->getSqlWhere(), $this->getSqlGroupBy(),
+				$this->getSqlHaving(), $this->getSqlOrderBy(), $sFilter, $sSort);
+		} else {
+			$sSort = $this->getSessionOrderBy();
+			return ew_BuildSelectSql($this->getSqlSelect(), $this->getSqlWhere(), $this->getSqlGroupBy(),
+				$this->getSqlHaving(), $this->getSqlOrderBy(), $sFilter, $sSort);
+		}
 	}
 
 	// Get ORDER BY clause
 	function GetOrderBy() {
-		$sSort = $this->getSessionOrderBy();
+		$sSort = ($this->UseVirtualFields()) ? $this->getSessionOrderByList() : $this->getSessionOrderBy();
 		return ew_BuildSelectSql("", "", "", "", $this->getSqlOrderBy(), "", $sSort);
+	}
+
+	// Check if virtual fields is used in SQL
+	function UseVirtualFields() {
+		$sWhere = $this->getSessionWhere();
+		$sOrderBy = $this->getSessionOrderByList();
+		if ($sWhere <> "")
+			$sWhere = " " . str_replace(array("(",")"), array("",""), $sWhere) . " ";
+		if ($sOrderBy <> "")
+			$sOrderBy = " " . str_replace(array("(",")"), array("",""), $sOrderBy) . " ";
+		if ($this->pembagian1_id->AdvancedSearch->SearchValue <> "" ||
+			$this->pembagian1_id->AdvancedSearch->SearchValue2 <> "" ||
+			strpos($sWhere, " " . $this->pembagian1_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if (strpos($sOrderBy, " " . $this->pembagian1_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if ($this->pembagian2_id->AdvancedSearch->SearchValue <> "" ||
+			$this->pembagian2_id->AdvancedSearch->SearchValue2 <> "" ||
+			strpos($sWhere, " " . $this->pembagian2_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if (strpos($sOrderBy, " " . $this->pembagian2_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		return FALSE;
 	}
 
 	// Try to get record count
@@ -864,11 +932,59 @@ class cpegawai extends cTable {
 		$this->tgl_lahir->ViewCustomAttributes = "";
 
 		// pembagian1_id
-		$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+		if ($this->pembagian1_id->VirtualValue <> "") {
+			$this->pembagian1_id->ViewValue = $this->pembagian1_id->VirtualValue;
+		} else {
+			$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+		if (strval($this->pembagian1_id->CurrentValue) <> "") {
+			$sFilterWrk = "`pembagian1_id`" . ew_SearchString("=", $this->pembagian1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `pembagian1_id`, `pembagian1_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian1`";
+		$sWhereWrk = "";
+		$this->pembagian1_id->LookupFilters = array("dx1" => '`pembagian1_nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->pembagian1_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->pembagian1_id->ViewValue = $this->pembagian1_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->pembagian1_id->ViewValue = $this->pembagian1_id->CurrentValue;
+			}
+		} else {
+			$this->pembagian1_id->ViewValue = NULL;
+		}
+		}
 		$this->pembagian1_id->ViewCustomAttributes = "";
 
 		// pembagian2_id
-		$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+		if ($this->pembagian2_id->VirtualValue <> "") {
+			$this->pembagian2_id->ViewValue = $this->pembagian2_id->VirtualValue;
+		} else {
+			$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+		if (strval($this->pembagian2_id->CurrentValue) <> "") {
+			$sFilterWrk = "`pembagian2_id`" . ew_SearchString("=", $this->pembagian2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `pembagian2_id`, `pembagian2_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `pembagian2`";
+		$sWhereWrk = "";
+		$this->pembagian2_id->LookupFilters = array("dx1" => '`pembagian2_nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->pembagian2_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->pembagian2_id->ViewValue = $this->pembagian2_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->pembagian2_id->ViewValue = $this->pembagian2_id->CurrentValue;
+			}
+		} else {
+			$this->pembagian2_id->ViewValue = NULL;
+		}
+		}
 		$this->pembagian2_id->ViewCustomAttributes = "";
 
 		// pembagian3_id

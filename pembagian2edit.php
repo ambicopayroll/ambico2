@@ -374,6 +374,15 @@ class cpembagian2_edit extends cpembagian2 {
 	var $IsModal = FALSE;
 	var $DbMasterFilter;
 	var $DbDetailFilter;
+	var $DisplayRecs = 1;
+	var $StartRec;
+	var $StopRec;
+	var $TotalRecs = 0;
+	var $RecRange = 10;
+	var $Pager;
+	var $RecCnt;
+	var $RecKey = array();
+	var $Recordset;
 
 	// 
 	// Page main
@@ -387,9 +396,46 @@ class cpembagian2_edit extends cpembagian2 {
 		if ($this->IsModal)
 			$gbSkipHeaderFooter = TRUE;
 
+		// Load current record
+		$bLoadCurrentRecord = FALSE;
+		$sReturnUrl = "";
+		$bMatchRecord = FALSE;
+
 		// Load key from QueryString
 		if (@$_GET["pembagian2_id"] <> "") {
 			$this->pembagian2_id->setQueryStringValue($_GET["pembagian2_id"]);
+			$this->RecKey["pembagian2_id"] = $this->pembagian2_id->QueryStringValue;
+		} else {
+			$bLoadCurrentRecord = TRUE;
+		}
+
+		// Load recordset
+		$this->StartRec = 1; // Initialize start position
+		if ($this->Recordset = $this->LoadRecordset()) // Load records
+			$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
+		if ($this->TotalRecs <= 0) { // No record found
+			if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+				$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+			$this->Page_Terminate("pembagian2list.php"); // Return to list page
+		} elseif ($bLoadCurrentRecord) { // Load current record position
+			$this->SetUpStartRec(); // Set up start record position
+
+			// Point to current record
+			if (intval($this->StartRec) <= intval($this->TotalRecs)) {
+				$bMatchRecord = TRUE;
+				$this->Recordset->Move($this->StartRec-1);
+			}
+		} else { // Match key values
+			while (!$this->Recordset->EOF) {
+				if (strval($this->pembagian2_id->CurrentValue) == strval($this->Recordset->fields('pembagian2_id'))) {
+					$this->setStartRecordNumber($this->StartRec); // Save record position
+					$bMatchRecord = TRUE;
+					break;
+				} else {
+					$this->StartRec++;
+					$this->Recordset->MoveNext();
+				}
+			}
 		}
 
 		// Process form if post back
@@ -398,11 +444,6 @@ class cpembagian2_edit extends cpembagian2 {
 			$this->LoadFormValues(); // Get form values
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
-		}
-
-		// Check if valid key
-		if ($this->pembagian2_id->CurrentValue == "") {
-			$this->Page_Terminate("pembagian2list.php"); // Invalid key, return to list
 		}
 
 		// Validate form if post back
@@ -416,9 +457,12 @@ class cpembagian2_edit extends cpembagian2 {
 		}
 		switch ($this->CurrentAction) {
 			case "I": // Get a record to display
-				if (!$this->LoadRow()) { // Load record based on key
-					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
-					$this->Page_Terminate("pembagian2list.php"); // No matching record, return to list
+				if (!$bMatchRecord) {
+					if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+						$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+					$this->Page_Terminate("pembagian2list.php"); // Return to list page
+				} else {
+					$this->LoadRowValues($this->Recordset); // Load row values
 				}
 				break;
 			Case "U": // Update
@@ -513,6 +557,32 @@ class cpembagian2_edit extends cpembagian2 {
 		$this->pembagian2_id->CurrentValue = $this->pembagian2_id->FormValue;
 		$this->pembagian2_nama->CurrentValue = $this->pembagian2_nama->FormValue;
 		$this->pembagian2_ket->CurrentValue = $this->pembagian2_ket->FormValue;
+	}
+
+	// Load recordset
+	function LoadRecordset($offset = -1, $rowcnt = -1) {
+
+		// Load List page SQL
+		$sSql = $this->SelectSQL();
+		$conn = &$this->Connection();
+
+		// Load recordset
+		$dbtype = ew_GetConnectionType($this->DBID);
+		if ($this->UseSelectLimit) {
+			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
+			if ($dbtype == "MSSQL") {
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())));
+			} else {
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset);
+			}
+			$conn->raiseErrorFn = '';
+		} else {
+			$rs = ew_LoadRecordset($sSql, $conn);
+		}
+
+		// Call Recordset Selected event
+		$this->Recordset_Selected($rs);
+		return $rs;
 	}
 
 	// Load row based on key values
@@ -928,6 +998,51 @@ fpembagian2edit.ValidateRequired = false;
 <?php
 $pembagian2_edit->ShowMessage();
 ?>
+<?php if (!$pembagian2_edit->IsModal) { ?>
+<form name="ewPagerForm" class="form-horizontal ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($pembagian2_edit->Pager)) $pembagian2_edit->Pager = new cPrevNextPager($pembagian2_edit->StartRec, $pembagian2_edit->DisplayRecs, $pembagian2_edit->TotalRecs) ?>
+<?php if ($pembagian2_edit->Pager->RecordCount > 0 && $pembagian2_edit->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($pembagian2_edit->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $pembagian2_edit->PageUrl() ?>start=<?php echo $pembagian2_edit->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($pembagian2_edit->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $pembagian2_edit->PageUrl() ?>start=<?php echo $pembagian2_edit->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $pembagian2_edit->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($pembagian2_edit->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $pembagian2_edit->PageUrl() ?>start=<?php echo $pembagian2_edit->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($pembagian2_edit->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $pembagian2_edit->PageUrl() ?>start=<?php echo $pembagian2_edit->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $pembagian2_edit->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
 <form name="fpembagian2edit" id="fpembagian2edit" class="<?php echo $pembagian2_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($pembagian2_edit->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $pembagian2_edit->Token ?>">
@@ -978,6 +1093,47 @@ $pembagian2_edit->ShowMessage();
 <button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $pembagian2_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 	</div>
 </div>
+<?php if (!isset($pembagian2_edit->Pager)) $pembagian2_edit->Pager = new cPrevNextPager($pembagian2_edit->StartRec, $pembagian2_edit->DisplayRecs, $pembagian2_edit->TotalRecs) ?>
+<?php if ($pembagian2_edit->Pager->RecordCount > 0 && $pembagian2_edit->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($pembagian2_edit->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $pembagian2_edit->PageUrl() ?>start=<?php echo $pembagian2_edit->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($pembagian2_edit->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $pembagian2_edit->PageUrl() ?>start=<?php echo $pembagian2_edit->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $pembagian2_edit->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($pembagian2_edit->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $pembagian2_edit->PageUrl() ?>start=<?php echo $pembagian2_edit->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($pembagian2_edit->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $pembagian2_edit->PageUrl() ?>start=<?php echo $pembagian2_edit->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $pembagian2_edit->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
 <?php } ?>
 </form>
 <script type="text/javascript">
