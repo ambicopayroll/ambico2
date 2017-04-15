@@ -640,11 +640,14 @@
     <menu id="10078">
       <phrase id="menutext" value="Jadwal Kerja Default" />
     </menu>
-    <menu id="10085">
-      <phrase id="menutext" value="Payroll" />
+    <menu id="10363">
+      <phrase id="menutext" value="Penggajian" />
     </menu>
     <menu id="10086">
       <phrase id="menutext" value="Master Rumus Gaji" />
+    </menu>
+    <menu id="10085">
+      <phrase id="menutext" value="Laporan Gaji" />
     </menu>
     <menu id="10084">
       <phrase id="menutext" value="v att log" />

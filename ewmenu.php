@@ -20,8 +20,9 @@ $RootMenu->AddMenuItem(10077, "mi_t_jdw_krj_peg", $Language->MenuPhrase("10077",
 $RootMenu->AddMenuItem(10087, "mi_t_rumus_peg", $Language->MenuPhrase("10087", "MenuText"), "t_rumus_peglist.php?cmd=resetall", 10223, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}t_rumus_peg'), FALSE, FALSE);
 $RootMenu->AddMenuItem(10079, "mi_generate__php", $Language->MenuPhrase("10079", "MenuText"), "generate_.php", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}generate_.php'), FALSE, TRUE);
 $RootMenu->AddMenuItem(10078, "mi_t_jdw_krj_def", $Language->MenuPhrase("10078", "MenuText"), "t_jdw_krj_deflist.php?cmd=resetall", 128, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}t_jdw_krj_def'), FALSE, FALSE);
-$RootMenu->AddMenuItem(10085, "mi_payroll__php", $Language->MenuPhrase("10085", "MenuText"), "payroll_.php", -1, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}payroll_.php'), FALSE, TRUE);
-$RootMenu->AddMenuItem(10086, "mi_t_rumus", $Language->MenuPhrase("10086", "MenuText"), "t_rumuslist.php", 10085, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}t_rumus'), FALSE, FALSE);
+$RootMenu->AddMenuItem(10363, "mci_Penggajian", $Language->MenuPhrase("10363", "MenuText"), "", -1, "", TRUE, FALSE, TRUE);
+$RootMenu->AddMenuItem(10086, "mi_t_rumus", $Language->MenuPhrase("10086", "MenuText"), "t_rumuslist.php", 10363, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}t_rumus'), FALSE, FALSE);
+$RootMenu->AddMenuItem(10085, "mi_payroll__php", $Language->MenuPhrase("10085", "MenuText"), "payroll_.php", 10363, "", AllowListMenu('{4B5DAB39-E4BC-48DF-9311-E295A5F18030}payroll_.php'), FALSE, TRUE);
 $RootMenu->AddMenuItem(-2, "mi_changepwd", $Language->Phrase("ChangePwd"), "changepwd.php", -1, "", IsLoggedIn() && !IsSysAdmin());
 $RootMenu->AddMenuItem(-1, "mi_logout", $Language->Phrase("Logout"), "logout.php", -1, "", IsLoggedIn());
 $RootMenu->AddMenuItem(-1, "mi_login", $Language->Phrase("Login"), "login.php", -1, "", !IsLoggedIn() && substr(@$_SERVER["URL"], -1 * strlen("login.php")) <> "login.php");
