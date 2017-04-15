@@ -610,23 +610,29 @@
     <menu id="128">
       <phrase id="menutext" value="Pegawai" />
     </menu>
+    <menu id="10223">
+      <phrase id="menutext" value="Master" />
+    </menu>
     <menu id="29">
-      <phrase id="menutext" value="Master Pegawai" />
+      <phrase id="menutext" value="Pegawai" />
     </menu>
     <menu id="31">
-      <phrase id="menutext" value="Master Jabatan" />
+      <phrase id="menutext" value="Jabatan" />
     </menu>
     <menu id="32">
-      <phrase id="menutext" value="Master Departemen" />
+      <phrase id="menutext" value="Departemen" />
     </menu>
     <menu id="33">
-      <phrase id="menutext" value="Master Status Pegawai" />
+      <phrase id="menutext" value="Status Pegawai" />
     </menu>
     <menu id="10072">
-      <phrase id="menutext" value="Master Jam Kerja" />
+      <phrase id="menutext" value="Jam Kerja" />
     </menu>
     <menu id="10077">
-      <phrase id="menutext" value="Master Jadwal Kerja" />
+      <phrase id="menutext" value="Jadwal Kerja" />
+    </menu>
+    <menu id="10087">
+      <phrase id="menutext" value="Gaji" />
     </menu>
     <menu id="10079">
       <phrase id="menutext" value="Generate Jadwal Kerja" />
@@ -638,10 +644,7 @@
       <phrase id="menutext" value="Payroll" />
     </menu>
     <menu id="10086">
-      <phrase id="menutext" value="Rumus" />
-    </menu>
-    <menu id="10087">
-      <phrase id="menutext" value="Rumus Gaji Pegawai" />
+      <phrase id="menutext" value="Master Rumus Gaji" />
     </menu>
     <menu id="10084">
       <phrase id="menutext" value="v att log" />
@@ -2753,7 +2756,7 @@
       <phrase id="tblcaption" value="Payroll" />
     </table>
     <table id="t_rumus">
-      <phrase id="tblcaption" value="Rumus" />
+      <phrase id="tblcaption" value="Master Rumus Gaji" />
       <field id="rumus_id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -2786,7 +2789,7 @@
       </field>
     </table>
     <table id="t_rumus_peg">
-      <phrase id="tblcaption" value="Rumus Gaji Pegawai" />
+      <phrase id="tblcaption" value="Master Gaji" />
       <field id="rumus_peg_id">
         <phrase id="fldcaption" value="ID" />
       </field>
