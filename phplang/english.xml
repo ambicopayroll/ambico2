@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/4/13" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/4/15" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -636,6 +636,12 @@
     </menu>
     <menu id="10085">
       <phrase id="menutext" value="Payroll" />
+    </menu>
+    <menu id="10086">
+      <phrase id="menutext" value="Rumus" />
+    </menu>
+    <menu id="10087">
+      <phrase id="menutext" value="Rumus Gaji Pegawai" />
     </menu>
     <menu id="10084">
       <phrase id="menutext" value="v att log" />
@@ -2745,6 +2751,51 @@
     </table>
     <table id="payroll__php">
       <phrase id="tblcaption" value="Payroll" />
+    </table>
+    <table id="t_rumus">
+      <phrase id="tblcaption" value="Rumus" />
+      <field id="rumus_id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="rumus_nama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+      <field id="hk_gol">
+        <phrase id="fldcaption" value="Gol. Hari Kerja" />
+      </field>
+      <field id="umr">
+        <phrase id="fldcaption" value="UMR" />
+      </field>
+      <field id="hk_jml">
+        <phrase id="fldcaption" value="Jml. Hari Kerja" />
+      </field>
+      <field id="upah">
+        <phrase id="fldcaption" value="Upah" />
+      </field>
+      <field id="premi_hadir">
+        <phrase id="fldcaption" value="Premi Hadir" />
+      </field>
+      <field id="premi_malam">
+        <phrase id="fldcaption" value="Premi Malam" />
+      </field>
+      <field id="pot_absen">
+        <phrase id="fldcaption" value="Potongan Absen" />
+      </field>
+      <field id="lembur">
+        <phrase id="fldcaption" value="Lembur" />
+      </field>
+    </table>
+    <table id="t_rumus_peg">
+      <phrase id="tblcaption" value="Rumus Gaji Pegawai" />
+      <field id="rumus_peg_id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="pegawai_id">
+        <phrase id="fldcaption" value="Nama Pegawai" />
+      </field>
+      <field id="rumus_id">
+        <phrase id="fldcaption" value="Nama Rumus" />
+      </field>
     </table>
   </project>
 </ew-language>

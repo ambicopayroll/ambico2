@@ -288,6 +288,10 @@ class cdefault {
 			$this->Page_Terminate("rekon_.php");
 		if ($Security->AllowList(CurrentProjectID() . 'payroll_.php'))
 			$this->Page_Terminate("payroll_.php");
+		if ($Security->AllowList(CurrentProjectID() . 't_rumus'))
+			$this->Page_Terminate("t_rumuslist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't_rumus_peg'))
+			$this->Page_Terminate("t_rumus_peglist.php");
 		if ($Security->IsLoggedIn()) {
 			$this->setFailureMessage(ew_DeniedMsg() . "<br><br><a href=\"logout.php\">" . $Language->Phrase("BackToLogin") . "</a>");
 		} else {

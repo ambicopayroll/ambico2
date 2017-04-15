@@ -9,6 +9,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "t_userinfo.php" ?>
 <?php include_once "t_jdw_krj_peggridcls.php" ?>
 <?php include_once "t_jdw_krj_defgridcls.php" ?>
+<?php include_once "t_rumus_peggridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -342,6 +343,14 @@ class cpegawai_add extends cpegawai {
 			if (@$_POST["grid"] == "ft_jdw_krj_defgrid") {
 				if (!isset($GLOBALS["t_jdw_krj_def_grid"])) $GLOBALS["t_jdw_krj_def_grid"] = new ct_jdw_krj_def_grid;
 				$GLOBALS["t_jdw_krj_def_grid"]->Page_Init();
+				$this->Page_Terminate();
+				exit();
+			}
+
+			// Process auto fill for detail table 't_rumus_peg'
+			if (@$_POST["grid"] == "ft_rumus_peggrid") {
+				if (!isset($GLOBALS["t_rumus_peg_grid"])) $GLOBALS["t_rumus_peg_grid"] = new ct_rumus_peg_grid;
+				$GLOBALS["t_rumus_peg_grid"]->Page_Init();
 				$this->Page_Terminate();
 				exit();
 			}
@@ -1492,6 +1501,10 @@ class cpegawai_add extends cpegawai {
 			if (!isset($GLOBALS["t_jdw_krj_def_grid"])) $GLOBALS["t_jdw_krj_def_grid"] = new ct_jdw_krj_def_grid(); // get detail page object
 			$GLOBALS["t_jdw_krj_def_grid"]->ValidateGridForm();
 		}
+		if (in_array("t_rumus_peg", $DetailTblVar) && $GLOBALS["t_rumus_peg"]->DetailAdd) {
+			if (!isset($GLOBALS["t_rumus_peg_grid"])) $GLOBALS["t_rumus_peg_grid"] = new ct_rumus_peg_grid(); // get detail page object
+			$GLOBALS["t_rumus_peg_grid"]->ValidateGridForm();
+		}
 
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
@@ -1661,6 +1674,15 @@ class cpegawai_add extends cpegawai {
 				if (!$AddRow)
 					$GLOBALS["t_jdw_krj_def"]->pegawai_id->setSessionValue(""); // Clear master key if insert failed
 			}
+			if (in_array("t_rumus_peg", $DetailTblVar) && $GLOBALS["t_rumus_peg"]->DetailAdd) {
+				$GLOBALS["t_rumus_peg"]->pegawai_id->setSessionValue($this->pegawai_id->CurrentValue); // Set master key
+				if (!isset($GLOBALS["t_rumus_peg_grid"])) $GLOBALS["t_rumus_peg_grid"] = new ct_rumus_peg_grid(); // Get detail page object
+				$Security->LoadCurrentUserLevel($this->ProjectID . "t_rumus_peg"); // Load user level of detail table
+				$AddRow = $GLOBALS["t_rumus_peg_grid"]->GridInsert();
+				$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+				if (!$AddRow)
+					$GLOBALS["t_rumus_peg"]->pegawai_id->setSessionValue(""); // Clear master key if insert failed
+			}
 		}
 
 		// Commit/Rollback transaction
@@ -1728,6 +1750,24 @@ class cpegawai_add extends cpegawai {
 					$GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->setSessionValue($GLOBALS["t_jdw_krj_def_grid"]->pegawai_id->CurrentValue);
 				}
 			}
+			if (in_array("t_rumus_peg", $DetailTblVar)) {
+				if (!isset($GLOBALS["t_rumus_peg_grid"]))
+					$GLOBALS["t_rumus_peg_grid"] = new ct_rumus_peg_grid;
+				if ($GLOBALS["t_rumus_peg_grid"]->DetailAdd) {
+					if ($this->CopyRecord)
+						$GLOBALS["t_rumus_peg_grid"]->CurrentMode = "copy";
+					else
+						$GLOBALS["t_rumus_peg_grid"]->CurrentMode = "add";
+					$GLOBALS["t_rumus_peg_grid"]->CurrentAction = "gridadd";
+
+					// Save current master table to detail table
+					$GLOBALS["t_rumus_peg_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t_rumus_peg_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t_rumus_peg_grid"]->pegawai_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t_rumus_peg_grid"]->pegawai_id->CurrentValue = $this->pegawai_id->CurrentValue;
+					$GLOBALS["t_rumus_peg_grid"]->pegawai_id->setSessionValue($GLOBALS["t_rumus_peg_grid"]->pegawai_id->CurrentValue);
+				}
+			}
 		}
 	}
 
@@ -1747,6 +1787,7 @@ class cpegawai_add extends cpegawai {
 		$pages->Style = "tabs";
 		$pages->Add('t_jdw_krj_peg');
 		$pages->Add('t_jdw_krj_def');
+		$pages->Add('t_rumus_peg');
 		$this->DetailPages = $pages;
 	}
 
@@ -2369,6 +2410,16 @@ ew_CreateCalendar("fpegawaiadd", "x_tgl_resign", 7);
 <?php
 	}
 ?>
+<?php
+	if (in_array("t_rumus_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_rumus_peg->DetailAdd) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_rumus_peg") {
+			$FirstActiveDetailTable = "t_rumus_peg";
+		}
+?>
+		<li<?php echo $pegawai_add->DetailPages->TabStyle("t_rumus_peg") ?>><a href="#tab_t_rumus_peg" data-toggle="tab"><?php echo $Language->TablePhrase("t_rumus_peg", "TblCaption") ?></a></li>
+<?php
+	}
+?>
 	</ul>
 	<div class="tab-content">
 <?php
@@ -2389,6 +2440,16 @@ ew_CreateCalendar("fpegawaiadd", "x_tgl_resign", 7);
 ?>
 		<div class="tab-pane<?php echo $pegawai_add->DetailPages->PageStyle("t_jdw_krj_def") ?>" id="tab_t_jdw_krj_def">
 <?php include_once "t_jdw_krj_defgrid.php" ?>
+		</div>
+<?php } ?>
+<?php
+	if (in_array("t_rumus_peg", explode(",", $pegawai->getCurrentDetailTable())) && $t_rumus_peg->DetailAdd) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t_rumus_peg") {
+			$FirstActiveDetailTable = "t_rumus_peg";
+		}
+?>
+		<div class="tab-pane<?php echo $pegawai_add->DetailPages->PageStyle("t_rumus_peg") ?>" id="tab_t_rumus_peg">
+<?php include_once "t_rumus_peggrid.php" ?>
 		</div>
 <?php } ?>
 	</div>

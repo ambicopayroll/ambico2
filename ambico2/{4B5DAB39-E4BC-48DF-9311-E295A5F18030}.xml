@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2017/04/13" author="e.World Technology Ltd.">
-  <project id="{4B5DAB39-E4BC-48DF-9311-E295A5F18030}" file="D:\xampp\htdocs\ambico2\ambico2.pmp" name="ambico2" product="PHPMaker" version="13.0" datetime="2017/04/13 05:58:47" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2017/04/15" author="e.World Technology Ltd.">
+  <project id="{4B5DAB39-E4BC-48DF-9311-E295A5F18030}" file="D:\xampp\htdocs\ambico2\ambico2.pmp" name="ambico2" product="PHPMaker" version="13.0" datetime="2017/04/15 09:51:07" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="att_log" name="att_log" caption="Data Finger Pegawai" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="cuti_normatif" name="cuti_normatif" caption="cuti normatif" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="dev_type" name="dev_type" caption="dev type" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -72,5 +72,7 @@
     <table id="v_rekon" name="v_rekon" caption="v rekon" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="v_att_log" name="v_att_log" caption="v att log" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="payroll__php" name="payroll_.php" caption="Payroll" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_rumus" name="t_rumus" caption="Rumus" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_rumus_peg" name="t_rumus_peg" caption="Rumus Gaji Pegawai" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

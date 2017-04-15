@@ -1,3 +1,18 @@
+7:55 AM 4/13/2017
+- buat master komponen gaji,
+- diharapkan hasil akhir bisa seperti ini ::
+	nama          : xx
+	jabatan       : xx
+	komponen gaji : 
+		- gaji pokok  :
+		- premi hadir :
+		- premi malam :
+		- LP          :
+		- 
+
+
+
+
 11:31 AM 4/12/2017
 - perlu dibuatkan status pegawai, antara bulanan dan bukan bulanan
 
