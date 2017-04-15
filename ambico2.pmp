@@ -1439,7 +1439,13 @@ function Database_Connecting(&$info) {
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Submit</button>
 </form>
 ]]></CustomScript>
-  <CustomScript ScriptType="Template" ScriptCodeType="Table" ScriptName="Content" ScriptCtrlID="custom" ScriptL1Key="payroll_.php" ScriptL2Key=""><![CDATA[<form id="myform" name="myform" class="form-horizontal" method="post" action="payroll.php">
+  <CustomScript ScriptType="Template" ScriptCodeType="Table" ScriptName="Content" ScriptCtrlID="custom" ScriptL1Key="payroll_.php" ScriptL2Key=""><![CDATA[<?php
+if ($_GET["ok"] == "1") {
+	echo "Selesai";
+}
+else {
+?>
+<form id="myform" name="myform" class="form-horizontal" method="post" action="payroll.php">
 	<div id="r_start" class="form-group">
 		<label for="start" class="col-sm-2 control-label ewLabel">Date Start</label>
 		<div class="col-sm-10">
@@ -1464,6 +1470,9 @@ function Database_Connecting(&$info) {
 	</div>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Submit</button>
 </form>
+<?php
+}
+?>
 ]]></CustomScript>
   <Menu MenuID="64" MenuText="Dashboard" MenuParentID="-1" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="0" MenuSecurity="" MenuUrl="dashboard.php" MenuCustomUrl="0" MenuLevel="0" MenuShow="1" MenuDisplayOrder="100" />
   <Menu MenuID="22" MenuText="Jadwal Kerja" MenuParentID="-1" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="0" MenuSecurity="" MenuUrl="jdw_kerja_m" MenuCustomUrl="0" MenuLevel="0" MenuShow="0" MenuDisplayOrder="200" />
