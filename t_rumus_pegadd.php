@@ -635,7 +635,6 @@ class ct_rumus_peg_add extends ct_rumus_peg {
 		if ($this->rumus_id->VirtualValue <> "") {
 			$this->rumus_id->ViewValue = $this->rumus_id->VirtualValue;
 		} else {
-			$this->rumus_id->ViewValue = $this->rumus_id->CurrentValue;
 		if (strval($this->rumus_id->CurrentValue) <> "") {
 			$sFilterWrk = "`rumus_id`" . ew_SearchString("=", $this->rumus_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `rumus_id`, `rumus_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t_rumus`";
@@ -727,30 +726,29 @@ class ct_rumus_peg_add extends ct_rumus_peg {
 			}
 
 			// rumus_id
-			$this->rumus_id->EditAttrs["class"] = "form-control";
 			$this->rumus_id->EditCustomAttributes = "";
-			$this->rumus_id->EditValue = ew_HtmlEncode($this->rumus_id->CurrentValue);
-			if (strval($this->rumus_id->CurrentValue) <> "") {
+			if (trim(strval($this->rumus_id->CurrentValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
 				$sFilterWrk = "`rumus_id`" . ew_SearchString("=", $this->rumus_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			$sSqlWrk = "SELECT `rumus_id`, `rumus_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t_rumus`";
+			}
+			$sSqlWrk = "SELECT `rumus_id`, `rumus_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t_rumus`";
 			$sWhereWrk = "";
 			$this->rumus_id->LookupFilters = array("dx1" => '`rumus_nama`');
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->rumus_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = Conn()->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = array();
-					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-					$this->rumus_id->EditValue = $this->rumus_id->DisplayValue($arwrk);
-					$rswrk->Close();
-				} else {
-					$this->rumus_id->EditValue = ew_HtmlEncode($this->rumus_id->CurrentValue);
-				}
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+				$this->rumus_id->ViewValue = $this->rumus_id->DisplayValue($arwrk);
 			} else {
-				$this->rumus_id->EditValue = NULL;
+				$this->rumus_id->ViewValue = $Language->Phrase("PleaseSelect");
 			}
-			$this->rumus_id->PlaceHolder = ew_RemoveHtml($this->rumus_id->FldCaption());
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->rumus_id->EditValue = $arwrk;
 
 			// Add refer script
 			// pegawai_id
@@ -964,19 +962,6 @@ class ct_rumus_peg_add extends ct_rumus_peg {
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->pegawai_id, $sWhereWrk); // Call Lookup selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " LIMIT " . EW_AUTO_SUGGEST_MAX_ENTRIES;
-			if ($sSqlWrk <> "")
-				$fld->LookupFilters["s"] .= $sSqlWrk;
-			break;
-		case "x_rumus_id":
-			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `rumus_id`, `rumus_nama` AS `DispFld` FROM `t_rumus`";
-			$sWhereWrk = "`rumus_nama` LIKE '{query_value}%'";
-			$this->rumus_id->LookupFilters = array("dx1" => '`rumus_nama`');
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
-			$sSqlWrk = "";
-			$this->Lookup_Selecting($this->rumus_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			$sSqlWrk .= " LIMIT " . EW_AUTO_SUGGEST_MAX_ENTRIES;
 			if ($sSqlWrk <> "")
@@ -1200,24 +1185,15 @@ ft_rumus_pegadd.CreateAutoSuggest({"id":"x_pegawai_id","forceSelect":true});
 <?php } ?>
 <?php if ($t_rumus_peg->rumus_id->Visible) { // rumus_id ?>
 	<div id="r_rumus_id" class="form-group">
-		<label id="elh_t_rumus_peg_rumus_id" class="col-sm-2 control-label ewLabel"><?php echo $t_rumus_peg->rumus_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<label id="elh_t_rumus_peg_rumus_id" for="x_rumus_id" class="col-sm-2 control-label ewLabel"><?php echo $t_rumus_peg->rumus_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
 		<div class="col-sm-10"><div<?php echo $t_rumus_peg->rumus_id->CellAttributes() ?>>
 <span id="el_t_rumus_peg_rumus_id">
-<?php
-$wrkonchange = trim(" " . @$t_rumus_peg->rumus_id->EditAttrs["onchange"]);
-if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
-$t_rumus_peg->rumus_id->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_rumus_id" style="white-space: nowrap; z-index: 8970">
-	<input type="text" name="sv_x_rumus_id" id="sv_x_rumus_id" value="<?php echo $t_rumus_peg->rumus_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t_rumus_peg->rumus_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t_rumus_peg->rumus_id->getPlaceHolder()) ?>"<?php echo $t_rumus_peg->rumus_id->EditAttributes() ?>>
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_rumus_id"><?php echo (strval($t_rumus_peg->rumus_id->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $t_rumus_peg->rumus_id->ViewValue); ?></span>
 </span>
-<input type="hidden" data-table="t_rumus_peg" data-field="x_rumus_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t_rumus_peg->rumus_id->DisplayValueSeparatorAttribute() ?>" name="x_rumus_id" id="x_rumus_id" value="<?php echo ew_HtmlEncode($t_rumus_peg->rumus_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
-<input type="hidden" name="q_x_rumus_id" id="q_x_rumus_id" value="<?php echo $t_rumus_peg->rumus_id->LookupFilterQuery(true) ?>">
-<script type="text/javascript">
-ft_rumus_pegadd.CreateAutoSuggest({"id":"x_rumus_id","forceSelect":true});
-</script>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t_rumus_peg->rumus_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_rumus_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" name="s_x_rumus_id" id="s_x_rumus_id" value="<?php echo $t_rumus_peg->rumus_id->LookupFilterQuery(false) ?>">
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t_rumus_peg->rumus_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_rumus_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="t_rumus_peg" data-field="x_rumus_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t_rumus_peg->rumus_id->DisplayValueSeparatorAttribute() ?>" name="x_rumus_id" id="x_rumus_id" value="<?php echo $t_rumus_peg->rumus_id->CurrentValue ?>"<?php echo $t_rumus_peg->rumus_id->EditAttributes() ?>>
+<input type="hidden" name="s_x_rumus_id" id="s_x_rumus_id" value="<?php echo $t_rumus_peg->rumus_id->LookupFilterQuery() ?>">
 </span>
 <?php echo $t_rumus_peg->rumus_id->CustomMsg ?></div></div>
 	</div>

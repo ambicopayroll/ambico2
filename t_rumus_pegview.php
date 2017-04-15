@@ -790,7 +790,6 @@ class ct_rumus_peg_view extends ct_rumus_peg {
 		if ($this->rumus_id->VirtualValue <> "") {
 			$this->rumus_id->ViewValue = $this->rumus_id->VirtualValue;
 		} else {
-			$this->rumus_id->ViewValue = $this->rumus_id->CurrentValue;
 		if (strval($this->rumus_id->CurrentValue) <> "") {
 			$sFilterWrk = "`rumus_id`" . ew_SearchString("=", $this->rumus_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `rumus_id`, `rumus_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t_rumus`";

@@ -60,8 +60,10 @@ class ct_rumus_peg extends cTable {
 		$this->fields['pegawai_id'] = &$this->pegawai_id;
 
 		// rumus_id
-		$this->rumus_id = new cField('t_rumus_peg', 't_rumus_peg', 'x_rumus_id', 'rumus_id', '`rumus_id`', '`rumus_id`', 3, -1, FALSE, '`EV__rumus_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->rumus_id = new cField('t_rumus_peg', 't_rumus_peg', 'x_rumus_id', 'rumus_id', '`rumus_id`', '`rumus_id`', 3, -1, FALSE, '`EV__rumus_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'SELECT');
 		$this->rumus_id->Sortable = TRUE; // Allow sort
+		$this->rumus_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->rumus_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->rumus_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['rumus_id'] = &$this->rumus_id;
 	}
@@ -748,7 +750,6 @@ class ct_rumus_peg extends cTable {
 		if ($this->rumus_id->VirtualValue <> "") {
 			$this->rumus_id->ViewValue = $this->rumus_id->VirtualValue;
 		} else {
-			$this->rumus_id->ViewValue = $this->rumus_id->CurrentValue;
 		if (strval($this->rumus_id->CurrentValue) <> "") {
 			$sFilterWrk = "`rumus_id`" . ew_SearchString("=", $this->rumus_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `rumus_id`, `rumus_nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t_rumus`";
@@ -843,8 +844,6 @@ class ct_rumus_peg extends cTable {
 		// rumus_id
 		$this->rumus_id->EditAttrs["class"] = "form-control";
 		$this->rumus_id->EditCustomAttributes = "";
-		$this->rumus_id->EditValue = $this->rumus_id->CurrentValue;
-		$this->rumus_id->PlaceHolder = ew_RemoveHtml($this->rumus_id->FldCaption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
