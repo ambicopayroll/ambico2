@@ -25,7 +25,7 @@ $msql = "
 	order by
 		a.pegawai_id
 		, tgl
-	";
+	"; echo $msql; exit;
 
 $rs = $conn->Execute($msql);
 
