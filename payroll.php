@@ -126,8 +126,9 @@ while (!$rs->EOF) {
 }
 
 $html .= '</table>';
-$pdf->writeHTML($html, true, false, true, false, '');
-$pdf->Output('Upah.pdf', 'I');
+//$pdf->writeHTML($html, true, false, true, false, '');
+//$pdf->Output('Upah.pdf', 'I');
+echo $html;
 
 $rs->Close();
 $conn->Close();
