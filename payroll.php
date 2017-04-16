@@ -107,6 +107,8 @@ $msql = "
 $rs = $conn->Execute($msql);
 while (!$rs->EOF) {
 	$mpegawai_id = $rs->fields["pegawai_id"];
+	$mpegawai_nama = $rs->fields["pegawai_nama"];
+	$mpegawai_nip = $rs->fields["pegawai_nip"];
 	$mupah = 0;
 	$mpremi_malam = 0;
 	$mpremi_hadir = 0;
@@ -126,7 +128,7 @@ while (!$rs->EOF) {
 	}
 	$mtotal = $mupah + $mpremi_malam + $mpremi_hadir - $mpot_absen;
 	// echo $mupah." ".$mpremi_malam." ".($mtidak_masuk ? "0" : $mpremi_hadir)." ".$mtotal;
-	$html .= '<tr><td>'.$mno.'</td><td>'.$rs->fields["pegawai_nama"].'</td><td>'.$rs->fields["pegawai_nip"].'</td>'.'<td align="right">'.number_format($mupah).'</td>'.'<td>'.$mpremi_malam.'</td>'.'<td>'.($mtidak_masuk ? "0" : $mpremi_hadir).'</td>'.'<td>'.$mpot_absen.'</td>'.'<td>'.$mtotal.'</td></tr>';
+	$html .= '<tr><td>'.$mno.'</td><td>'.$mpegawai_nama.'</td><td>'.$mpegawai_nip.'</td>'.'<td align="right">'.number_format($mupah).'</td>'.'<td align="right">'.number_format($mpremi_malam).'</td>'.'<td align="right">'.($mtidak_masuk ? "" : number_format($mpremi_hadir)).'</td>'.'<td align="right">'.number_format($mpot_absen).'</td>'.'<td align="right">'.number_format($mtotal).'</td></tr>';
 	$mno++;
 }
 
