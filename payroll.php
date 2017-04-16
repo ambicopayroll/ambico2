@@ -89,6 +89,8 @@ $html .= '<table border="1" width="100%">';
 $html .= '<tr><th rowspan="2" align="center">No.</th><th rowspan="2" align="center">Nama / Bagian</th><th rowspan="2" align="center">NP</th><th rowspan="2" align="center">Total Upah</th><th colspan="2" align="center">Premi</th><th rowspan="2" align="center">Absen</th><th rowspan="2" align="center">Jumlah Terima</th></tr>';
 $html .= '<tr><th align="center">Malam</th><th align="center">Hadir</th></tr>';
 
+$mno = 1;
+
 $msql = "
 	select * from
 		v_rekon a
@@ -123,7 +125,8 @@ while (!$rs->EOF) {
 	}
 	$mtotal = $mupah + $mpremi_malam + $mpremi_hadir - $mpot_absen;
 	// echo $mupah." ".$mpremi_malam." ".($mtidak_masuk ? "0" : $mpremi_hadir)." ".$mtotal;
-	$html .= '<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>'.'<td align="right">'.number_format($mupah).'</td>'.'<td>'.$mpremi_malam.'</td>'.'<td>'.($mtidak_masuk ? "0" : $mpremi_hadir).'</td>'.'<td>'.$mpot_absen.'</td>'.'<td>'.$mtotal.'</td></tr>';
+	$html .= '<tr><td>'.$mno.'</td><td>'.$rs->fields["pegawai_nama"].'</td><td>'.$rs->fields["pegawai_nip"].'</td>'.'<td align="right">'.number_format($mupah).'</td>'.'<td>'.$mpremi_malam.'</td>'.'<td>'.($mtidak_masuk ? "0" : $mpremi_hadir).'</td>'.'<td>'.$mpot_absen.'</td>'.'<td>'.$mtotal.'</td></tr>';
+	$mno++;
 }
 
 $html .= '</table>';
