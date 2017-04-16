@@ -106,6 +106,7 @@ while (!$rs->EOF) {
 	$mpegawai_id = $rs->fields["pegawai_id"];
 	$mupah = 0;
 	$mpremi_malam = 0;
+	$mpremi_hadir = 0;
 	$mtidak_masuk = 0;
 	$mpot_absen = 0;
 	while ($mpegawai_id == $rs->fields["pegawai_id"]) {
@@ -122,13 +123,13 @@ while (!$rs->EOF) {
 	}
 	$mtotal = $mupah + $mpremi_malam + $mpremi_hadir - $mpot_absen;
 	// echo $mupah." ".$mpremi_malam." ".($mtidak_masuk ? "0" : $mpremi_hadir)." ".$mtotal;
-	$html .= '<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>'.'<td>'.$mupah.'</td>'.'<td>'.$mpremi_malam.'</td>'.'<td>'.($mtidak_masuk ? "0" : $mpremi_hadir).'</td>'.'<td>'.$mpot_absen.'</td>'.'<td>'.$mtotal.'</td></tr>';
+	$html .= '<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>'.'<td align="right">'.number_format($mupah).'</td>'.'<td>'.$mpremi_malam.'</td>'.'<td>'.($mtidak_masuk ? "0" : $mpremi_hadir).'</td>'.'<td>'.$mpot_absen.'</td>'.'<td>'.$mtotal.'</td></tr>';
 }
 
 $html .= '</table>';
-//$pdf->writeHTML($html, true, false, true, false, '');
-//$pdf->Output('Upah.pdf', 'I');
-echo $html;
+$pdf->writeHTML($html, true, false, true, false, '');
+$pdf->Output('Upah.pdf', 'I');
+//echo $html;
 
 $rs->Close();
 $conn->Close();
