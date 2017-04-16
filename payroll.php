@@ -67,6 +67,7 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 // add a page
 //$pdf->AddPage("L", "A4");
 $pdf->AddPage();
+$pdf->SetFont('helvetica', 'B', 20);
 
 include "adodb5/adodb.inc.php";
 
