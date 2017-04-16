@@ -67,7 +67,7 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 // add a page
 //$pdf->AddPage("L", "A4");
 $pdf->AddPage();
-$pdf->SetFont('helvetica', '', 10);
+$pdf->SetFont('times', '', 10);
 
 include "adodb5/adodb.inc.php";
 
@@ -131,6 +131,7 @@ while (!$rs->EOF) {
 }
 
 $html .= '</table>';
+$html .= $msql;
 $pdf->writeHTML($html, true, false, true, false, '');
 $pdf->Output('Upah.pdf', 'I');
 //echo $html;
