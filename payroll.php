@@ -32,9 +32,9 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Armanda');
-$pdf->SetTitle('Invoice');
-$pdf->SetSubject('Invoice');
+$pdf->SetAuthor('Ambico');
+$pdf->SetTitle('Upah');
+$pdf->SetSubject('Upah');
 $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 
 // remove default header/footer
@@ -65,8 +65,8 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 //$pdf->SetFont('times', 'BI', 20);
 
 // add a page
-$pdf->AddPage("L", "A4");
-//$pdf->AddPage();
+//$pdf->AddPage("L", "A4");
+$pdf->AddPage();
 
 include "adodb5/adodb.inc.php";
 
@@ -86,7 +86,8 @@ $html .= '<tr><td>Periode '.$_POST["start"].' s.d. '.$_POST["end"].'</td></tr>';
 $html .= '</table>';
 
 $html .= '<table border="1" width="100%">';
-$html .= '<tr><th>No.</th><th>Nama / Bagian</th><th>NP</th><th>Total Upah</th><th>Premi Malam</th><th>Premi Hadir</th><th>Absen</th><th>Jumlah Terima</th></tr>';
+$html .= '<tr><th rowspan="2" align="center">No.</th><th rowspan="2" align="center">Nama / Bagian</th><th rowspan="2" align="center">NP</th><th rowspan="2" align="center">Total Upah</th><th colspan="2" align="center">Premi</th><th rowspan="2" align="center">Absen</th><th rowspan="2" align="center">Jumlah Terima</th></tr>';
+$html .= '<tr><th align="center">Malam</th><th align="center">Hadir</th></tr>';
 
 $msql = "
 	select * from
@@ -126,7 +127,7 @@ while (!$rs->EOF) {
 
 $html .= '</table>';
 $pdf->writeHTML($html, true, false, true, false, '');
-$pdf->Output('Invoice.pdf', 'I');
+$pdf->Output('Upah.pdf', 'I');
 
 $rs->Close();
 $conn->Close();
