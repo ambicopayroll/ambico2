@@ -1,4 +1,73 @@
 <?php
+//============================================================+
+// File name   : example_002.php
+// Begin       : 2008-03-04
+// Last Update : 2013-05-14
+//
+// Description : Example 002 for TCPDF class
+//               Removing Header and Footer
+//
+// Author: Nicola Asuni
+//
+// (c) Copyright:
+//               Nicola Asuni
+//               Tecnick.com LTD
+//               www.tecnick.com
+//               info@tecnick.com
+//============================================================+
+
+/**
+ * Creates an example PDF TEST document using TCPDF
+ * @package com.tecnick.tcpdf
+ * @abstract TCPDF - Example: Removing Header and Footer
+ * @author Nicola Asuni
+ * @since 2008-03-04
+ */
+
+// Include the main TCPDF library (search for installation path).
+require_once('tcpdf_include.php');
+
+// create new PDF document
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Armanda');
+$pdf->SetTitle('Invoice');
+$pdf->SetSubject('Invoice');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+// remove default header/footer
+$pdf->setPrintHeader(false);
+$pdf->setPrintFooter(false);
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+// set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+// set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+// set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+// set some language-dependent strings (optional)
+if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+	require_once(dirname(__FILE__).'/lang/eng.php');
+	$pdf->setLanguageArray($l);
+}
+
+// ---------------------------------------------------------
+
+// set font
+//$pdf->SetFont('times', 'BI', 20);
+
+// add a page
+$pdf->AddPage("L", "A4");
+//$pdf->AddPage();
+
 include "adodb5/adodb.inc.php";
 
 $conn = ADONewConnection('mysql');
@@ -10,9 +79,14 @@ if ($_SERVER["HTTP_HOST"] == "localhost" ) { // testing on local PC
 	$conn->Connect('mysql.idhostinger.com','u945388674_ambic','M457r1P 81','u945388674_ambic');
 }
 
-// echo "under progress ... ";
+$html  = '<table border="0" width="300">';
+$html .= '<tr><td>DAFTAR UPAH HARIAN LEPAS</td></tr>';
+$html .= '<tr><td>PT AMBICO - CARAT</td></tr>';
+$html .= '<tr><td>Periode '.$_POST["start"].' s.d. '.$_POST["end"].'</td></tr>';
+$html .= '</table>';
 
-// echo $_POST['start']." - ".$_POST['end']." - ";
+$html .= '<table border="1" width="100%">';
+$html .= '<tr><th>No.</th><th>Nama / Bagian</th><th>NP</th><th>Total Upah</th><th>Premi Malam</th><th>Premi Hadir</th><th>Absen</th><th>Jumlah Terima</th></tr>';
 
 $msql = "
 	select * from
@@ -26,9 +100,7 @@ $msql = "
 		a.pegawai_id
 		, tgl
 	"; //echo $msql; exit;
-
 $rs = $conn->Execute($msql);
-
 while (!$rs->EOF) {
 	$mpegawai_id = $rs->fields["pegawai_id"];
 	$mupah = 0;
@@ -48,8 +120,14 @@ while (!$rs->EOF) {
 		$rs->MoveNext();
 	}
 	$mtotal = $mupah + $mpremi_malam + $mpremi_hadir - $mpot_absen;
-	echo $mupah." ".$mpremi_malam." ".($mtidak_masuk ? "0" : $mpremi_hadir)." ".$mtotal;
+	// echo $mupah." ".$mpremi_malam." ".($mtidak_masuk ? "0" : $mpremi_hadir)." ".$mtotal;
+	$html .= '<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>'.'<td>'.$mupah.'</td>'.'<td>'.$mpremi_malam.'</td>'.'<td>'.($mtidak_masuk ? "0" : $mpremi_hadir).'</td>'.'<td>'.$mpot_absen.'</td>'.'<td>'.$mtotal.'</td></tr>';
 }
+
+$html .= '</table>';
+$pdf->writeHTML($html, true, false, true, false, '');
+$pdf->Output('Invoice.pdf', 'I');
+
 $rs->Close();
 $conn->Close();
 
