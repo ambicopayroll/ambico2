@@ -12,6 +12,8 @@ if ($_SERVER["HTTP_HOST"] == "localhost" ) { // testing on local PC
 
 // echo "under progress ... ";
 
+echo $_POST['start']." - ".$_POST['end']." - ";
+
 $msql = "
 	select * from
 		v_rekon a
