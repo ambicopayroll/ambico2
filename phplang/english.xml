@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2017/4/16" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2017/4/17" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -625,20 +625,23 @@
     <menu id="33">
       <phrase id="menutext" value="Status Pegawai" />
     </menu>
-    <menu id="10072">
-      <phrase id="menutext" value="Jam Kerja" />
-    </menu>
-    <menu id="10077">
-      <phrase id="menutext" value="Jadwal Kerja" />
-    </menu>
     <menu id="10087">
       <phrase id="menutext" value="Gaji" />
     </menu>
+    <menu id="10072">
+      <phrase id="menutext" value="Jam Kerja" />
+    </menu>
+    <menu id="10494">
+      <phrase id="menutext" value="Jadwal Kerja" />
+    </menu>
+    <menu id="10077">
+      <phrase id="menutext" value="Create" />
+    </menu>
     <menu id="10079">
-      <phrase id="menutext" value="Generate Jadwal Kerja" />
+      <phrase id="menutext" value="Generate" />
     </menu>
     <menu id="10078">
-      <phrase id="menutext" value="Jadwal Kerja Default" />
+      <phrase id="menutext" value="List" />
     </menu>
     <menu id="10363">
       <phrase id="menutext" value="Penggajian" />

@@ -14,7 +14,7 @@ $rs = $conn->Execute('select * from t_jdw_krj_peg order by pegawai_id, tgl1');
 
 while (!$rs->EOF) {
 	$mpegawai_id = $rs->fields["pegawai_id"];
-	$conn->Execute("delete from t_jdw_krj_def where pegawai_id = ".$mpegawai_id."");
+	// $conn->Execute("delete from t_jdw_krj_def where pegawai_id = ".$mpegawai_id."");
 	while ($mpegawai_id == $rs->fields["pegawai_id"]) {
 		$mtgl1 = $rs->fields["tgl1"];
 		$mtgl2 = $rs->fields["tgl2"];
