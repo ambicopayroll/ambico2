@@ -610,11 +610,8 @@
     <menu id="128">
       <phrase id="menutext" value="Pegawai" />
     </menu>
-    <menu id="10223">
-      <phrase id="menutext" value="Master" />
-    </menu>
     <menu id="29">
-      <phrase id="menutext" value="Pegawai" />
+      <phrase id="menutext" value="List Data" />
     </menu>
     <menu id="31">
       <phrase id="menutext" value="Jabatan" />
@@ -624,9 +621,6 @@
     </menu>
     <menu id="33">
       <phrase id="menutext" value="Status Pegawai" />
-    </menu>
-    <menu id="10087">
-      <phrase id="menutext" value="Gaji" />
     </menu>
     <menu id="10072">
       <phrase id="menutext" value="Jam Kerja" />
@@ -641,16 +635,19 @@
       <phrase id="menutext" value="Generate" />
     </menu>
     <menu id="10078">
-      <phrase id="menutext" value="List" />
+      <phrase id="menutext" value="List Data" />
+    </menu>
+    <menu id="10087">
+      <phrase id="menutext" value="Gaji" />
     </menu>
     <menu id="10363">
       <phrase id="menutext" value="Penggajian" />
     </menu>
     <menu id="10086">
-      <phrase id="menutext" value="Master Rumus Gaji" />
+      <phrase id="menutext" value="Rumus" />
     </menu>
     <menu id="10085">
-      <phrase id="menutext" value="Laporan Gaji" />
+      <phrase id="menutext" value="Laporan" />
     </menu>
     <menu id="10084">
       <phrase id="menutext" value="v att log" />
@@ -1814,7 +1811,7 @@
       </field>
     </table>
     <table id="pembagian1">
-      <phrase id="tblcaption" value="Master Jabatan" />
+      <phrase id="tblcaption" value="Jabatan" />
       <field id="pembagian1_id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -2663,7 +2660,7 @@
       </field>
     </table>
     <table id="t_jdw_krj_def">
-      <phrase id="tblcaption" value="List" />
+      <phrase id="tblcaption" value="List Data" />
       <field id="jdw_id">
         <phrase id="fldcaption" value="jdw id" />
       </field>
@@ -2762,7 +2759,7 @@
       <phrase id="tblcaption" value="Payroll" />
     </table>
     <table id="t_rumus">
-      <phrase id="tblcaption" value="Master Rumus Gaji" />
+      <phrase id="tblcaption" value="Rumus Gaji" />
       <field id="rumus_id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -2795,7 +2792,7 @@
       </field>
     </table>
     <table id="t_rumus_peg">
-      <phrase id="tblcaption" value="Master Gaji" />
+      <phrase id="tblcaption" value="Gaji" />
       <field id="rumus_peg_id">
         <phrase id="fldcaption" value="ID" />
       </field>
