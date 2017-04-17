@@ -320,7 +320,7 @@ Page_Rendering();
 			}
 			else {
 			?>
-				<p>Jadwal Pegawai yang sudah ter-create akan terhapus setelah tanggal create</p>
+				<p>Jadwal Pegawai mulai tanggal <?php $mtgl1 = date("d-m-Y", strtotime("+1 day", strtotime(date("Y-m-d")))); echo $mtgl1; ?> akan diperbaharui. Terima kasih.</p>
 				<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">Generate</button>
 			<?php
 			}
