@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <configuration date="2017/04/18" author="e.World Technology Ltd.">
-  <project id="{4B5DAB39-E4BC-48DF-9311-E295A5F18030}" file="D:\xampp\htdocs\ambico2\ambico2.pmp" name="ambico2" product="PHPMaker" version="13.0" datetime="2017/04/18 16:42:59" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+  <project id="{4B5DAB39-E4BC-48DF-9311-E295A5F18030}" file="D:\xampp\htdocs\ambico2\ambico2.pmp" name="ambico2" product="PHPMaker" version="13.0" datetime="2017/04/18 17:56:08" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="att_log" name="att_log" caption="Data Finger Pegawai" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="cuti_normatif" name="cuti_normatif" caption="cuti normatif" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="dev_type" name="dev_type" caption="dev type" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -65,14 +65,14 @@
     <table id="t_user" name="t_user" caption="t user" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="dashboard_php" name="dashboard.php" caption="Dashboard" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t_jk" name="t_jk" caption="Jam Kerja" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="t_jdw_krj_peg" name="t_jdw_krj_peg" caption="Create" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="t_jdw_krj_def" name="t_jdw_krj_def" caption="List Data" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_jdw_krj_peg" name="t_jdw_krj_peg" caption="Setup Jadwal" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_jdw_krj_def" name="t_jdw_krj_def" caption="Daftar Jadwal" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="generate__php" name="generate_.php" caption="Generate" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="rekon__php" name="rekon_.php" caption="Generate Rekonsiliasi Absensi" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="v_rekon" name="v_rekon" caption="v rekon" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="v_att_log" name="v_att_log" caption="v att log" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="payroll__php" name="payroll_.php" caption="Payroll" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t_rumus" name="t_rumus" caption="Rumus Gaji" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="t_rumus_peg" name="t_rumus_peg" caption="Gaji" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t_rumus_peg" name="t_rumus_peg" caption="Setup Gaji" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>
