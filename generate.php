@@ -14,11 +14,10 @@ $rs = $conn->Execute('select * from t_jdw_krj_peg order by pegawai_id, tgl1');
 
 while (!$rs->EOF) {
 	$mpegawai_id = $rs->fields["pegawai_id"];
-	// $conn->Execute("delete from t_jdw_krj_def where pegawai_id = ".$mpegawai_id."");
 	$mtanggal_hari_ini = date("Y-m-d");
-	//$msql = "delete from t_jdw_krj_def where pegawai_id = ".$mpegawai_id." and tgl1 > '".$mtanggal_hari_ini."'";
-	//echo $msql; exit;
-	$conn->Execute("delete from t_jdw_krj_def where pegawai_id = ".$mpegawai_id." and tgl > '".$mtanggal_hari_ini."'");
+	//$msql = "delete from t_jdw_krj_def where pegawai_id = ".$mpegawai_id." and tgl > '".$mtanggal_hari_ini."'"; //echo $msql; exit;
+	$msql = "delete from t_jdw_krj_def where pegawai_id = ".$mpegawai_id." and tgl >= '".$rs->fields["tgl1"]."'"; //echo $msql; exit;
+	$conn->Execute($msql);
 	while ($mpegawai_id == $rs->fields["pegawai_id"]) {
 		$mtgl1 = $rs->fields["tgl1"];
 		$mtgl2 = $rs->fields["tgl2"];
