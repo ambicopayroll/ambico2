@@ -591,7 +591,7 @@ class crr_rekon2 extends crTableCrosstab {
 		$sSqlWrk = "SELECT DISTINCT `pegawai_nama`, `pegawai_nama` AS `DispFld`, '' AS `DispFld2`, '' AS `DispFld3`, '' AS `DispFld4` FROM `v_rekon`";
 		$sWhereWrk = "{filter}";
 		$this->pegawai_nama->LookupFilters = array("dx1" => '`pegawai_nama`');
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "DB", "f0" => '`pegawai_nama` = {filter_value}', "t0" => "200", "fn0" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "DB", "f0" => '`pegawai_nama` = {filter_value}', "t0" => "200", "fn0" => "", "dlm" => ewr_Encrypt($fld->FldDelimiter));
 			$sSqlWrk = "";
 		$this->Lookup_Selecting($this->pegawai_nama, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -637,6 +637,18 @@ class crr_rekon2 extends crTableCrosstab {
 		//$ViewValue = "xxx";
 		//$ViewAttrs["style"] = "xxx";
 
+		if ($Field->FldName == "scan_masuk") {
+			$ViewAttrs["style"] = "color: green";
+		}
+		if ($Field->FldName == "scan_keluar") {
+			$ViewAttrs["style"] = "color: red";
+		}
+		if ($Field->FldName == "jk_kd") {
+			$ViewAttrs["style"] = "color: blue";
+		}
+		if ($Field->FldName == "gol_hk") {
+			$ViewAttrs["style"] = "color: brown";
+		}
 	}
 
 	// Row Rendered event

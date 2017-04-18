@@ -2189,7 +2189,7 @@ if (!$Page->DrillDownInPanel) {
 	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_sv_pegawai_nip"><?php echo (strval(ewr_FilterDropDownValue($Page->pegawai_nip)) == "" ? $ReportLanguage->Phrase("PleaseSelect") : ewr_FilterDropDownValue($Page->pegawai_nip)); ?></span>
 </span>
 <button type="button" title="<?php echo ewr_HtmlEncode(str_replace("%s", ewr_RemoveHtml($Page->pegawai_nip->FldCaption()), $ReportLanguage->Phrase("LookupLink", TRUE))) ?>" onclick="ewr_ModalLookupShow({lnk:this,el:'sv_pegawai_nip',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="r_att_log" data-field="x_pegawai_nip" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $Page->pegawai_nip->DisplayValueSeparatorAttribute() ?>" name="sv_pegawai_nip" id="sv_pegawai_nip" value="<?php echo ewr_FilterDropDownValue($Page->pegawai_nip) ?>"<?php echo $Page->pegawai_nip->EditAttributes() ?>>
+<input type="hidden" data-table="r_att_log" data-field="x_pegawai_nip" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $Page->pegawai_nip->DisplayValueSeparatorAttribute() ?>" name="sv_pegawai_nip" id="sv_pegawai_nip" value="<?php echo ewr_FilterDropDownValue($Page->pegawai_nip, ",") ?>"<?php echo $Page->pegawai_nip->EditAttributes() ?>>
 <input type="hidden" name="s_sv_pegawai_nip" id="s_sv_pegawai_nip" value="<?php echo $Page->pegawai_nip->LookupFilterQuery() ?>"></span>
 </div>
 </div>
@@ -2201,7 +2201,7 @@ if (!$Page->DrillDownInPanel) {
 	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_sv_pegawai_nama"><?php echo (strval(ewr_FilterDropDownValue($Page->pegawai_nama)) == "" ? $ReportLanguage->Phrase("PleaseSelect") : ewr_FilterDropDownValue($Page->pegawai_nama)); ?></span>
 </span>
 <button type="button" title="<?php echo ewr_HtmlEncode(str_replace("%s", ewr_RemoveHtml($Page->pegawai_nama->FldCaption()), $ReportLanguage->Phrase("LookupLink", TRUE))) ?>" onclick="ewr_ModalLookupShow({lnk:this,el:'sv_pegawai_nama',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="r_att_log" data-field="x_pegawai_nama" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $Page->pegawai_nama->DisplayValueSeparatorAttribute() ?>" name="sv_pegawai_nama" id="sv_pegawai_nama" value="<?php echo ewr_FilterDropDownValue($Page->pegawai_nama) ?>"<?php echo $Page->pegawai_nama->EditAttributes() ?>>
+<input type="hidden" data-table="r_att_log" data-field="x_pegawai_nama" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $Page->pegawai_nama->DisplayValueSeparatorAttribute() ?>" name="sv_pegawai_nama" id="sv_pegawai_nama" value="<?php echo ewr_FilterDropDownValue($Page->pegawai_nama, ",") ?>"<?php echo $Page->pegawai_nama->EditAttributes() ?>>
 <input type="hidden" name="s_sv_pegawai_nama" id="s_sv_pegawai_nama" value="<?php echo $Page->pegawai_nama->LookupFilterQuery() ?>"></span>
 </div>
 </div>
