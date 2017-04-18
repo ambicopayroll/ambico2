@@ -156,8 +156,9 @@ class cpegawai extends cTable {
 		$this->fields['tgl_resign'] = &$this->tgl_resign;
 
 		// gender
-		$this->gender = new cField('pegawai', 'pegawai', 'x_gender', 'gender', '`gender`', '`gender`', 16, -1, FALSE, '`gender`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->gender = new cField('pegawai', 'pegawai', 'x_gender', 'gender', '`gender`', '`gender`', 16, -1, FALSE, '`gender`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
 		$this->gender->Sortable = TRUE; // Allow sort
+		$this->gender->OptionCount = 2;
 		$this->gender->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['gender'] = &$this->gender;
 
@@ -1008,7 +1009,11 @@ class cpegawai extends cTable {
 		$this->tgl_resign->ViewCustomAttributes = "";
 
 		// gender
-		$this->gender->ViewValue = $this->gender->CurrentValue;
+		if (strval($this->gender->CurrentValue) <> "") {
+			$this->gender->ViewValue = $this->gender->OptionCaption($this->gender->CurrentValue);
+		} else {
+			$this->gender->ViewValue = NULL;
+		}
 		$this->gender->ViewCustomAttributes = "";
 
 		// tgl_masuk_pertama
@@ -1259,10 +1264,8 @@ class cpegawai extends cTable {
 		$this->tgl_resign->PlaceHolder = ew_RemoveHtml($this->tgl_resign->FldCaption());
 
 		// gender
-		$this->gender->EditAttrs["class"] = "form-control";
 		$this->gender->EditCustomAttributes = "";
-		$this->gender->EditValue = $this->gender->CurrentValue;
-		$this->gender->PlaceHolder = ew_RemoveHtml($this->gender->FldCaption());
+		$this->gender->EditValue = $this->gender->Options(FALSE);
 
 		// tgl_masuk_pertama
 		$this->tgl_masuk_pertama->EditAttrs["class"] = "form-control";
@@ -1327,29 +1330,16 @@ class cpegawai extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->pegawai_id->Exportable) $Doc->ExportCaption($this->pegawai_id);
 					if ($this->pegawai_pin->Exportable) $Doc->ExportCaption($this->pegawai_pin);
 					if ($this->pegawai_nip->Exportable) $Doc->ExportCaption($this->pegawai_nip);
 					if ($this->pegawai_nama->Exportable) $Doc->ExportCaption($this->pegawai_nama);
-					if ($this->pegawai_pwd->Exportable) $Doc->ExportCaption($this->pegawai_pwd);
-					if ($this->pegawai_rfid->Exportable) $Doc->ExportCaption($this->pegawai_rfid);
-					if ($this->pegawai_privilege->Exportable) $Doc->ExportCaption($this->pegawai_privilege);
 					if ($this->pegawai_telp->Exportable) $Doc->ExportCaption($this->pegawai_telp);
-					if ($this->pegawai_status->Exportable) $Doc->ExportCaption($this->pegawai_status);
 					if ($this->tempat_lahir->Exportable) $Doc->ExportCaption($this->tempat_lahir);
 					if ($this->tgl_lahir->Exportable) $Doc->ExportCaption($this->tgl_lahir);
 					if ($this->pembagian1_id->Exportable) $Doc->ExportCaption($this->pembagian1_id);
 					if ($this->pembagian2_id->Exportable) $Doc->ExportCaption($this->pembagian2_id);
 					if ($this->pembagian3_id->Exportable) $Doc->ExportCaption($this->pembagian3_id);
-					if ($this->tgl_mulai_kerja->Exportable) $Doc->ExportCaption($this->tgl_mulai_kerja);
-					if ($this->tgl_resign->Exportable) $Doc->ExportCaption($this->tgl_resign);
 					if ($this->gender->Exportable) $Doc->ExportCaption($this->gender);
-					if ($this->tgl_masuk_pertama->Exportable) $Doc->ExportCaption($this->tgl_masuk_pertama);
-					if ($this->photo_path->Exportable) $Doc->ExportCaption($this->photo_path);
-					if ($this->tmp_img->Exportable) $Doc->ExportCaption($this->tmp_img);
-					if ($this->nama_bank->Exportable) $Doc->ExportCaption($this->nama_bank);
-					if ($this->nama_rek->Exportable) $Doc->ExportCaption($this->nama_rek);
-					if ($this->no_rek->Exportable) $Doc->ExportCaption($this->no_rek);
 				} else {
 					if ($this->pegawai_id->Exportable) $Doc->ExportCaption($this->pegawai_id);
 					if ($this->pegawai_pin->Exportable) $Doc->ExportCaption($this->pegawai_pin);
@@ -1404,29 +1394,16 @@ class cpegawai extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->pegawai_id->Exportable) $Doc->ExportField($this->pegawai_id);
 						if ($this->pegawai_pin->Exportable) $Doc->ExportField($this->pegawai_pin);
 						if ($this->pegawai_nip->Exportable) $Doc->ExportField($this->pegawai_nip);
 						if ($this->pegawai_nama->Exportable) $Doc->ExportField($this->pegawai_nama);
-						if ($this->pegawai_pwd->Exportable) $Doc->ExportField($this->pegawai_pwd);
-						if ($this->pegawai_rfid->Exportable) $Doc->ExportField($this->pegawai_rfid);
-						if ($this->pegawai_privilege->Exportable) $Doc->ExportField($this->pegawai_privilege);
 						if ($this->pegawai_telp->Exportable) $Doc->ExportField($this->pegawai_telp);
-						if ($this->pegawai_status->Exportable) $Doc->ExportField($this->pegawai_status);
 						if ($this->tempat_lahir->Exportable) $Doc->ExportField($this->tempat_lahir);
 						if ($this->tgl_lahir->Exportable) $Doc->ExportField($this->tgl_lahir);
 						if ($this->pembagian1_id->Exportable) $Doc->ExportField($this->pembagian1_id);
 						if ($this->pembagian2_id->Exportable) $Doc->ExportField($this->pembagian2_id);
 						if ($this->pembagian3_id->Exportable) $Doc->ExportField($this->pembagian3_id);
-						if ($this->tgl_mulai_kerja->Exportable) $Doc->ExportField($this->tgl_mulai_kerja);
-						if ($this->tgl_resign->Exportable) $Doc->ExportField($this->tgl_resign);
 						if ($this->gender->Exportable) $Doc->ExportField($this->gender);
-						if ($this->tgl_masuk_pertama->Exportable) $Doc->ExportField($this->tgl_masuk_pertama);
-						if ($this->photo_path->Exportable) $Doc->ExportField($this->photo_path);
-						if ($this->tmp_img->Exportable) $Doc->ExportField($this->tmp_img);
-						if ($this->nama_bank->Exportable) $Doc->ExportField($this->nama_bank);
-						if ($this->nama_rek->Exportable) $Doc->ExportField($this->nama_rek);
-						if ($this->no_rek->Exportable) $Doc->ExportField($this->no_rek);
 					} else {
 						if ($this->pegawai_id->Exportable) $Doc->ExportField($this->pegawai_id);
 						if ($this->pegawai_pin->Exportable) $Doc->ExportField($this->pegawai_pin);
