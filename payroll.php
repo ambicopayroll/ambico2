@@ -114,10 +114,14 @@ while (!$rs->EOF) {
 	$mpremi_hadir = 0;
 	$mtidak_masuk = 0;
 	$mpot_absen = 0;
+	$mjml_premi_malam = 0;
 	while ($mpegawai_id == $rs->fields["pegawai_id"]) {
 		$mupah += $rs->fields["upah"];
 		if (substr($rs->fields["jk_kd"], 0, 2) == "S3") {
-			$mpremi_malam += $rs->fields["premi_malam"];
+			$mjml_premi_malam++;
+			if ($mjml_premi_malam <= 5) {
+				$mpremi_malam += $rs->fields["premi_malam"];
+			}
 		}
 		$mpremi_hadir = $rs->fields["premi_hadir"];
 		if (is_null($rs->fields["gol_hk"])) {
