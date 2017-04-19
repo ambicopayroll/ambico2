@@ -392,9 +392,7 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		$this->pegawai_id->SetVisibility();
 		$this->tgl->SetVisibility();
 		$this->jk_id->SetVisibility();
-		$this->scan_masuk->SetVisibility();
-		$this->scan_keluar->SetVisibility();
-		$this->hk->SetVisibility();
+		$this->hk_def->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -730,7 +728,7 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		}
 		$this->scan_masuk->setDbValue($rs->fields('scan_masuk'));
 		$this->scan_keluar->setDbValue($rs->fields('scan_keluar'));
-		$this->hk->setDbValue($rs->fields('hk'));
+		$this->hk_def->setDbValue($rs->fields('hk_def'));
 	}
 
 	// Load DbValue from recordset
@@ -743,7 +741,7 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		$this->jk_id->DbValue = $row['jk_id'];
 		$this->scan_masuk->DbValue = $row['scan_masuk'];
 		$this->scan_keluar->DbValue = $row['scan_keluar'];
-		$this->hk->DbValue = $row['hk'];
+		$this->hk_def->DbValue = $row['hk_def'];
 	}
 
 	// Render row values based on field settings
@@ -768,7 +766,7 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		// jk_id
 		// scan_masuk
 		// scan_keluar
-		// hk
+		// hk_def
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -846,9 +844,13 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 1);
 		$this->scan_keluar->ViewCustomAttributes = "";
 
-		// hk
-		$this->hk->ViewValue = $this->hk->CurrentValue;
-		$this->hk->ViewCustomAttributes = "";
+		// hk_def
+		if (strval($this->hk_def->CurrentValue) <> "") {
+			$this->hk_def->ViewValue = $this->hk_def->OptionCaption($this->hk_def->CurrentValue);
+		} else {
+			$this->hk_def->ViewValue = NULL;
+		}
+		$this->hk_def->ViewCustomAttributes = "";
 
 			// jdw_id
 			$this->jdw_id->LinkCustomAttributes = "";
@@ -870,20 +872,10 @@ class ct_jdw_krj_def_view extends ct_jdw_krj_def {
 			$this->jk_id->HrefValue = "";
 			$this->jk_id->TooltipValue = "";
 
-			// scan_masuk
-			$this->scan_masuk->LinkCustomAttributes = "";
-			$this->scan_masuk->HrefValue = "";
-			$this->scan_masuk->TooltipValue = "";
-
-			// scan_keluar
-			$this->scan_keluar->LinkCustomAttributes = "";
-			$this->scan_keluar->HrefValue = "";
-			$this->scan_keluar->TooltipValue = "";
-
-			// hk
-			$this->hk->LinkCustomAttributes = "";
-			$this->hk->HrefValue = "";
-			$this->hk->TooltipValue = "";
+			// hk_def
+			$this->hk_def->LinkCustomAttributes = "";
+			$this->hk_def->HrefValue = "";
+			$this->hk_def->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1356,6 +1348,8 @@ ft_jdw_krj_defview.ValidateRequired = false;
 // Dynamic selection lists
 ft_jdw_krj_defview.Lists["x_pegawai_id"] = {"LinkField":"x_pegawai_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pegawai_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pegawai"};
 ft_jdw_krj_defview.Lists["x_jk_id"] = {"LinkField":"x_jk_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_jk_nm","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t_jk"};
+ft_jdw_krj_defview.Lists["x_hk_def"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+ft_jdw_krj_defview.Lists["x_hk_def"].Options = <?php echo json_encode($t_jdw_krj_def->hk_def->Options()) ?>;
 
 // Form object for search
 </script>
@@ -1488,35 +1482,13 @@ $t_jdw_krj_def_view->ShowMessage();
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t_jdw_krj_def->scan_masuk->Visible) { // scan_masuk ?>
-	<tr id="r_scan_masuk">
-		<td><span id="elh_t_jdw_krj_def_scan_masuk"><?php echo $t_jdw_krj_def->scan_masuk->FldCaption() ?></span></td>
-		<td data-name="scan_masuk"<?php echo $t_jdw_krj_def->scan_masuk->CellAttributes() ?>>
-<span id="el_t_jdw_krj_def_scan_masuk">
-<span<?php echo $t_jdw_krj_def->scan_masuk->ViewAttributes() ?>>
-<?php echo $t_jdw_krj_def->scan_masuk->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t_jdw_krj_def->scan_keluar->Visible) { // scan_keluar ?>
-	<tr id="r_scan_keluar">
-		<td><span id="elh_t_jdw_krj_def_scan_keluar"><?php echo $t_jdw_krj_def->scan_keluar->FldCaption() ?></span></td>
-		<td data-name="scan_keluar"<?php echo $t_jdw_krj_def->scan_keluar->CellAttributes() ?>>
-<span id="el_t_jdw_krj_def_scan_keluar">
-<span<?php echo $t_jdw_krj_def->scan_keluar->ViewAttributes() ?>>
-<?php echo $t_jdw_krj_def->scan_keluar->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t_jdw_krj_def->hk->Visible) { // hk ?>
-	<tr id="r_hk">
-		<td><span id="elh_t_jdw_krj_def_hk"><?php echo $t_jdw_krj_def->hk->FldCaption() ?></span></td>
-		<td data-name="hk"<?php echo $t_jdw_krj_def->hk->CellAttributes() ?>>
-<span id="el_t_jdw_krj_def_hk">
-<span<?php echo $t_jdw_krj_def->hk->ViewAttributes() ?>>
-<?php echo $t_jdw_krj_def->hk->ViewValue ?></span>
+<?php if ($t_jdw_krj_def->hk_def->Visible) { // hk_def ?>
+	<tr id="r_hk_def">
+		<td><span id="elh_t_jdw_krj_def_hk_def"><?php echo $t_jdw_krj_def->hk_def->FldCaption() ?></span></td>
+		<td data-name="hk_def"<?php echo $t_jdw_krj_def->hk_def->CellAttributes() ?>>
+<span id="el_t_jdw_krj_def_hk_def">
+<span<?php echo $t_jdw_krj_def->hk_def->ViewAttributes() ?>>
+<?php echo $t_jdw_krj_def->hk_def->ViewValue ?></span>
 </span>
 </td>
 	</tr>

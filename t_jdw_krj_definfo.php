@@ -19,7 +19,7 @@ class ct_jdw_krj_def extends cTable {
 	var $jk_id;
 	var $scan_masuk;
 	var $scan_keluar;
-	var $hk;
+	var $hk_def;
 
 	//
 	// Table class constructor
@@ -89,11 +89,12 @@ class ct_jdw_krj_def extends cTable {
 		$this->scan_keluar->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
 		$this->fields['scan_keluar'] = &$this->scan_keluar;
 
-		// hk
-		$this->hk = new cField('t_jdw_krj_def', 't_jdw_krj_def', 'x_hk', 'hk', '`hk`', '`hk`', 16, -1, FALSE, '`hk`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->hk->Sortable = TRUE; // Allow sort
-		$this->hk->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['hk'] = &$this->hk;
+		// hk_def
+		$this->hk_def = new cField('t_jdw_krj_def', 't_jdw_krj_def', 'x_hk_def', 'hk_def', '`hk_def`', '`hk_def`', 16, -1, FALSE, '`hk_def`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
+		$this->hk_def->Sortable = TRUE; // Allow sort
+		$this->hk_def->OptionCount = 2;
+		$this->hk_def->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['hk_def'] = &$this->hk_def;
 	}
 
 	// Set Field Visibility
@@ -731,7 +732,7 @@ class ct_jdw_krj_def extends cTable {
 		$this->jk_id->setDbValue($rs->fields('jk_id'));
 		$this->scan_masuk->setDbValue($rs->fields('scan_masuk'));
 		$this->scan_keluar->setDbValue($rs->fields('scan_keluar'));
-		$this->hk->setDbValue($rs->fields('hk'));
+		$this->hk_def->setDbValue($rs->fields('hk_def'));
 	}
 
 	// Render list row values
@@ -748,7 +749,7 @@ class ct_jdw_krj_def extends cTable {
 		// jk_id
 		// scan_masuk
 		// scan_keluar
-		// hk
+		// hk_def
 		// jdw_id
 
 		$this->jdw_id->ViewValue = $this->jdw_id->CurrentValue;
@@ -824,9 +825,13 @@ class ct_jdw_krj_def extends cTable {
 		$this->scan_keluar->ViewValue = ew_FormatDateTime($this->scan_keluar->ViewValue, 1);
 		$this->scan_keluar->ViewCustomAttributes = "";
 
-		// hk
-		$this->hk->ViewValue = $this->hk->CurrentValue;
-		$this->hk->ViewCustomAttributes = "";
+		// hk_def
+		if (strval($this->hk_def->CurrentValue) <> "") {
+			$this->hk_def->ViewValue = $this->hk_def->OptionCaption($this->hk_def->CurrentValue);
+		} else {
+			$this->hk_def->ViewValue = NULL;
+		}
+		$this->hk_def->ViewCustomAttributes = "";
 
 		// jdw_id
 		$this->jdw_id->LinkCustomAttributes = "";
@@ -858,10 +863,10 @@ class ct_jdw_krj_def extends cTable {
 		$this->scan_keluar->HrefValue = "";
 		$this->scan_keluar->TooltipValue = "";
 
-		// hk
-		$this->hk->LinkCustomAttributes = "";
-		$this->hk->HrefValue = "";
-		$this->hk->TooltipValue = "";
+		// hk_def
+		$this->hk_def->LinkCustomAttributes = "";
+		$this->hk_def->HrefValue = "";
+		$this->hk_def->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -938,11 +943,9 @@ class ct_jdw_krj_def extends cTable {
 		$this->scan_keluar->EditValue = ew_FormatDateTime($this->scan_keluar->CurrentValue, 8);
 		$this->scan_keluar->PlaceHolder = ew_RemoveHtml($this->scan_keluar->FldCaption());
 
-		// hk
-		$this->hk->EditAttrs["class"] = "form-control";
-		$this->hk->EditCustomAttributes = "";
-		$this->hk->EditValue = $this->hk->CurrentValue;
-		$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+		// hk_def
+		$this->hk_def->EditCustomAttributes = "";
+		$this->hk_def->EditValue = $this->hk_def->Options(FALSE);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -975,9 +978,7 @@ class ct_jdw_krj_def extends cTable {
 					if ($this->pegawai_id->Exportable) $Doc->ExportCaption($this->pegawai_id);
 					if ($this->tgl->Exportable) $Doc->ExportCaption($this->tgl);
 					if ($this->jk_id->Exportable) $Doc->ExportCaption($this->jk_id);
-					if ($this->scan_masuk->Exportable) $Doc->ExportCaption($this->scan_masuk);
-					if ($this->scan_keluar->Exportable) $Doc->ExportCaption($this->scan_keluar);
-					if ($this->hk->Exportable) $Doc->ExportCaption($this->hk);
+					if ($this->hk_def->Exportable) $Doc->ExportCaption($this->hk_def);
 				} else {
 					if ($this->jdw_id->Exportable) $Doc->ExportCaption($this->jdw_id);
 					if ($this->pegawai_id->Exportable) $Doc->ExportCaption($this->pegawai_id);
@@ -985,7 +986,7 @@ class ct_jdw_krj_def extends cTable {
 					if ($this->jk_id->Exportable) $Doc->ExportCaption($this->jk_id);
 					if ($this->scan_masuk->Exportable) $Doc->ExportCaption($this->scan_masuk);
 					if ($this->scan_keluar->Exportable) $Doc->ExportCaption($this->scan_keluar);
-					if ($this->hk->Exportable) $Doc->ExportCaption($this->hk);
+					if ($this->hk_def->Exportable) $Doc->ExportCaption($this->hk_def);
 				}
 				$Doc->EndExportRow();
 			}
@@ -1021,9 +1022,7 @@ class ct_jdw_krj_def extends cTable {
 						if ($this->pegawai_id->Exportable) $Doc->ExportField($this->pegawai_id);
 						if ($this->tgl->Exportable) $Doc->ExportField($this->tgl);
 						if ($this->jk_id->Exportable) $Doc->ExportField($this->jk_id);
-						if ($this->scan_masuk->Exportable) $Doc->ExportField($this->scan_masuk);
-						if ($this->scan_keluar->Exportable) $Doc->ExportField($this->scan_keluar);
-						if ($this->hk->Exportable) $Doc->ExportField($this->hk);
+						if ($this->hk_def->Exportable) $Doc->ExportField($this->hk_def);
 					} else {
 						if ($this->jdw_id->Exportable) $Doc->ExportField($this->jdw_id);
 						if ($this->pegawai_id->Exportable) $Doc->ExportField($this->pegawai_id);
@@ -1031,7 +1030,7 @@ class ct_jdw_krj_def extends cTable {
 						if ($this->jk_id->Exportable) $Doc->ExportField($this->jk_id);
 						if ($this->scan_masuk->Exportable) $Doc->ExportField($this->scan_masuk);
 						if ($this->scan_keluar->Exportable) $Doc->ExportField($this->scan_keluar);
-						if ($this->hk->Exportable) $Doc->ExportField($this->hk);
+						if ($this->hk_def->Exportable) $Doc->ExportField($this->hk_def);
 					}
 					$Doc->EndExportRow();
 				}

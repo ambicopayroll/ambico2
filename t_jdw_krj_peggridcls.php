@@ -1437,7 +1437,11 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		$this->jk_id->ViewCustomAttributes = "";
 
 		// hk
-		$this->hk->ViewValue = $this->hk->CurrentValue;
+		if (strval($this->hk->CurrentValue) <> "") {
+			$this->hk->ViewValue = $this->hk->OptionCaption($this->hk->CurrentValue);
+		} else {
+			$this->hk->ViewValue = NULL;
+		}
 		$this->hk->ViewCustomAttributes = "";
 
 			// pegawai_id
@@ -1561,10 +1565,8 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->EditValue = $arwrk;
 
 			// hk
-			$this->hk->EditAttrs["class"] = "form-control";
 			$this->hk->EditCustomAttributes = "";
-			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
-			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+			$this->hk->EditValue = $this->hk->Options(FALSE);
 
 			// Add refer script
 			// pegawai_id
@@ -1684,10 +1686,8 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->jk_id->EditValue = $arwrk;
 
 			// hk
-			$this->hk->EditAttrs["class"] = "form-control";
 			$this->hk->EditCustomAttributes = "";
-			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
-			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+			$this->hk->EditValue = $this->hk->Options(FALSE);
 
 			// Edit refer script
 			// pegawai_id
@@ -1738,17 +1738,17 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		if (!ew_CheckDateDef($this->tgl1->FormValue)) {
 			ew_AddMessage($gsFormError, $this->tgl1->FldErrMsg());
 		}
+		if (!$this->tgl2->FldIsDetailKey && !is_null($this->tgl2->FormValue) && $this->tgl2->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->tgl2->FldCaption(), $this->tgl2->ReqErrMsg));
+		}
 		if (!ew_CheckDateDef($this->tgl2->FormValue)) {
 			ew_AddMessage($gsFormError, $this->tgl2->FldErrMsg());
 		}
 		if (!$this->jk_id->FldIsDetailKey && !is_null($this->jk_id->FormValue) && $this->jk_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->jk_id->FldCaption(), $this->jk_id->ReqErrMsg));
 		}
-		if (!$this->hk->FldIsDetailKey && !is_null($this->hk->FormValue) && $this->hk->FormValue == "") {
+		if ($this->hk->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->hk->FldCaption(), $this->hk->ReqErrMsg));
-		}
-		if (!ew_CheckInteger($this->hk->FormValue)) {
-			ew_AddMessage($gsFormError, $this->hk->FldErrMsg());
 		}
 
 		// Return validate result
@@ -1875,7 +1875,7 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 			$this->tgl1->SetDbValueDef($rsnew, $this->tgl1->CurrentValue, ew_CurrentDate(), $this->tgl1->ReadOnly);
 
 			// tgl2
-			$this->tgl2->SetDbValueDef($rsnew, $this->tgl2->CurrentValue, NULL, $this->tgl2->ReadOnly);
+			$this->tgl2->SetDbValueDef($rsnew, $this->tgl2->CurrentValue, ew_CurrentDate(), $this->tgl2->ReadOnly);
 
 			// jk_id
 			$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, $this->jk_id->ReadOnly);
@@ -1938,7 +1938,7 @@ class ct_jdw_krj_peg_grid extends ct_jdw_krj_peg {
 		$this->tgl1->SetDbValueDef($rsnew, $this->tgl1->CurrentValue, ew_CurrentDate(), FALSE);
 
 		// tgl2
-		$this->tgl2->SetDbValueDef($rsnew, $this->tgl2->CurrentValue, NULL, FALSE);
+		$this->tgl2->SetDbValueDef($rsnew, $this->tgl2->CurrentValue, ew_CurrentDate(), FALSE);
 
 		// jk_id
 		$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, FALSE);

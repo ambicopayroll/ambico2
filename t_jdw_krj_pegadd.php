@@ -703,7 +703,11 @@ class ct_jdw_krj_peg_add extends ct_jdw_krj_peg {
 		$this->jk_id->ViewCustomAttributes = "";
 
 		// hk
-		$this->hk->ViewValue = $this->hk->CurrentValue;
+		if (strval($this->hk->CurrentValue) <> "") {
+			$this->hk->ViewValue = $this->hk->OptionCaption($this->hk->CurrentValue);
+		} else {
+			$this->hk->ViewValue = NULL;
+		}
 		$this->hk->ViewCustomAttributes = "";
 
 			// pegawai_id
@@ -826,10 +830,8 @@ class ct_jdw_krj_peg_add extends ct_jdw_krj_peg {
 			$this->jk_id->EditValue = $arwrk;
 
 			// hk
-			$this->hk->EditAttrs["class"] = "form-control";
 			$this->hk->EditCustomAttributes = "";
-			$this->hk->EditValue = ew_HtmlEncode($this->hk->CurrentValue);
-			$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+			$this->hk->EditValue = $this->hk->Options(FALSE);
 
 			// Add refer script
 			// pegawai_id
@@ -883,17 +885,17 @@ class ct_jdw_krj_peg_add extends ct_jdw_krj_peg {
 		if (!ew_CheckDateDef($this->tgl1->FormValue)) {
 			ew_AddMessage($gsFormError, $this->tgl1->FldErrMsg());
 		}
+		if (!$this->tgl2->FldIsDetailKey && !is_null($this->tgl2->FormValue) && $this->tgl2->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->tgl2->FldCaption(), $this->tgl2->ReqErrMsg));
+		}
 		if (!ew_CheckDateDef($this->tgl2->FormValue)) {
 			ew_AddMessage($gsFormError, $this->tgl2->FldErrMsg());
 		}
 		if (!$this->jk_id->FldIsDetailKey && !is_null($this->jk_id->FormValue) && $this->jk_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->jk_id->FldCaption(), $this->jk_id->ReqErrMsg));
 		}
-		if (!$this->hk->FldIsDetailKey && !is_null($this->hk->FormValue) && $this->hk->FormValue == "") {
+		if ($this->hk->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->hk->FldCaption(), $this->hk->ReqErrMsg));
-		}
-		if (!ew_CheckInteger($this->hk->FormValue)) {
-			ew_AddMessage($gsFormError, $this->hk->FldErrMsg());
 		}
 
 		// Return validate result
@@ -926,7 +928,7 @@ class ct_jdw_krj_peg_add extends ct_jdw_krj_peg {
 		$this->tgl1->SetDbValueDef($rsnew, $this->tgl1->CurrentValue, ew_CurrentDate(), FALSE);
 
 		// tgl2
-		$this->tgl2->SetDbValueDef($rsnew, $this->tgl2->CurrentValue, NULL, FALSE);
+		$this->tgl2->SetDbValueDef($rsnew, $this->tgl2->CurrentValue, ew_CurrentDate(), FALSE);
 
 		// jk_id
 		$this->jk_id->SetDbValueDef($rsnew, $this->jk_id->CurrentValue, 0, FALSE);
@@ -1205,6 +1207,9 @@ ft_jdw_krj_pegadd.Validate = function() {
 			if (elm && !ew_CheckDateDef(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_peg->tgl1->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_tgl2");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdw_krj_peg->tgl2->FldCaption(), $t_jdw_krj_peg->tgl2->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_tgl2");
 			if (elm && !ew_CheckDateDef(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_peg->tgl2->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_jk_id");
@@ -1213,9 +1218,6 @@ ft_jdw_krj_pegadd.Validate = function() {
 			elm = this.GetElements("x" + infix + "_hk");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdw_krj_peg->hk->FldCaption(), $t_jdw_krj_peg->hk->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_hk");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_peg->hk->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1251,6 +1253,8 @@ ft_jdw_krj_pegadd.ValidateRequired = false;
 // Dynamic selection lists
 ft_jdw_krj_pegadd.Lists["x_pegawai_id"] = {"LinkField":"x_pegawai_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pegawai_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pegawai"};
 ft_jdw_krj_pegadd.Lists["x_jk_id"] = {"LinkField":"x_jk_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_jk_nm","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t_jk"};
+ft_jdw_krj_pegadd.Lists["x_hk"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+ft_jdw_krj_pegadd.Lists["x_hk"].Options = <?php echo json_encode($t_jdw_krj_peg->hk->Options()) ?>;
 
 // Form object for search
 </script>
@@ -1332,7 +1336,7 @@ ew_CreateCalendar("ft_jdw_krj_pegadd", "x_tgl1", 0);
 <?php } ?>
 <?php if ($t_jdw_krj_peg->tgl2->Visible) { // tgl2 ?>
 	<div id="r_tgl2" class="form-group">
-		<label id="elh_t_jdw_krj_peg_tgl2" for="x_tgl2" class="col-sm-2 control-label ewLabel"><?php echo $t_jdw_krj_peg->tgl2->FldCaption() ?></label>
+		<label id="elh_t_jdw_krj_peg_tgl2" for="x_tgl2" class="col-sm-2 control-label ewLabel"><?php echo $t_jdw_krj_peg->tgl2->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
 		<div class="col-sm-10"><div<?php echo $t_jdw_krj_peg->tgl2->CellAttributes() ?>>
 <span id="el_t_jdw_krj_peg_tgl2">
 <input type="text" data-table="t_jdw_krj_peg" data-field="x_tgl2" name="x_tgl2" id="x_tgl2" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->tgl2->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->tgl2->EditValue ?>"<?php echo $t_jdw_krj_peg->tgl2->EditAttributes() ?>>
@@ -1362,10 +1366,13 @@ ew_CreateCalendar("ft_jdw_krj_pegadd", "x_tgl2", 0);
 <?php } ?>
 <?php if ($t_jdw_krj_peg->hk->Visible) { // hk ?>
 	<div id="r_hk" class="form-group">
-		<label id="elh_t_jdw_krj_peg_hk" for="x_hk" class="col-sm-2 control-label ewLabel"><?php echo $t_jdw_krj_peg->hk->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<label id="elh_t_jdw_krj_peg_hk" class="col-sm-2 control-label ewLabel"><?php echo $t_jdw_krj_peg->hk->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
 		<div class="col-sm-10"><div<?php echo $t_jdw_krj_peg->hk->CellAttributes() ?>>
 <span id="el_t_jdw_krj_peg_hk">
-<input type="text" data-table="t_jdw_krj_peg" data-field="x_hk" name="x_hk" id="x_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->hk->EditValue ?>"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>>
+<div id="tp_x_hk" class="ewTemplate"><input type="radio" data-table="t_jdw_krj_peg" data-field="x_hk" data-value-separator="<?php echo $t_jdw_krj_peg->hk->DisplayValueSeparatorAttribute() ?>" name="x_hk" id="x_hk" value="{value}"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>></div>
+<div id="dsl_x_hk" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+<?php echo $t_jdw_krj_peg->hk->RadioButtonListHtml(FALSE, "x_hk") ?>
+</div></div>
 </span>
 <?php echo $t_jdw_krj_peg->hk->CustomMsg ?></div></div>
 	</div>

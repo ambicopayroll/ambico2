@@ -51,6 +51,9 @@ ft_jdw_krj_peggrid.Validate = function() {
 			if (elm && !ew_CheckDateDef(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_peg->tgl1->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_tgl2");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdw_krj_peg->tgl2->FldCaption(), $t_jdw_krj_peg->tgl2->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_tgl2");
 			if (elm && !ew_CheckDateDef(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_peg->tgl2->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_jk_id");
@@ -59,9 +62,6 @@ ft_jdw_krj_peggrid.Validate = function() {
 			elm = this.GetElements("x" + infix + "_hk");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t_jdw_krj_peg->hk->FldCaption(), $t_jdw_krj_peg->hk->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_hk");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($t_jdw_krj_peg->hk->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -100,6 +100,8 @@ ft_jdw_krj_peggrid.ValidateRequired = false;
 // Dynamic selection lists
 ft_jdw_krj_peggrid.Lists["x_pegawai_id"] = {"LinkField":"x_pegawai_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pegawai_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pegawai"};
 ft_jdw_krj_peggrid.Lists["x_jk_id"] = {"LinkField":"x_jk_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_jk_nm","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t_jk"};
+ft_jdw_krj_peggrid.Lists["x_hk"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+ft_jdw_krj_peggrid.Lists["x_hk"].Options = <?php echo json_encode($t_jdw_krj_peg->hk->Options()) ?>;
 
 // Form object for search
 </script>
@@ -533,13 +535,19 @@ ew_CreateCalendar("ft_jdw_krj_peggrid", "x<?php echo $t_jdw_krj_peg_grid->RowInd
 		<td data-name="hk"<?php echo $t_jdw_krj_peg->hk->CellAttributes() ?>>
 <?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t_jdw_krj_peg_grid->RowCnt ?>_t_jdw_krj_peg_hk" class="form-group t_jdw_krj_peg_hk">
-<input type="text" data-table="t_jdw_krj_peg" data-field="x_hk" name="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->hk->EditValue ?>"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>>
+<div id="tp_x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" class="ewTemplate"><input type="radio" data-table="t_jdw_krj_peg" data-field="x_hk" data-value-separator="<?php echo $t_jdw_krj_peg->hk->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" value="{value}"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>></div>
+<div id="dsl_x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+<?php echo $t_jdw_krj_peg->hk->RadioButtonListHtml(FALSE, "x{$t_jdw_krj_peg_grid->RowIndex}_hk") ?>
+</div></div>
 </span>
 <input type="hidden" data-table="t_jdw_krj_peg" data-field="x_hk" name="o<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" id="o<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" value="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->OldValue) ?>">
 <?php } ?>
 <?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t_jdw_krj_peg_grid->RowCnt ?>_t_jdw_krj_peg_hk" class="form-group t_jdw_krj_peg_hk">
-<input type="text" data-table="t_jdw_krj_peg" data-field="x_hk" name="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->hk->EditValue ?>"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>>
+<div id="tp_x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" class="ewTemplate"><input type="radio" data-table="t_jdw_krj_peg" data-field="x_hk" data-value-separator="<?php echo $t_jdw_krj_peg->hk->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" value="{value}"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>></div>
+<div id="dsl_x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+<?php echo $t_jdw_krj_peg->hk->RadioButtonListHtml(FALSE, "x{$t_jdw_krj_peg_grid->RowIndex}_hk") ?>
+</div></div>
 </span>
 <?php } ?>
 <?php if ($t_jdw_krj_peg->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -704,7 +712,10 @@ ew_CreateCalendar("ft_jdw_krj_peggrid", "x<?php echo $t_jdw_krj_peg_grid->RowInd
 		<td data-name="hk">
 <?php if ($t_jdw_krj_peg->CurrentAction <> "F") { ?>
 <span id="el$rowindex$_t_jdw_krj_peg_hk" class="form-group t_jdw_krj_peg_hk">
-<input type="text" data-table="t_jdw_krj_peg" data-field="x_hk" name="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" size="30" placeholder="<?php echo ew_HtmlEncode($t_jdw_krj_peg->hk->getPlaceHolder()) ?>" value="<?php echo $t_jdw_krj_peg->hk->EditValue ?>"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>>
+<div id="tp_x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" class="ewTemplate"><input type="radio" data-table="t_jdw_krj_peg" data-field="x_hk" data-value-separator="<?php echo $t_jdw_krj_peg->hk->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" id="x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" value="{value}"<?php echo $t_jdw_krj_peg->hk->EditAttributes() ?>></div>
+<div id="dsl_x<?php echo $t_jdw_krj_peg_grid->RowIndex ?>_hk" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+<?php echo $t_jdw_krj_peg->hk->RadioButtonListHtml(FALSE, "x{$t_jdw_krj_peg_grid->RowIndex}_hk") ?>
+</div></div>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_t_jdw_krj_peg_hk" class="form-group t_jdw_krj_peg_hk">

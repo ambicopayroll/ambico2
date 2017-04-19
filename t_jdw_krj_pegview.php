@@ -836,7 +836,11 @@ class ct_jdw_krj_peg_view extends ct_jdw_krj_peg {
 		$this->jk_id->ViewCustomAttributes = "";
 
 		// hk
-		$this->hk->ViewValue = $this->hk->CurrentValue;
+		if (strval($this->hk->CurrentValue) <> "") {
+			$this->hk->ViewValue = $this->hk->OptionCaption($this->hk->CurrentValue);
+		} else {
+			$this->hk->ViewValue = NULL;
+		}
 		$this->hk->ViewCustomAttributes = "";
 
 			// pegawai_id
@@ -1335,6 +1339,8 @@ ft_jdw_krj_pegview.ValidateRequired = false;
 // Dynamic selection lists
 ft_jdw_krj_pegview.Lists["x_pegawai_id"] = {"LinkField":"x_pegawai_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_pegawai_nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"pegawai"};
 ft_jdw_krj_pegview.Lists["x_jk_id"] = {"LinkField":"x_jk_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_jk_nm","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t_jk"};
+ft_jdw_krj_pegview.Lists["x_hk"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+ft_jdw_krj_pegview.Lists["x_hk"].Options = <?php echo json_encode($t_jdw_krj_peg->hk->Options()) ?>;
 
 // Form object for search
 </script>

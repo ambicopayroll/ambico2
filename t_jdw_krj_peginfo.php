@@ -83,8 +83,9 @@ class ct_jdw_krj_peg extends cTable {
 		$this->fields['jk_id'] = &$this->jk_id;
 
 		// hk
-		$this->hk = new cField('t_jdw_krj_peg', 't_jdw_krj_peg', 'x_hk', 'hk', '`hk`', '`hk`', 16, -1, FALSE, '`hk`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->hk = new cField('t_jdw_krj_peg', 't_jdw_krj_peg', 'x_hk', 'hk', '`hk`', '`hk`', 16, -1, FALSE, '`hk`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
 		$this->hk->Sortable = TRUE; // Allow sort
+		$this->hk->OptionCount = 2;
 		$this->hk->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['hk'] = &$this->hk;
 	}
@@ -811,7 +812,11 @@ class ct_jdw_krj_peg extends cTable {
 		$this->jk_id->ViewCustomAttributes = "";
 
 		// hk
-		$this->hk->ViewValue = $this->hk->CurrentValue;
+		if (strval($this->hk->CurrentValue) <> "") {
+			$this->hk->ViewValue = $this->hk->OptionCaption($this->hk->CurrentValue);
+		} else {
+			$this->hk->ViewValue = NULL;
+		}
 		$this->hk->ViewCustomAttributes = "";
 
 		// jdw_id
@@ -914,10 +919,8 @@ class ct_jdw_krj_peg extends cTable {
 		$this->jk_id->EditCustomAttributes = "";
 
 		// hk
-		$this->hk->EditAttrs["class"] = "form-control";
 		$this->hk->EditCustomAttributes = "";
-		$this->hk->EditValue = $this->hk->CurrentValue;
-		$this->hk->PlaceHolder = ew_RemoveHtml($this->hk->FldCaption());
+		$this->hk->EditValue = $this->hk->Options(FALSE);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
